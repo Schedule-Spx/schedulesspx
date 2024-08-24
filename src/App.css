@@ -1,38 +1,36 @@
+/* src/App.css */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  height: 100vh; /* Ensure App takes full viewport height */
+}
+
+.App-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto; /* Two rows for main content and ads */
+  gap: 1rem;
+  flex-grow: 1; /* Make the grid take the remaining space */
+  padding: 1rem;
+}
+
+.App-ads {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.glass-tile,
+.ad-widget {
+  min-height: 100px; /* Ensure minimum height */
+  height: 100%; /* Make tiles take full height of their grid cell */
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.period-progress {
+  grid-column: span 3; /* Make the period progress span across all columns */
+  width: 100%; /* Ensure it spans the full width */
 }
