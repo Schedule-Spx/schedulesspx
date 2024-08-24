@@ -8,9 +8,11 @@ const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useContext(ThemeContext);
 
+  const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org'];
+
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    if (userData.email === 'your-admin-email@example.com') {  // Replace with actual admin email
+    if (adminEmails.includes(userData.email)) {
       navigate('/admin');
     }
   };
@@ -36,6 +38,9 @@ const NavBar = ({ user, setUser }) => {
         {user ? (
           <>
             <span>{user.name}</span>
+            {adminEmails.includes(user.email) && (
+              <Link to="/admin" className="text-sm hover:text-gray-300">Admin</Link>
+            )}
             <button
               className="bg-red-500 hover:bg-red-600 text-white text-sm py-1 px-3 rounded"
               onClick={handleLogout}

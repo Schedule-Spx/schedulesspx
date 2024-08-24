@@ -4,19 +4,18 @@ import { useGoogleLogin } from '@react-oauth/google';
 
 const GoogleLogin = ({ onLoginSuccess }) => {
   const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
+    onSuccess: async (tokenResponse) => {
       console.log(tokenResponse);
-      // Here you would typically send the access token to your backend
-      // The backend would then use it to fetch the user's info and return it
-      // For this example, we'll simulate that with a timeout
-      setTimeout(() => {
-        onLoginSuccess({
-          name: 'Google User',
-          email: 'user@example.com',
-          // You wouldn't actually store the access token in the frontend like this
-          accessToken: tokenResponse.access_token
-        });
-      }, 1000);
+      // Fetch user info using the access token
+      const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+      });
+      const userInfo = await userInfoResponse.json();
+      onLoginSuccess({
+        name: userInfo.name,
+        email: userInfo.email,
+        accessToken: tokenResponse.access_token
+      });
     },
     onError: (error) => console.log('Login Failed:', error)
   });
