@@ -3,99 +3,55 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
 body {
   @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  height: 100vh; /* Ensure body takes full viewport height */
-  display: flex;
-  flex-direction: column;
 }
 
-/* Utility classes */
+.App {
+  @apply h-screen flex flex-col;
+}
+
+main {
+  @apply flex-grow flex flex-col;
+}
+
 .glass-tile {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 50px; /* Rounded oval shape */
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%; /* Make tiles take full height of their grid cell */
+  @apply bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-3xl p-4 shadow-lg text-inherit flex flex-col justify-center;
 }
 
-/* Dark mode styles */
-.dark .glass-tile {
-  background: rgba(0, 0, 0, 0.2);
+.ad-component {
+  @apply glass-tile flex items-center justify-center;
+  min-height: 250px;
 }
 
-/* Ad widget styles */
-.ad-container {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 50px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100px; /* Ensure minimum height */
-  height: 100%; /* Make tiles take full height of their grid cell */
-}
-
-/* Navbar styles */
-.navbar {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 50px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Center the buttons */
-  padding: 5px 10px; /* Reduced padding to make the navbar skinnier vertically */
-  width: 90%; /* Spanning across the screen */
-  max-width: 1200px; /* Maximum width */
-  margin: 10px auto; /* Center horizontally with margin */
-  height: 40px; /* Set a fixed height for the navbar */
-}
-
-/* Period progress styles */
 .period-progress {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 50px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 10px 20px; /* Padding for content */
-  width: 100%; /* Spanning across the screen */
-  margin: 10px 0; /* Center horizontally with margin */
-  height: auto; /* Height will be determined by the content */
+  @apply glass-tile flex items-center justify-center flex-col p-2 w-full;
 }
 
-/* Ensure buttons are side by side */
-.navbar .button-container {
-  display: flex;
-  gap: 10px;
+.grid {
+  @apply gap-4;
 }
 
-/* Modal styles */
-.modal {
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  z-index: 1000; /* Ensure modal is in front */
+h1, h2, h3 {
+  @apply text-lg font-bold;
 }
 
-.modal-content {
-  max-width: 400px;
-  width: 100%;
-  z-index: 1001; /* Ensure modal content is in front */
+p, span, div {
+  @apply text-sm;
+}
+
+nav {
+  @apply bg-gray-900 text-white py-2 px-4 flex justify-between items-center;
 }

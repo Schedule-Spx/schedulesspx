@@ -1,25 +1,44 @@
-// src/Events.js
-import React from 'react';
+// src/Events.jsx
+import React, { useState, useEffect } from 'react';
 
-const events = [
-  { time: "09:00 AM", event: "Meeting with team" },
-  { time: "11:00 AM", event: "Project deadline" },
-  { time: "01:00 PM", event: "Lunch with client" },
-  { time: "03:00 PM", event: "Conference call" },
-  { time: "05:00 PM", event: "Review reports" },
-];
+const Events = ({ user }) => {
+  const [events, setEvents] = useState([]);
 
-const Events = () => {
+  useEffect(() => {
+    const fetchEvents = async () => {
+      if (user && user.accessToken) {
+        try {
+          const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=10`, {
+            headers: {
+              'Authorization': `Bearer ${user.accessToken}`
+            }
+          });
+          const data = await response.json();
+          setEvents(data.items || []);
+        } catch (error) {
+          console.error('Error fetching events:', error);
+        }
+      }
+    };
+    fetchEvents();
+  }, [user]);
+
   return (
     <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">
       <h2 className="text-xl font-bold mb-4">Important Events</h2>
-      <ul>
-        {events.map((event, index) => (
-          <li key={index} className="mb-2">
-            <span className="font-semibold">{event.time}:</span> {event.event}
-          </li>
-        ))}
-      </ul>
+      {user ? (
+        <ul>
+          {events.map((event, index) => (
+            <li key={index} className="mb-2">
+              <span className="font-semibold">
+                {new Date(event.start.dateTime || event.start.date).toLocaleString()}:
+              </span> {event.summary}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Please sign in to view events.</p>
+      )}
     </div>
   );
 };

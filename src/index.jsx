@@ -1,18 +1,18 @@
-// src/index.js
+// src/index.jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './App.jsx';
 import { ThemeProvider } from './ThemeContext';
-import reportWebVitals from './reportWebVitals';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-reportWebVitals();
