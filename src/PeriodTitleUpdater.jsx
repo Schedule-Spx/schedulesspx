@@ -1,4 +1,4 @@
-// src/PeriodTitleUpdater.js
+// src/PeriodTitleUpdater.jsx
 import { useEffect, useState } from 'react';
 
 const periods = [
@@ -19,24 +19,37 @@ const PeriodTitleUpdater = () => {
 
   useEffect(() => {
     const checkCurrentPeriod = () => {
-      const now = new Date(); // Update the current time
-      for (let period of periods) {
-        const start = new Date();
-        const [startHour, startMinute, startPeriod] = period.start.split(/[: ]/);
-        start.setHours(startPeriod === 'PM' ? +startHour + 12 : +startHour, +startMinute, 0, 0);
+      const now = new Date();
+      const day = now.getDay();
+      const isWeekend = day === 0 || day === 6;
 
-        const end = new Date();
-        const [endHour, endMinute, endPeriod] = period.end.split(/[: ]/);
-        end.setHours(endPeriod === 'PM' ? +endHour + 12 : +endHour, +endMinute, 0, 0);
+      if (isWeekend) {
+        // Calculate time until Monday 8 AM
+        const monday = new Date(now);
+        monday.setDate(now.getDate() + (1 + 7 - now.getDay()) % 7);
+        monday.setHours(8, 0, 0, 0);
+        const timeUntilMonday = Math.floor((monday - now) / 1000);
+        setCurrentPeriod({ name: "Weekend" });
+        setRemainingTime(formatTime(timeUntilMonday));
+      } else {
+        for (let period of periods) {
+          const start = new Date();
+          const [startHour, startMinute, startPeriod] = period.start.split(/[: ]/);
+          start.setHours(startPeriod === 'PM' ? +startHour + 12 : +startHour, +startMinute, 0, 0);
 
-        if (now >= start && now <= end) {
-          setCurrentPeriod(period);
-          const timeRemaining = Math.floor((end - now) / 1000);
-          setRemainingTime(formatTime(timeRemaining));
-          break;
-        } else {
-          setCurrentPeriod(null);
-          setRemainingTime("");
+          const end = new Date();
+          const [endHour, endMinute, endPeriod] = period.end.split(/[: ]/);
+          end.setHours(endPeriod === 'PM' ? +endHour + 12 : +endHour, +endMinute, 0, 0);
+
+          if (now >= start && now <= end) {
+            setCurrentPeriod(period);
+            const timeRemaining = Math.floor((end - now) / 1000);
+            setRemainingTime(formatTime(timeRemaining));
+            break;
+          } else {
+            setCurrentPeriod(null);
+            setRemainingTime("");
+          }
         }
       }
     };
@@ -51,14 +64,16 @@ const PeriodTitleUpdater = () => {
     if (currentPeriod) {
       document.title = `${currentPeriod.name} - ${remainingTime}`;
     } else {
-      document.title = "React App";
+      document.title = "Schedule-SPX";
     }
   }, [currentPeriod, remainingTime]);
 
   const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}m ${remainingSeconds}s`;
+    return `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
   };
 
   return null;
