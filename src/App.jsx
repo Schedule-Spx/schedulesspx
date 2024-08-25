@@ -10,8 +10,8 @@ import PeriodTitleUpdater from './PeriodTitleUpdater';
 import Schedule from './Schedule';
 import NavBar from './NavBar';
 import Admin from './Admin';
-import Account from './components/Account';
-import About from './components/About';
+import Account from './Account';
+import About from './About';
 import AdComponent from './AdComponent';
 
 function AppContent() {
