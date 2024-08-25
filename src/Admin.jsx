@@ -11,6 +11,7 @@ const Admin = ({ user }) => {
     Friday: []
   });
   const [pasteArea, setPasteArea] = useState('');
+  const [selectedDay, setSelectedDay] = useState('Monday');
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem('weekSchedule');
@@ -56,18 +57,15 @@ const Admin = ({ user }) => {
     const lines = pastedText.split('\n');
     const newSchedule = { ...weekSchedule };
     
-    lines.forEach((line, index) => {
-      if (index === 0) return; // Skip header line
+    newSchedule[selectedDay] = lines.slice(1).map(line => {
       const [name, start, end, duration] = line.split('\t');
-      if (name && start && end) {
-        newSchedule.Monday.push({
-          name: name === 'AS' ? 'AS Period' : `Period ${name}`,
-          start,
-          end,
-          visible: true
-        });
-      }
-    });
+      return {
+        name: name === 'AS' ? 'AS Period' : `Period ${name}`,
+        start,
+        end,
+        visible: true
+      };
+    }).filter(period => period.name && period.start && period.end);
 
     setWeekSchedule(newSchedule);
   };
@@ -83,13 +81,24 @@ const Admin = ({ user }) => {
       <h1 className="text-2xl font-bold mb-4">Admin Management Page</h1>
       <div className="mb-8">
         <h2 className="text-xl font-bold mb-2">Paste Schedule</h2>
+        <div className="flex mb-2">
+          {Object.keys(weekSchedule).map(day => (
+            <button
+              key={day}
+              onClick={() => setSelectedDay(day)}
+              className={`mr-2 px-3 py-1 rounded ${selectedDay === day ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+            >
+              {day}
+            </button>
+          ))}
+        </div>
         <textarea
           className="w-full p-2 border rounded mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           rows="10"
           value={pasteArea}
           onChange={(e) => setPasteArea(e.target.value)}
           onPaste={handlePaste}
-          placeholder="Paste your schedule here..."
+          placeholder={`Paste your schedule for ${selectedDay} here...`}
         />
       </div>
       {Object.entries(weekSchedule).map(([day, schedule]) => (
