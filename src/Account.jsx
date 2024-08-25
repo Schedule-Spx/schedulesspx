@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 const Account = ({ user }) => {
   const [periodNames, setPeriodNames] = useState([
     "Period 1", "Period 2", "Period 3", "Period 4",
-    "Period 5", "Period 6", "Period 7", "Period 8", "Assembly"
+    "Period 5", "Period 6", "Period 7", "Period 8"
   ]);
 
   useEffect(() => {
