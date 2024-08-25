@@ -20,7 +20,7 @@ const NavBar = ({ user, setUser }) => {
     navigate('/');
   };
 
-  const isAdmin = user && adminEmails.includes(user.email);
+  const isAdmin = user && adminEmails.includes(user.email.toLowerCase());
 
   return (
     <nav className="bg-gray-900 text-white py-2 px-4 flex justify-between items-center">
