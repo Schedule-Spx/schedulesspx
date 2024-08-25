@@ -9,7 +9,7 @@ const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useContext(ThemeContext);
 
-  const adminEmails = ['kagenmjensen@me.com', 'dcamick@spxstudent.org'];
+  const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org'];
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
