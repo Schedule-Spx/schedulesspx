@@ -1,6 +1,7 @@
 // src/App.jsx
 import React, { useContext, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
 import { ThemeContext } from './ThemeContext';
 import DayHeader from './DayHeader';
@@ -54,9 +55,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <Router>
+        <AppContent />
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 

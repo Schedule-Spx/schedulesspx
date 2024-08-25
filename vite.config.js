@@ -1,6 +1,7 @@
 // vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
@@ -8,9 +9,12 @@ export default defineConfig({
     port: 3000,
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json']
+    extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   define: {
-    'process.env': {}
-  }
+    'process.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_CLIENT_ID),
+  },
 });
