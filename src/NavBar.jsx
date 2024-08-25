@@ -29,7 +29,7 @@ const NavBar = ({ user, setUser }) => {
           <img src={logo} alt="Schedule-SPX Logo" className="h-8 w-auto mr-2" />
           <span className="text-xl font-bold hover:text-gray-300">Schedule-SPX</span>
         </Link>
-        <button className="text-sm hover:text-gray-300">About</button>
+        <Link to="/about" className="text-sm hover:text-gray-300">About</Link>
       </div>
       <div className="flex items-center space-x-4">
         <button
@@ -40,7 +40,7 @@ const NavBar = ({ user, setUser }) => {
         </button>
         {user ? (
           <>
-            <span>{user.name}</span>
+            <Link to="/account" className="text-sm hover:text-gray-300">{user.name}</Link>
             {isAdmin && (
               <Link 
                 to="/admin" 

@@ -10,6 +10,8 @@ import PeriodTitleUpdater from './PeriodTitleUpdater';
 import Schedule from './Schedule';
 import NavBar from './NavBar';
 import Admin from './Admin';
+import Account from './components/Account';
+import About from './components/About';
 import AdComponent from './AdComponent';
 
 function AppContent() {
@@ -20,11 +22,13 @@ function AppContent() {
   const isAdminPage = location.pathname === '/admin';
 
   return (
-    <div className={`App ${theme} flex flex-col h-screen ${isAdminPage ? 'overflow-auto' : 'overflow-hidden'}`}>
+    <div className={`App ${theme} flex flex-col min-h-screen ${isAdminPage ? 'overflow-auto' : 'overflow-hidden'}`}>
       <NavBar user={user} setUser={setUser} />
       <PeriodTitleUpdater />
       <Routes>
         <Route path="/admin" element={<Admin />} />
+        <Route path="/account" element={<Account user={user} />} />
+        <Route path="/about" element={<About />} />
         <Route
           path="/"
           element={
