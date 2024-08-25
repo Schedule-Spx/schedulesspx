@@ -1,59 +1,100 @@
-// src/App.jsx
-import React, { useContext, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import './App.css';
-import { ThemeContext } from './ThemeContext';
-import DayHeader from './DayHeader';
-import Events from './Events';
-import PeriodProgress from './PeriodProgress';
-import PeriodTitleUpdater from './PeriodTitleUpdater';
-import Schedule from './Schedule';
-import NavBar from './NavBar';
-import Admin from './Admin';
-import AdComponent from './AdComponent';
+// src/Admin.jsx
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 
-function AppContent() {
-  const { theme } = useContext(ThemeContext);
-  const location = useLocation();
-  const [user, setUser] = useState(null);
+const Admin = ({ user }) => {
+  const [schedule, setSchedule] = useState([
+    { name: "Period 1", start: "08:40 AM", end: "09:21 AM", visible: true },
+    { name: "Period 2", start: "09:26 AM", end: "10:06 AM", visible: true },
+    { name: "Period 3", start: "10:11 AM", end: "10:51 AM", visible: true },
+    { name: "Period 4", start: "10:56 AM", end: "11:36 AM", visible: true },
+    { name: "Period 5", start: "11:41 AM", end: "12:21 PM", visible: true },
+    { name: "Period 6", start: "12:26 PM", end: "01:06 PM", visible: true },
+    { name: "Period 7", start: "01:11 PM", end: "01:51 PM", visible: true },
+    { name: "Period 8", start: "01:56 PM", end: "02:36 PM", visible: true },
+    { name: "Assembly", start: "02:41 PM", end: "03:01 PM", visible: true },
+  ]);
 
-  const isAdminPage = location.pathname === '/admin';
+  useEffect(() => {
+    const savedSchedule = localStorage.getItem('schedule');
+    if (savedSchedule) {
+      setSchedule(JSON.parse(savedSchedule));
+    }
+  }, []);
+
+  const handleChange = (index, field, value) => {
+    const newSchedule = [...schedule];
+    newSchedule[index][field] = value;
+    setSchedule(newSchedule);
+  };
+
+  const handleVisibilityChange = (index) => {
+    const newSchedule = [...schedule];
+    newSchedule[index].visible = !newSchedule[index].visible;
+    setSchedule(newSchedule);
+  };
+
+  const handlePaste = (e) => {
+    const pastedText = e.target.value;
+    const lines = pastedText.split('\n');
+    const newSchedule = lines.slice(1).map(line => {
+      const [name, start, end] = line.split('\t');
+      return { name, start, end, visible: true };
+    });
+    setSchedule(newSchedule);
+  };
+
+  const handleSave = () => {
+    localStorage.setItem('schedule', JSON.stringify(schedule));
+    alert('Schedule saved');
+  };
+
+  const adminEmails = ['kagenmjensen@me.com', 'dcamick@spxstudent.org'];
+  
+  if (!user || !adminEmails.includes(user.email.toLowerCase())) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
-    <div className={`App ${theme} flex flex-col h-screen ${isAdminPage ? 'overflow-auto' : 'overflow-hidden'}`}>
-      <NavBar user={user} setUser={setUser} />
-      <PeriodTitleUpdater />
-      <Routes>
-        <Route path="/admin" element={<Admin />} />
-        <Route
-          path="/"
-          element={
-            <main className="flex-grow flex flex-col p-4 space-y-4 overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
-                <DayHeader />
-                <Schedule />
-                <Events user={user} />
-              </div>
-              <PeriodProgress user={user} />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-auto">
-                <AdComponent adSlot="1234567890" />
-                <AdComponent adSlot="1234567891" />
-                <AdComponent adSlot="1234567892" />
-              </div>
-            </main>
-          }
-        />
-      </Routes>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Admin Management Page</h1>
+      <textarea
+        className="w-full p-2 border rounded mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        rows="10"
+        placeholder="Paste schedule here"
+        onBlur={handlePaste}
+      />
+      {schedule.map((period, index) => (
+        <div key={index} className="mb-4">
+          <label className="block text-sm font-medium mb-1">{period.name}</label>
+          <input
+            type="text"
+            value={period.start}
+            onChange={(e) => handleChange(index, 'start', e.target.value)}
+            className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          />
+          <input
+            type="text"
+            value={period.end}
+            onChange={(e) => handleChange(index, 'end', e.target.value)}
+            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          />
+          <div className="flex items-center mt-2">
+            <input
+              type="checkbox"
+              checked={period.visible}
+              onChange={() => handleVisibilityChange(index)}
+              className="mr-2"
+            />
+            <label>Visible</label>
+          </div>
+        </div>
+      ))}
+      <button onClick={handleSave} className="bg-blue-500 text-white rounded p-2">
+        Save
+      </button>
     </div>
   );
-}
+};
 
-function App() {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
-}
-
-export default App;
+export default Admin;

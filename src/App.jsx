@@ -27,7 +27,7 @@ function AppContent() {
       <NavBar user={user} setUser={setUser} />
       <PeriodTitleUpdater />
       <Routes>
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<Admin user={user} />} />
         <Route path="/account" element={<Account user={user} />} />
         <Route path="/about" element={<About />} />
         <Route
