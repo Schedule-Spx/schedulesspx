@@ -1,50 +1,58 @@
-// src/Schedule.jsx
 import React, { useState, useEffect } from 'react';
 
 const Schedule = () => {
-  const [weekSchedule, setWeekSchedule] = useState({});
+  const [daySchedule, setDaySchedule] = useState([]);
   const [currentDay, setCurrentDay] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
+        setLoading(true);
         const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
-        const data = await response.text();
-        const parsedData = JSON.parse(data);
-        if (typeof parsedData === 'object' && parsedData !== null) {
-          setWeekSchedule(parsedData);
-        } else {
-          console.error('Invalid schedule data format');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const data = await response.json();
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+        setCurrentDay(today);
+        setDaySchedule(data[today] || []);
       } catch (error) {
         console.error('Error fetching schedule:', error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchSchedule();
   }, []);
 
-  useEffect(() => {
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-    setCurrentDay(today);
-  }, []);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h2>Week Schedule</h2>
-      {Object.entries(weekSchedule).map(([day, periods]) => (
-        <div key={day}>
-          <h3>{day}</h3>
-          <ul>
-            {Array.isArray(periods) ? (
-              periods.map((period, index) => <li key={index}>{period}</li>)
-            ) : (
-              <li>No periods available</li>
-            )}
-          </ul>
-        </div>
-      ))}
-      <p>Current Day: {currentDay}</p>
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4">{currentDay}'s Schedule</h2>
+      {daySchedule.length > 0 ? (
+        <ul className="space-y-2">
+          {daySchedule.map((period, index) => {
+            const [name, time] = period.split(' - ');
+            const [start, end] = time.split('-');
+            return (
+              <li key={index} className="flex justify-between items-center">
+                <span className="font-medium">{name}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {start} - {end}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p>No schedule available for today.</p>
+      )}
     </div>
   );
 };
