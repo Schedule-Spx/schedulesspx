@@ -6,7 +6,9 @@ const API_KEY = __VITE_GOOGLE_API_KEY__;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';
 
 const GoogleCalendar = () => {
-  // ... (keep the existing state and other code)
+  const [events, setEvents] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -58,7 +60,35 @@ const GoogleCalendar = () => {
     fetchEvents();
   }, []);
 
-  // ... (keep the rest of the component code)
+  if (loading) {
+    return <div>Loading events...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile overflow-auto" style={{maxHeight: '400px'}}>
+      <h2 className="text-xl font-bold mb-4">Important Events</h2>
+      {Object.keys(events).length > 0 ? (
+        Object.entries(events).map(([date, dayEvents]) => (
+          <div key={date} className="mb-4">
+            <h3 className="font-semibold">{date}</h3>
+            <ul className="list-disc list-inside">
+              {dayEvents.map((event, index) => (
+                <li key={index} className="text-sm">
+                  {event.summary}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      ) : (
+        <p>No upcoming events.</p>
+      )}
+    </div>
+  );
 };
 
 export default GoogleCalendar;
