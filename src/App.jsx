@@ -72,21 +72,25 @@ function AppContent() {
         <Route
           path="/"
           element={
-            <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
-                <div className="flex flex-col space-y-4">
+            <main className="flex-grow p-4 flex flex-col space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="h-64">
                   <DayHeader />
+                </div>
+                <div className="h-64">
                   <Schedule periodNames={periodNames} />
                 </div>
-                <div className="flex flex-col space-y-4">
+                <div className="h-64">
                   <GoogleCalendar />
-                  <PeriodProgress user={user} periodNames={periodNames} />
                 </div>
-                <div className="flex flex-col space-y-4">
-                  <AdComponent adSlot="1234567890" />
-                  <AdComponent adSlot="1234567891" />
-                  <AdComponent adSlot="1234567892" />
-                </div>
+              </div>
+              <div className="w-full">
+                <PeriodProgress user={user} periodNames={periodNames} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <AdComponent adSlot="1234567890" />
+                <AdComponent adSlot="1234567891" />
+                <AdComponent adSlot="1234567892" />
               </div>
             </main>
           }
