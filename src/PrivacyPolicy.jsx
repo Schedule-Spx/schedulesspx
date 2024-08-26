@@ -4,7 +4,7 @@ const PrivacyPolicy = () => {
   return (
     <div className="container mx-auto px-4 py-8 overflow-auto max-h-screen">
       <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
-      <p className="mb-4">Last updated: [Insert Date]</p>
+      <p className="mb-4">Last updated: August 26, 2024</p>
       
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-3">1. Introduction</h2>
@@ -38,13 +38,28 @@ const PrivacyPolicy = () => {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3">5. Changes to This Privacy Policy</h2>
+        <h2 className="text-2xl font-semibold mb-3">5. Third-Party Services</h2>
+        <p>We may use third-party services that collect, monitor and analyze this type of information in order to increase our Service's functionality. These third-party service providers have their own privacy policies addressing how they use such information.</p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-semibold mb-3">6. Your Data Protection Rights</h2>
+        <p>Depending on your location, you may have certain rights regarding your personal information, such as the right to access, correct, or delete your data. Please contact us to exercise these rights.</p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-semibold mb-3">7. Children's Privacy</h2>
+        <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-semibold mb-3">8. Changes to This Privacy Policy</h2>
         <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.</p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3">6. Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy, please contact us at [Insert Contact Information].</p>
+        <h2 className="text-2xl font-semibold mb-3">9. Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy, please contact us at admin@schedulespx.com.</p>
       </section>
     </div>
   );

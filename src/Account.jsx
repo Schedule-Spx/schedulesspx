@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Account = ({ user }) => {
   if (!user) {
@@ -12,7 +13,14 @@ const Account = ({ user }) => {
         <p>Name: {user.name}</p>
         <p>Email: {user.email}</p>
       </div>
-      {/* Add more account-related information and settings */}
+      <div className="mt-8">
+        <Link 
+          to="/privacy" 
+          className="text-blue-500 hover:text-blue-700 underline"
+        >
+          View Privacy Policy
+        </Link>
+      </div>
     </div>
   );
 };
