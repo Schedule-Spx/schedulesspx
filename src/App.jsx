@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
@@ -26,6 +26,12 @@ function AppContent() {
   const [socket, setSocket] = useState(null);
   const [showAgreement, setShowAgreement] = useState(false);
 
+  const handleScheduleUpdate = useCallback((newSchedule) => {
+    setWeekSchedule(newSchedule);
+    // Force a page refresh to ensure all components update
+    window.location.reload();
+  }, []);
+
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
@@ -36,7 +42,6 @@ function AppContent() {
       localStorage.removeItem('sessionExpiry');
     }
 
-    // Check if user has agreed to terms
     const hasAgreed = localStorage.getItem('agreedToTerms');
     if (!hasAgreed) {
       setShowAgreement(true);
@@ -53,7 +58,7 @@ function AppContent() {
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'scheduleUpdate') {
-        setWeekSchedule(message.data);
+        handleScheduleUpdate(message.data);
       }
     };
 
@@ -63,12 +68,16 @@ function AppContent() {
 
     ws.onclose = () => {
       console.log('WebSocket disconnected');
+      // Attempt to reconnect after a short delay
+      setTimeout(() => {
+        setSocket(new WebSocket('wss://schedule-api.devs4u.workers.dev'));
+      }, 5000);
     };
 
     return () => {
       ws.close();
     };
-  }, []);
+  }, [handleScheduleUpdate]);
 
   const updateUser = (newUser) => {
     setUser(newUser);
