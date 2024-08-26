@@ -1,8 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
-import { ThemeProvider } from './ThemeContext';
+import { ThemeProvider, useTheme } from './ThemeContext';
 import DayHeader from './DayHeader';
 import Events from './Events';
 import PeriodProgress from './PeriodProgress';
@@ -15,7 +15,7 @@ import About from './About';
 import AdComponent from './AdComponent';
 
 function AppContent() {
-  const { theme } = useContext(ThemeProvider);
+  const { theme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [periodNames, setPeriodNames] = useState([
