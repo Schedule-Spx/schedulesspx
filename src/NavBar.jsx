@@ -30,6 +30,7 @@ const NavBar = ({ user, setUser }) => {
           <span className="text-xl font-bold hover:text-gray-300">Schedule-SPX</span>
         </Link>
         <Link to="/about" className="text-sm hover:text-gray-300">About</Link>
+        <Link to="/privacy" className="text-sm hover:text-gray-300">Privacy Policy</Link>
       </div>
       <div className="flex items-center space-x-4">
         <button

@@ -14,6 +14,7 @@ import Admin from './Admin';
 import Account from './Account';
 import About from './About';
 import AdSense from './components/AdSense';
+import PrivacyPolicy from './PrivacyPolicy';
 
 function AppContent() {
   const { theme } = useTheme();
@@ -69,6 +70,7 @@ function AppContent() {
         <Route path="/admin" element={<Admin user={user} />} />
         <Route path="/account" element={<Account user={user} periodNames={periodNames} setPeriodNames={updatePeriodNames} />} />
         <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route
           path="/"
           element={
