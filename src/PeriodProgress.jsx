@@ -38,19 +38,28 @@ const PeriodProgress = () => {
   }, [weekSchedule, currentDay]);
 
   useEffect(() => {
-    if (currentPeriod) {
-      const startTime = new Date(`1970-01-01T${currentPeriod.start}`);
-      const endTime = new Date(`1970-01-01T${currentPeriod.end}`);
-      const now = new Date();
+    const updateProgress = () => {
+      if (currentPeriod) {
+        const startTime = new Date(`1970-01-01T${currentPeriod.start}`);
+        const endTime = new Date(`1970-01-01T${currentPeriod.end}`);
+        const now = new Date();
 
-      const totalDuration = endTime - startTime;
-      const elapsedDuration = now - startTime;
-      const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
+        const totalDuration = endTime - startTime;
+        const elapsedDuration = now - startTime;
+        const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
 
-      setProgress(progress);
-    } else {
-      setProgress(0);
-    }
+        setProgress(progress);
+      } else {
+        setProgress(0);
+      }
+    };
+
+    updateProgress();
+    const intervalId = setInterval(updateProgress, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [currentPeriod]);
 
   return (

@@ -51,17 +51,17 @@ const Schedule = () => {
   return (
     <div className="p-4 h-full">
       <h2 className="text-lg font-bold mb-2">Today's Schedule ({currentDay})</h2>
-      <ul className="space-y-2 h-full">
+      <ul className="space-y-1 h-full text-sm">
         {weekSchedule[currentDay].map((period, index) => (
           period.visible && (
             <li
               key={index}
-              className={`p-2 rounded shadow ${
+              className={`p-1 rounded ${
                 currentPeriod === period ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-700'
               }`}
             >
-              <div className="font-semibold">Period {index + 1}: {period.name}</div>
-              <div className="text-sm">
+              <div className="font-semibold">{period.name}</div>
+              <div className="text-xs">
                 {period.start} - {period.end}
               </div>
             </li>
