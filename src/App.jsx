@@ -16,6 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AdComponent from './AdComponent';
+import AgreementPopup from './components/AgreementPopup';
 
 function AppContent() {
   const { theme } = useTheme();
@@ -23,6 +24,7 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [socket, setSocket] = useState(null);
+  const [showAgreement, setShowAgreement] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -32,6 +34,12 @@ function AppContent() {
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
+    }
+
+    // Check if user has agreed to terms
+    const hasAgreed = localStorage.getItem('agreedToTerms');
+    if (!hasAgreed) {
+      setShowAgreement(true);
     }
 
     // Set up WebSocket connection
@@ -74,12 +82,18 @@ function AppContent() {
     }
   };
 
+  const handleAgree = () => {
+    localStorage.setItem('agreedToTerms', 'true');
+    setShowAgreement(false);
+  };
+
   const isAdminPage = location.pathname === '/admin';
 
   return (
     <div className={`App ${theme} flex flex-col min-h-screen`}>
       <NavBar user={user} setUser={updateUser} />
       <PeriodTitleUpdater />
+      {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
         <Route path="/admin" element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} socket={socket} />} />
         <Route path="/account" element={<Account user={user} />} />
