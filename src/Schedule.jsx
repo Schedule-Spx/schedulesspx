@@ -10,7 +10,12 @@ const Schedule = () => {
       try {
         const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
         const data = await response.text();
-        setWeekSchedule(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        if (typeof parsedData === 'object' && parsedData !== null) {
+          setWeekSchedule(parsedData);
+        } else {
+          console.error('Invalid schedule data format');
+        }
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }
@@ -31,9 +36,11 @@ const Schedule = () => {
         <div key={day}>
           <h3>{day}</h3>
           <ul>
-            {periods.map((period, index) => (
-              <li key={index}>{period}</li>
-            ))}
+            {Array.isArray(periods) ? (
+              periods.map((period, index) => <li key={index}>{period}</li>)
+            ) : (
+              <li>No periods available</li>
+            )}
           </ul>
         </div>
       ))}

@@ -13,7 +13,12 @@ const PeriodProgress = () => {
       try {
         const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
         const data = await response.text();
-        setWeekSchedule(JSON.parse(data));
+        const parsedData = JSON.parse(data);
+        if (typeof parsedData === 'object' && parsedData !== null) {
+          setWeekSchedule(parsedData);
+        } else {
+          console.error('Invalid schedule data format');
+        }
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }
@@ -31,20 +36,24 @@ const PeriodProgress = () => {
     const currentMinute = currentTime.getMinutes();
 
     const schedule = weekSchedule[today];
-    if (schedule) {
+    if (Array.isArray(schedule)) {
       const currentPeriodIndex = schedule.findIndex((period) => {
-        const [startHour, startMinute] = period.split('-')[0].split(':').map(Number);
-        const [endHour, endMinute] = period.split('-')[1].split(':').map(Number);
-        return (
-          (currentHour > startHour || (currentHour === startHour && currentMinute >= startMinute)) &&
-          (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute))
-        );
+        if (period) {
+          const [startHour, startMinute] = period.split('-')[0].split(':').map(Number);
+          const [endHour, endMinute] = period.split('-')[1].split(':').map(Number);
+          return (
+            (currentHour > startHour || (currentHour === startHour && currentMinute >= startMinute)) &&
+            (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute))
+          );
+        }
+        return false;
       });
 
       if (currentPeriodIndex !== -1) {
         setCurrentPeriod(schedule[currentPeriodIndex]);
+        const [startHour, startMinute] = schedule[currentPeriodIndex].split('-')[0].split(':').map(Number);
         const [endHour, endMinute] = schedule[currentPeriodIndex].split('-')[1].split(':').map(Number);
-        const totalMinutes = (endHour - currentHour) * 60 + (endMinute - currentMinute);
+        const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
         const elapsedMinutes = (currentHour - startHour) * 60 + (currentMinute - startMinute);
         const progressPercentage = (elapsedMinutes / totalMinutes) * 100;
         setProgress(progressPercentage);
