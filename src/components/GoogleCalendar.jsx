@@ -25,7 +25,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 10, // Limit to 10 events
+              maxResults: 10,
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -59,33 +59,35 @@ const GoogleCalendar = () => {
   };
 
   if (loading) {
-    return <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">Loading events...</div>;
+    return <div className="p-4">Loading events...</div>;
   }
 
   if (error) {
-    return <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">Error: {error}</div>;
+    return <div className="p-4">Error: {error}</div>;
   }
 
   return (
-    <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">
+    <div className="p-4 h-full overflow-hidden">
       <h2 className="text-xl font-bold mb-4">Important Events</h2>
-      {events.length > 0 ? (
-        <ul className="space-y-2">
-          {events.map((event, index) => (
-            <li key={index} className="text-sm">
-              <div className="font-semibold">{formatDate(event.start.dateTime || event.start.date)}</div>
-              <div>{event.summary}</div>
-              {event.start.dateTime && (
-                <div className="text-xs text-gray-500">
-                  {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No upcoming events.</p>
-      )}
+      <div className="overflow-auto h-[calc(100%-2rem)]">
+        {events.length > 0 ? (
+          <ul className="space-y-2">
+            {events.map((event, index) => (
+              <li key={index} className="text-sm">
+                <div className="font-semibold">{formatDate(event.start.dateTime || event.start.date)}</div>
+                <div className="truncate">{event.summary}</div>
+                {event.start.dateTime && (
+                  <div className="text-xs text-gray-500">
+                    {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No upcoming events.</p>
+        )}
+      </div>
     </div>
   );
 };
