@@ -13,8 +13,8 @@ import NavBar from './NavBar';
 import Admin from './Admin';
 import Account from './Account';
 import About from './About';
-import AdSense from './components/AdSense';
 import PrivacyPolicy from './PrivacyPolicy';
+import AdSense from './components/AdSense';
 
 function AppContent() {
   const { theme } = useTheme();
