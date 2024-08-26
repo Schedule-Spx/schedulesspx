@@ -20,5 +20,9 @@ export default defineConfig(({ mode }) => {
       __VITE_GOOGLE_API_KEY__: JSON.stringify(env.VITE_GOOGLE_API_KEY),
       __VITE_GOOGLE_CLIENT_ID__: JSON.stringify(env.VITE_GOOGLE_CLIENT_ID),
     },
+    build: {
+      outDir: 'dist',
+    },
+    publicDir: 'public',
   };
 });
