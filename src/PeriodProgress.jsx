@@ -6,6 +6,7 @@ const PeriodProgress = () => {
   const [currentDay, setCurrentDay] = useState('');
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [progress, setProgress] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState('');
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem('weekSchedule');
@@ -46,11 +47,20 @@ const PeriodProgress = () => {
 
         const totalDuration = endTime - startTime;
         const elapsedDuration = now - startTime;
+        const remainingDuration = endTime - now;
         const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
 
         setProgress(progress);
+
+        const minutes = Math.floor(remainingDuration / 60000);
+        const seconds = Math.floor((remainingDuration % 60000) / 1000);
+        setTimeRemaining(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+
+        document.title = `${currentPeriod.name} | ${timeRemaining} remaining | Schedule-SPX`;
       } else {
         setProgress(0);
+        setTimeRemaining('');
+        document.title = 'Schedule-SPX';
       }
     };
 
@@ -62,12 +72,24 @@ const PeriodProgress = () => {
     };
   }, [currentPeriod]);
 
+  const getProgressColor = () => {
+    if (progress < 50) {
+      return 'bg-green-500';
+    } else if (progress < 75) {
+      return 'bg-yellow-500';
+    } else {
+      return 'bg-red-500';
+    }
+  };
+
   return (
     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6">
       <div
-        className="bg-blue-500 h-6 rounded-full transition-all duration-1000 ease-linear"
+        className={`h-6 rounded-full transition-all duration-1000 ease-linear ${getProgressColor()}`}
         style={{ width: `${progress}%` }}
-      ></div>
+      >
+        <span className="text-xs text-white ml-2">{timeRemaining}</span>
+      </div>
     </div>
   );
 };
