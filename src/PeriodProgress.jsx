@@ -85,12 +85,14 @@ const PeriodProgress = () => {
   };
 
   return (
-    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6">
+    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-8">
       <div
-        className={`h-6 rounded-full transition-all duration-1000 ease-linear ${getProgressColor()}`}
+        className={`h-8 rounded-full transition-all duration-1000 ease-linear ${getProgressColor()}`}
         style={{ width: `${progress}%` }}
       >
-        <span className="text-xs text-white ml-2">{currentPeriod ? `${currentPeriod.name} | ${timeRemaining}` : 'No active period'}</span>
+        <span className="text-sm text-white ml-4 py-1 inline-block">
+          {currentPeriod ? `${currentPeriod.name} | ${timeRemaining} remaining` : 'No active period'}
+        </span>
       </div>
     </div>
   );
