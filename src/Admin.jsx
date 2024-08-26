@@ -90,7 +90,7 @@ const Admin = ({ user }) => {
           onPaste={handlePaste}
         ></textarea>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 mb-16">
         {weekSchedule[selectedDay].map((period, index) => (
           <div key={index} className="p-4 border rounded">
             <input
@@ -132,15 +132,19 @@ const Admin = ({ user }) => {
           </div>
         ))}
       </div>
-      <button
-        onClick={() => handleAddPeriod(selectedDay)}
-        className="bg-green-500 text-white rounded p-2 mt-4"
-      >
-        Add Period
-      </button>
-      <button onClick={handleSave} className="bg-blue-500 text-white rounded p-2 mt-4">
-        Save Schedule
-      </button>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex justify-between">
+          <button
+            onClick={() => handleAddPeriod(selectedDay)}
+            className="bg-green-500 text-white rounded p-2"
+          >
+            Add Period
+          </button>
+          <button onClick={handleSave} className="bg-blue-500 text-white rounded p-2">
+            Save Schedule
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
