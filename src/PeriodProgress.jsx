@@ -87,25 +87,24 @@ const PeriodProgress = () => {
   }, [weekSchedule]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-4 shadow-lg">
-      <div className="container mx-auto">
-        {currentPeriod ? (
-          <>
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-lg font-semibold">{currentPeriod.split(' - ')[0]}</p>
-              <p className="text-sm">{timeRemaining} remaining</p>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
-              <div 
-                className="bg-blue-600 h-4 rounded-full transition-all duration-1000 ease-in-out" 
-                style={{width: `${progress}%`}}
-              ></div>
-            </div>
-          </>
-        ) : (
-          <p className="text-center">No ongoing period</p>
-        )}
-      </div>
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
+      <h2 className="text-xl font-bold mb-4">Period Progress</h2>
+      {currentPeriod ? (
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-lg font-semibold">{currentPeriod.split(' - ')[0]}</p>
+            <p className="text-sm">{timeRemaining} remaining</p>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
+            <div 
+              className="bg-blue-600 h-4 rounded-full transition-all duration-1000 ease-in-out" 
+              style={{width: `${progress}%`}}
+            ></div>
+          </div>
+        </div>
+      ) : (
+        <p>No ongoing period.</p>
+      )}
     </div>
   );
 };
