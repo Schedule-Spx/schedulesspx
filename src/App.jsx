@@ -20,6 +20,7 @@ function AppContent() {
   const { theme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const [scheduleKey, setScheduleKey] = useState(0);
 
   useEffect(() => {
     // Check for saved user session
@@ -32,6 +33,9 @@ function AppContent() {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
     }
+
+    // Force re-render of Schedule component when page loads
+    setScheduleKey(prev => prev + 1);
   }, []);
 
   const updateUser = (newUser) => {
@@ -67,7 +71,7 @@ function AppContent() {
                   <DayHeader />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <Schedule />
+                  <Schedule key={scheduleKey} />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                   <GoogleCalendar />
@@ -99,10 +103,4 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <Router>
-        <AppContent />
-      </Router>
-    </GoogleOAuthProvider>
-  );
-}
-
-export default App;
+        <App

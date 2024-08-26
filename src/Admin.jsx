@@ -1,3 +1,4 @@
+// src/Admin.jsx
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -9,8 +10,6 @@ const Admin = ({ user }) => {
     Thursday: [],
     Friday: []
   });
-  const [pasteArea, setPasteArea] = useState('');
-  const [selectedDay, setSelectedDay] = useState('Monday');
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem('weekSchedule');
@@ -48,27 +47,6 @@ const Admin = ({ user }) => {
     alert('Schedule saved');
   };
 
-  const handlePaste = (e) => {
-    e.preventDefault();
-    const pastedText = e.clipboardData.getData('text');
-    setPasteArea(pastedText);
-    
-    const lines = pastedText.split('\n');
-    const newSchedule = { ...weekSchedule };
-    
-    newSchedule[selectedDay] = lines.slice(1).map(line => {
-      const [name, start, end, duration] = line.split('\t');
-      return {
-        name: name === 'AS' ? 'AS Period' : `Period ${name}`,
-        start,
-        end,
-        visible: true
-      };
-    }).filter(period => period.name && period.start && period.end);
-
-    setWeekSchedule(newSchedule);
-  };
-
   const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org'];
   
   if (!user || !adminEmails.includes(user.email.toLowerCase())) {
@@ -76,30 +54,8 @@ const Admin = ({ user }) => {
   }
 
   return (
-    <div className="container mx-auto p-4 h-screen overflow-y-auto">
+    <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Admin Management Page</h1>
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-2">Paste Schedule</h2>
-        <div className="flex mb-2">
-          {Object.keys(weekSchedule).map(day => (
-            <button
-              key={day}
-              onClick={() => setSelectedDay(day)}
-              className={`mr-2 px-3 py-1 rounded ${selectedDay === day ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
-        <textarea
-          className="w-full p-2 border rounded mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          rows="10"
-          value={pasteArea}
-          onChange={(e) => setPasteArea(e.target.value)}
-          onPaste={handlePaste}
-          placeholder={`Paste your schedule for ${selectedDay} here...`}
-        />
-      </div>
       {Object.entries(weekSchedule).map(([day, schedule]) => (
         <div key={day} className="mb-8">
           <h2 className="text-xl font-bold mb-2">{day}</h2>
