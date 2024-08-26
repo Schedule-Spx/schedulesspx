@@ -66,13 +66,13 @@ const Admin = ({ user }) => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 overflow-auto max-h-screen">
       <h1 className="text-2xl font-bold mb-4">Admin Management Page</h1>
-      <div className="mb-4">
+      <div className="mb-4 flex flex-wrap">
         {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
           <button
             key={day}
-            className={`px-4 py-2 rounded mr-2 ${
+            className={`px-4 py-2 rounded mr-2 mb-2 ${
               selectedDay === day ? 'bg-blue-500 text-white' : 'bg-gray-200'
             }`}
             onClick={() => setSelectedDay(day)}
@@ -90,49 +90,51 @@ const Admin = ({ user }) => {
           onPaste={handlePaste}
         ></textarea>
       </div>
-      {weekSchedule[selectedDay].map((period, index) => (
-        <div key={index} className="mb-4 p-4 border rounded">
-          <input
-            type="text"
-            value={period.name}
-            onChange={(e) => handleChange(selectedDay, index, 'name', e.target.value)}
-            className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder="Period Name"
-          />
-          <input
-            type="text"
-            value={period.start}
-            onChange={(e) => handleChange(selectedDay, index, 'start', e.target.value)}
-            className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder="Start Time (e.g., 08:40 AM)"
-          />
-          <input
-            type="text"
-            value={period.end}
-            onChange={(e) => handleChange(selectedDay, index, 'end', e.target.value)}
-            className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder="End Time (e.g., 09:21 AM)"
-          />
-          <div className="flex items-center mt-2">
+      <div className="space-y-4">
+        {weekSchedule[selectedDay].map((period, index) => (
+          <div key={index} className="p-4 border rounded">
             <input
-              type="checkbox"
-              checked={period.visible}
-              onChange={() => handleVisibilityChange(selectedDay, index)}
-              className="mr-2"
+              type="text"
+              value={period.name}
+              onChange={(e) => handleChange(selectedDay, index, 'name', e.target.value)}
+              className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="Period Name"
             />
-            <label>Visible</label>
-            <button
-              onClick={() => handleRemovePeriod(selectedDay, index)}
-              className="ml-auto bg-red-500 text-white rounded p-2"
-            >
-              Remove Period
-            </button>
+            <input
+              type="text"
+              value={period.start}
+              onChange={(e) => handleChange(selectedDay, index, 'start', e.target.value)}
+              className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="Start Time (e.g., 08:40 AM)"
+            />
+            <input
+              type="text"
+              value={period.end}
+              onChange={(e) => handleChange(selectedDay, index, 'end', e.target.value)}
+              className="w-full p-2 border rounded mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="End Time (e.g., 09:21 AM)"
+            />
+            <div className="flex items-center mt-2">
+              <input
+                type="checkbox"
+                checked={period.visible}
+                onChange={() => handleVisibilityChange(selectedDay, index)}
+                className="mr-2"
+              />
+              <label>Visible</label>
+              <button
+                onClick={() => handleRemovePeriod(selectedDay, index)}
+                className="ml-auto bg-red-500 text-white rounded p-2"
+              >
+                Remove Period
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
       <button
         onClick={() => handleAddPeriod(selectedDay)}
-        className="bg-green-500 text-white rounded p-2 mt-2"
+        className="bg-green-500 text-white rounded p-2 mt-4"
       >
         Add Period
       </button>
