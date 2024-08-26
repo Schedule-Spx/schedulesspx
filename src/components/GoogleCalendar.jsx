@@ -6,9 +6,7 @@ const API_KEY = __VITE_GOOGLE_API_KEY__;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';
 
 const GoogleCalendar = () => {
-  const [events, setEvents] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // ... (keep the existing state and other code)
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -60,7 +58,7 @@ const GoogleCalendar = () => {
     fetchEvents();
   }, []);
 
-  // ... rest of the component remains the same
+  // ... (keep the rest of the component code)
 };
 
 export default GoogleCalendar;
