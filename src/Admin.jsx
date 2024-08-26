@@ -6,6 +6,7 @@ const Admin = () => {
   });
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
+  const [saveStatus, setSaveStatus] = useState('');
 
   useEffect(() => {
     fetchSchedule();
@@ -16,10 +17,11 @@ const Admin = () => {
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
       if (!response.ok) throw new Error('Failed to fetch schedule');
       const data = await response.json();
-      console.log('Fetched schedule:', data); // Log the fetched data
+      console.log('Fetched schedule:', data);
       setWeekSchedule(data);
     } catch (error) {
       console.error('Error fetching schedule:', error);
+      alert('Failed to fetch schedule');
     }
   };
 
@@ -43,17 +45,23 @@ const Admin = () => {
 
   const handleSave = async () => {
     try {
+      setSaveStatus('Saving...');
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(weekSchedule)
       });
-      if (!response.ok) throw new Error('Failed to save schedule');
-      alert('Schedule saved successfully');
-      console.log('Saved schedule:', weekSchedule); // Log the saved data
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to save schedule: ${errorText}`);
+      }
+      const responseData = await response.json();
+      console.log('Save response:', responseData);
+      setSaveStatus('Schedule saved successfully');
+      setTimeout(() => setSaveStatus(''), 3000);
     } catch (error) {
       console.error('Error saving schedule:', error);
-      alert('Failed to save schedule');
+      setSaveStatus(`Failed to save schedule: ${error.message}`);
     }
   };
 
@@ -122,6 +130,11 @@ const Admin = () => {
       >
         Save Schedule
       </button>
+      {saveStatus && (
+        <p className={`mt-2 ${saveStatus.includes('Failed') ? 'text-red-500' : 'text-green-500'}`}>
+          {saveStatus}
+        </p>
+      )}
     </div>
   );
 };

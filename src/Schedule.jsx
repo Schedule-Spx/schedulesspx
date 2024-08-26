@@ -15,10 +15,12 @@ const Schedule = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Fetched schedule data:', data); // Log the fetched data
+        console.log('Fetched schedule data:', data);
         const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+        console.log('Current day:', today);
         setCurrentDay(today);
         if (data[today] && Array.isArray(data[today])) {
+          console.log(`Schedule for ${today}:`, data[today]);
           setDaySchedule(data[today]);
         } else {
           console.log(`No schedule found for ${today}`);
@@ -44,6 +46,7 @@ const Schedule = () => {
       {daySchedule.length > 0 ? (
         <ul className="space-y-2">
           {daySchedule.map((period, index) => {
+            console.log('Processing period:', period);
             if (typeof period !== 'string') {
               console.error('Invalid period format:', period);
               return null;
