@@ -5,12 +5,12 @@ const AdSense = ({ adSlot }) => {
   const adRef = useRef(null);
 
   useEffect(() => {
-    if (adRef.current && window.adsbygoogle) {
-      try {
+    try {
+      if (adRef.current && window.adsbygoogle) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        console.error('AdSense error:', e);
       }
+    } catch (error) {
+      console.error('AdSense error:', error);
     }
   }, []);
 
