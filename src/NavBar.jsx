@@ -1,13 +1,12 @@
-// src/NavBar.jsx
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ThemeContext } from './ThemeContext';
+import { useTheme } from './ThemeContext';
 import GoogleLogin from './components/GoogleLogin';
 import logo from './assets/logo.svg';
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useTheme();
 
   const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org'];
 
@@ -30,7 +29,6 @@ const NavBar = ({ user, setUser }) => {
           <span className="text-xl font-bold hover:text-gray-300">Schedule-SPX</span>
         </Link>
         <Link to="/about" className="text-sm hover:text-gray-300">About</Link>
-        <Link to="/privacy" className="text-sm hover:text-gray-300">Privacy Policy</Link>
       </div>
       <div className="flex items-center space-x-4">
         <button
