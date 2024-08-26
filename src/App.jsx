@@ -73,7 +73,7 @@ function AppContent() {
           path="/"
           element={
             <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[60vh]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                   <DayHeader />
                 </div>
@@ -84,10 +84,21 @@ function AppContent() {
                   <GoogleCalendar />
                 </div>
               </div>
-              <div className="w-full my-4">
+              <div className="w-full my-4 flex-grow flex items-center justify-center">
                 <PeriodProgress user={user} periodNames={periodNames} />
               </div>
-              <div className="grid grid-cols-3 gap-4 h-20 mt-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <Schedule periodNames={periodNames} />
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <GoogleCalendar />
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <DayHeader />
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-4 h-20 mt-4">
                 <AdComponent adSlot="1234567890" />
                 <AdComponent adSlot="1234567891" />
                 <AdComponent adSlot="1234567892" />
