@@ -20,10 +20,6 @@ function AppContent() {
   const { theme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const [periodNames, setPeriodNames] = useState([
-    "Period 1", "Period 2", "Period 3", "Period 4",
-    "Period 5", "Period 6", "Period 7", "Period 8"
-  ]);
 
   useEffect(() => {
     // Check for saved user session
@@ -35,12 +31,6 @@ function AppContent() {
       // Clear expired session
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
-    }
-
-    // Load saved period names
-    const savedPeriodNames = localStorage.getItem('periodNames');
-    if (savedPeriodNames) {
-      setPeriodNames(JSON.parse(savedPeriodNames));
     }
   }, []);
 
@@ -57,18 +47,15 @@ function AppContent() {
     }
   };
 
-  const updatePeriodNames = (newNames) => {
-    setPeriodNames(newNames);
-    localStorage.setItem('periodNames', JSON.stringify(newNames));
-  };
+  const isAdminPage = location.pathname === '/admin';
 
   return (
     <div className={`App ${theme} flex flex-col min-h-screen`}>
       <NavBar user={user} setUser={updateUser} />
-      <PeriodTitleUpdater periodNames={periodNames} />
+      <PeriodTitleUpdater />
       <Routes>
         <Route path="/admin" element={<Admin user={user} />} />
-        <Route path="/account" element={<Account user={user} periodNames={periodNames} setPeriodNames={updatePeriodNames} />} />
+        <Route path="/account" element={<Account user={user} />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route
@@ -80,14 +67,14 @@ function AppContent() {
                   <DayHeader />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <Schedule periodNames={periodNames} />
+                  <Schedule />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                   <GoogleCalendar />
                 </div>
               </div>
               <div className="w-full my-4 flex-grow flex items-center justify-center">
-                <PeriodProgress user={user} periodNames={periodNames} />
+                <PeriodProgress user={user} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
