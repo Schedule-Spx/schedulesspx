@@ -1,7 +1,7 @@
+// App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import io from 'socket.io-client';
 import './App.css';
 import { useTheme } from './ThemeContext';
 import DayHeader from './DayHeader';
@@ -15,13 +15,12 @@ import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 
-const socket = io('https://schedule-api.devs4u.workers.dev');
-
 function AppContent() {
   const { theme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -33,17 +32,31 @@ function AppContent() {
       localStorage.removeItem('sessionExpiry');
     }
 
-    socket.on('connect', () => {
-      console.log('Connected to WebSocket');
-    });
+    // Set up WebSocket connection
+    const ws = new WebSocket('wss://schedule-api.devs4u.workers.dev');
+    setSocket(ws);
 
-    socket.on('scheduleUpdate', (updatedSchedule) => {
-      setWeekSchedule(updatedSchedule);
-    });
+    ws.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'scheduleUpdate') {
+        setWeekSchedule(message.data);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
 
     return () => {
-      socket.off('connect');
-      socket.off('scheduleUpdate');
+      ws.close();
     };
   }, []);
 
