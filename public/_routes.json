@@ -1,6 +1,9 @@
 {
     "version": 1,
     "include": ["/*"],
-    "exclude": []
+    "exclude": [],
+    "routes": [
+      { "src": "/[Aa]ds.txt", "dest": "/ads.txt" }
+    ]
   }
   
