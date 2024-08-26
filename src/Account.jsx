@@ -1,27 +1,21 @@
-// src/Account.jsx
 import React, { useState, useEffect } from 'react';
 
-const Account = ({ user }) => {
-  const [periodNames, setPeriodNames] = useState([
-    "Period 1", "Period 2", "Period 3", "Period 4",
-    "Period 5", "Period 6", "Period 7", "Period 8"
-  ]);
+const Account = ({ user, periodNames, setPeriodNames }) => {
+  const [localPeriodNames, setLocalPeriodNames] = useState(periodNames);
 
   useEffect(() => {
-    const savedNames = localStorage.getItem('periodNames');
-    if (savedNames) {
-      setPeriodNames(JSON.parse(savedNames));
-    }
-  }, []);
+    setLocalPeriodNames(periodNames);
+  }, [periodNames]);
 
   const handleNameChange = (index, newName) => {
-    const newNames = [...periodNames];
+    const newNames = [...localPeriodNames];
     newNames[index] = newName;
-    setPeriodNames(newNames);
+    setLocalPeriodNames(newNames);
   };
 
   const handleSave = () => {
-    localStorage.setItem('periodNames', JSON.stringify(periodNames));
+    setPeriodNames(localPeriodNames);
+    localStorage.setItem('periodNames', JSON.stringify(localPeriodNames));
     alert('Period names saved successfully!');
   };
 
@@ -37,7 +31,7 @@ const Account = ({ user }) => {
         <p>Email: {user.email}</p>
       </div>
       <h2 className="text-xl font-bold mb-2">Customize Period Names</h2>
-      {periodNames.map((name, index) => (
+      {localPeriodNames.map((name, index) => (
         <div key={index} className="mb-2">
           <label className="block text-sm font-medium mb-1">
             Period {index + 1}:
