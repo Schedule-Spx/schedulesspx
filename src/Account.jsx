@@ -24,7 +24,7 @@ const Account = ({ user, periodNames, setPeriodNames }) => {
   }
 
   return (
-    <div className="container mx-auto mt-8 p-4">
+    <div className="container mx-auto mt-8 p-4 h-screen overflow-y-auto">
       <h1 className="text-2xl font-bold mb-4">Account Page</h1>
       <div className="mb-4">
         <p>Name: {user.name}</p>
