@@ -44,7 +44,7 @@ const TermsAndConditions = () => {
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-3">8. Governing Law</h2>
-        <p>These Terms shall be governed and construed in accordance with the laws of [Your State/Country], without regard to its conflict of law provisions.</p>
+        <p>These Terms shall be governed and construed in accordance with the laws of the State of Georgia, United States, without regard to its conflict of law provisions.</p>
       </section>
 
       <section className="mb-6">
