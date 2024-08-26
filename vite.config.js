@@ -18,9 +18,7 @@ export default defineConfig({
     'process.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_CLIENT_ID),
     'process.env.VITE_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_GOOGLE_API_KEY),
   },
-  build: {
-    rollupOptions: {
-      external: ['axios'],
-    },
+  optimizeDeps: {
+    include: ['axios'],
   },
 });

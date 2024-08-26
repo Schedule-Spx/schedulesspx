@@ -10,6 +10,10 @@ const GoogleCalendar = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      if (!API_KEY) {
+        console.error('Google API Key is not set');
+        return;
+      }
       try {
         const response = await axios.get(
           `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
