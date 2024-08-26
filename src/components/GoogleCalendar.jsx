@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+const API_KEY = __VITE_GOOGLE_API_KEY__;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';
 
 const GoogleCalendar = () => {
