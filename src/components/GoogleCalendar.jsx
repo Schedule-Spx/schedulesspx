@@ -25,7 +25,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 10,
+              maxResults: 5, // Limit to 5 events to fit without scrolling
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -49,8 +49,10 @@ const GoogleCalendar = () => {
   }, []);
 
   const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 1); // Add one day to fix the off-by-one issue
     const options = { weekday: 'short', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    return date.toLocaleDateString(undefined, options);
   };
 
   const formatTime = (dateString) => {
@@ -67,9 +69,9 @@ const GoogleCalendar = () => {
   }
 
   return (
-    <div className="p-4 h-full overflow-hidden">
-      <h2 className="text-xl font-bold mb-4">Important Events</h2>
-      <div className="overflow-auto h-[calc(100%-2rem)]">
+    <div className="p-4 h-full flex flex-col">
+      <h2 className="text-xl font-bold mb-2">Important Events</h2>
+      <div className="flex-grow">
         {events.length > 0 ? (
           <ul className="space-y-2">
             {events.map((event, index) => (
