@@ -1,4 +1,4 @@
-// App.jsx
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -14,6 +14,7 @@ import Admin from './Admin';
 import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
+import AdComponent from './AdComponent';
 
 function AppContent() {
   const { theme } = useTheme();
@@ -87,7 +88,7 @@ function AppContent() {
           path="/"
           element={
             <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                   <DayHeader />
                 </div>
@@ -98,8 +99,13 @@ function AppContent() {
                   <GoogleCalendar />
                 </div>
               </div>
-              <div className="w-full my-4 flex-grow flex items-center justify-center">
+              <div className="w-full mb-4">
                 <PeriodProgress weekSchedule={weekSchedule} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <AdComponent adSlot="1234567890" />
+                <AdComponent adSlot="2345678901" />
+                <AdComponent adSlot="3456789012" />
               </div>
             </main>
           }
