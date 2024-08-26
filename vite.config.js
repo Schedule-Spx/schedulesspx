@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
       extensions: ['.js', '.jsx', '.json'],
       alias: {
         '@': path.resolve(__dirname, './src'),
+        'socket.io-client': 'socket.io-client/dist/socket.io.js',
       },
     },
     define: {
@@ -22,6 +23,9 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist',
+      rollupOptions: {
+        external: ['socket.io-client']
+      }
     },
     publicDir: 'public',
   };
