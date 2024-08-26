@@ -7,11 +7,12 @@ const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.go
 
 const GoogleCalendar = () => {
   const [events, setEvents] = useState({});
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       if (!API_KEY) {
-        console.error('Google API Key is not set');
+        setError('Google API Key is not set');
         return;
       }
       try {
@@ -30,6 +31,8 @@ const GoogleCalendar = () => {
           }
         );
         
+        console.log('API Response:', response.data); // Debug log
+        
         // Group events by date
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const date = new Date(event.start.dateTime || event.start.date).toDateString();
@@ -43,6 +46,7 @@ const GoogleCalendar = () => {
         setEvents(groupedEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
+        setError('Failed to fetch events. Please try again later.');
       }
     };
 
@@ -57,6 +61,15 @@ const GoogleCalendar = () => {
   const formatTime = (dateTimeString) => {
     return new Date(dateTimeString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  if (error) {
+    return (
+      <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">
+        <h2 className="text-xl font-bold mb-4">Important Events</h2>
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile overflow-auto" style={{maxHeight: '400px'}}>
