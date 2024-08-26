@@ -15,9 +15,15 @@ const Schedule = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Fetched schedule data:', data); // Log the fetched data
         const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
         setCurrentDay(today);
-        setDaySchedule(data[today] || []);
+        if (data[today] && Array.isArray(data[today])) {
+          setDaySchedule(data[today]);
+        } else {
+          console.log(`No schedule found for ${today}`);
+          setDaySchedule([]);
+        }
       } catch (error) {
         console.error('Error fetching schedule:', error);
         setError(error.message);
@@ -38,7 +44,16 @@ const Schedule = () => {
       {daySchedule.length > 0 ? (
         <ul className="space-y-2">
           {daySchedule.map((period, index) => {
-            const [name, time] = period.split(' - ');
+            if (typeof period !== 'string') {
+              console.error('Invalid period format:', period);
+              return null;
+            }
+            const parts = period.split(' - ');
+            if (parts.length !== 2) {
+              console.error('Invalid period format:', period);
+              return null;
+            }
+            const [name, time] = parts;
             const [start, end] = time.split('-');
             return (
               <li key={index} className="flex justify-between items-center">

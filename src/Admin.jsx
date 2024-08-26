@@ -16,6 +16,7 @@ const Admin = () => {
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
       if (!response.ok) throw new Error('Failed to fetch schedule');
       const data = await response.json();
+      console.log('Fetched schedule:', data); // Log the fetched data
       setWeekSchedule(data);
     } catch (error) {
       console.error('Error fetching schedule:', error);
@@ -24,9 +25,10 @@ const Admin = () => {
 
   const handleAddPeriod = () => {
     if (newPeriod.name && newPeriod.start && newPeriod.end) {
+      const newPeriodString = `${newPeriod.name} - ${newPeriod.start}-${newPeriod.end}`;
       setWeekSchedule(prev => ({
         ...prev,
-        [selectedDay]: [...prev[selectedDay], `${newPeriod.name} - ${newPeriod.start}-${newPeriod.end}`]
+        [selectedDay]: [...prev[selectedDay], newPeriodString]
       }));
       setNewPeriod({ name: '', start: '', end: '' });
     }
@@ -48,6 +50,7 @@ const Admin = () => {
       });
       if (!response.ok) throw new Error('Failed to save schedule');
       alert('Schedule saved successfully');
+      console.log('Saved schedule:', weekSchedule); // Log the saved data
     } catch (error) {
       console.error('Error saving schedule:', error);
       alert('Failed to save schedule');
