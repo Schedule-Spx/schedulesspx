@@ -36,11 +36,30 @@ const Admin = () => {
     }
   };
 
-  const handleRemovePeriod = (index) => {
-    setWeekSchedule(prev => ({
-      ...prev,
-      [selectedDay]: prev[selectedDay].filter((_, i) => i !== index)
-    }));
+  const handleRemovePeriod = async (index) => {
+    try {
+      const updatedSchedule = {
+        ...weekSchedule,
+        [selectedDay]: weekSchedule[selectedDay].filter((_, i) => i !== index)
+      };
+      
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedSchedule)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      setWeekSchedule(updatedSchedule);
+      setSaveStatus('Period removed successfully');
+      setTimeout(() => setSaveStatus(''), 3000);
+    } catch (error) {
+      console.error('Error removing period:', error);
+      setSaveStatus(`Failed to remove period: ${error.message}`);
+    }
   };
 
   const handleSave = async () => {
@@ -52,11 +71,10 @@ const Admin = () => {
         body: JSON.stringify(weekSchedule)
       });
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to save schedule: ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const responseData = await response.json();
-      console.log('Save response:', responseData);
+      const result = await response.json();
+      console.log('Save response:', result);
       setSaveStatus('Schedule saved successfully');
       setTimeout(() => setSaveStatus(''), 3000);
     } catch (error) {
