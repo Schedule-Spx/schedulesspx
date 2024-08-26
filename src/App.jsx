@@ -1,9 +1,9 @@
 // src/App.jsx
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
-import { ThemeContext } from './ThemeContext';
+import { ThemeProvider, useTheme } from './ThemeContext';
 import DayHeader from './DayHeader';
 import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
@@ -16,7 +16,7 @@ import About from './About';
 import AdComponent from './AdComponent';
 
 function AppContent() {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [periodNames, setPeriodNames] = useState([
@@ -97,11 +97,11 @@ function AppContent() {
 function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <ThemeContext.Provider>
+      <ThemeProvider>
         <Router>
           <AppContent />
         </Router>
-      </ThemeContext.Provider>
+      </ThemeProvider>
     </GoogleOAuthProvider>
   );
 }
