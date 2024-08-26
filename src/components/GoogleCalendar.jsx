@@ -8,14 +8,17 @@ const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.go
 const GoogleCalendar = () => {
   const [events, setEvents] = useState({});
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvents = async () => {
       if (!API_KEY) {
         setError('Google API Key is not set');
+        setLoading(false);
         return;
       }
       try {
+        console.log('Fetching events with API Key:', API_KEY);
         const response = await axios.get(
           `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
             CALENDAR_ID
@@ -31,22 +34,28 @@ const GoogleCalendar = () => {
           }
         );
         
-        console.log('API Response:', response.data); // Debug log
+        console.log('API Response:', response.data);
         
-        // Group events by date
-        const groupedEvents = response.data.items.reduce((acc, event) => {
-          const date = new Date(event.start.dateTime || event.start.date).toDateString();
-          if (!acc[date]) {
-            acc[date] = [];
-          }
-          acc[date].push(event);
-          return acc;
-        }, {});
+        if (response.data.items && response.data.items.length > 0) {
+          // Group events by date
+          const groupedEvents = response.data.items.reduce((acc, event) => {
+            const date = new Date(event.start.dateTime || event.start.date).toDateString();
+            if (!acc[date]) {
+              acc[date] = [];
+            }
+            acc[date].push(event);
+            return acc;
+          }, {});
 
-        setEvents(groupedEvents);
+          setEvents(groupedEvents);
+        } else {
+          console.log('No events found in the response');
+        }
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error fetching events:', error.response ? error.response.data : error.message);
         setError('Failed to fetch events. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -61,6 +70,15 @@ const GoogleCalendar = () => {
   const formatTime = (dateTimeString) => {
     return new Date(dateTimeString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  if (loading) {
+    return (
+      <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">
+        <h2 className="text-xl font-bold mb-4">Important Events</h2>
+        <p>Loading events...</p>
+      </div>
+    );
+  }
 
   if (error) {
     return (
