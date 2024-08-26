@@ -13,6 +13,7 @@ import NavBar from './NavBar';
 import Admin from './Admin';
 import Account from './Account';
 import About from './About';
+import AdSense from './components/AdSense';
 
 function AppContent() {
   const { theme } = useTheme();
@@ -87,9 +88,15 @@ function AppContent() {
                 <PeriodProgress user={user} periodNames={periodNames} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <AdSense adSlot="1234567890" />
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <AdSense adSlot="2345678901" />
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <AdSense adSlot="3456789012" />
+                </div>
               </div>
             </main>
           }
