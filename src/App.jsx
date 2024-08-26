@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+// src/App.jsx
+import React, { useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
-import { ThemeProvider, useTheme } from './ThemeContext';
+import { ThemeContext } from './ThemeContext';
 import DayHeader from './DayHeader';
-import Events from './Events';
+import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
 import PeriodTitleUpdater from './PeriodTitleUpdater';
 import Schedule from './Schedule';
@@ -15,7 +16,7 @@ import About from './About';
 import AdComponent from './AdComponent';
 
 function AppContent() {
-  const { theme } = useTheme();
+  const { theme } = useContext(ThemeContext);
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [periodNames, setPeriodNames] = useState([
@@ -77,7 +78,7 @@ function AppContent() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
                 <DayHeader />
                 <Schedule periodNames={periodNames} />
-                <Events user={user} />
+                <GoogleCalendar />
               </div>
               <PeriodProgress user={user} periodNames={periodNames} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-auto">
@@ -96,11 +97,11 @@ function AppContent() {
 function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <ThemeProvider>
+      <ThemeContext.Provider>
         <Router>
           <AppContent />
         </Router>
-      </ThemeProvider>
+      </ThemeContext.Provider>
     </GoogleOAuthProvider>
   );
 }
