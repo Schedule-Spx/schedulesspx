@@ -4,72 +4,40 @@ import React, { useState, useEffect } from 'react';
 const Schedule = () => {
   const [weekSchedule, setWeekSchedule] = useState({});
   const [currentDay, setCurrentDay] = useState('');
-  const [currentPeriod, setCurrentPeriod] = useState(null);
 
   useEffect(() => {
-    const savedSchedule = localStorage.getItem('weekSchedule');
-    if (savedSchedule) {
-      setWeekSchedule(JSON.parse(savedSchedule));
-    }
-
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    setCurrentDay(days[new Date().getDay()]);
-
-    const updateCurrentPeriod = () => {
-      const now = new Date();
-      const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      if (weekSchedule[currentDay]) {
-        const period = weekSchedule[currentDay].find((p) => {
-          return currentTime >= p.start && currentTime < p.end;
-        });
-
-        setCurrentPeriod(period || null);
+    const fetchSchedule = async () => {
+      try {
+        const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
+        const data = await response.text();
+        setWeekSchedule(JSON.parse(data));
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
       }
     };
 
-    updateCurrentPeriod();
-    const intervalId = setInterval(updateCurrentPeriod, 60000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [weekSchedule, currentDay]);
+    fetchSchedule();
+  }, []);
 
   useEffect(() => {
-    if (currentPeriod) {
-      document.title = `${currentPeriod.name} | Schedule-SPX`;
-    } else {
-      document.title = 'Schedule-SPX';
-    }
-  }, [currentPeriod]);
-
-  if (!weekSchedule[currentDay] || weekSchedule[currentDay].length === 0) {
-    return <div className="p-4">No schedule available for today.</div>;
-  }
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    setCurrentDay(today);
+  }, []);
 
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-bold mb-2">Today's Schedule ({currentDay})</h2>
-      <table className="w-full text-xs">
-        <tbody>
-          {weekSchedule[currentDay].map((period, index) => (
-            period.visible && (
-              <tr
-                key={index}
-                className={`${
-                  currentPeriod === period ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-700'
-                }`}
-              >
-                <td className="px-2 py-1 font-semibold">{period.name}</td>
-                <td className="px-2 py-1">
-                  {period.start} - {period.end}
-                </td>
-              </tr>
-            )
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <h2>Week Schedule</h2>
+      {Object.entries(weekSchedule).map(([day, periods]) => (
+        <div key={day}>
+          <h3>{day}</h3>
+          <ul>
+            {periods.map((period, index) => (
+              <li key={index}>{period}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p>Current Day: {currentDay}</p>
     </div>
   );
 };

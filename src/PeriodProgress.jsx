@@ -9,98 +9,70 @@ const PeriodProgress = () => {
   const [timeRemaining, setTimeRemaining] = useState('');
 
   useEffect(() => {
-    const savedSchedule = localStorage.getItem('weekSchedule');
-    if (savedSchedule) {
-      setWeekSchedule(JSON.parse(savedSchedule));
-    }
+    const fetchSchedule = async () => {
+      try {
+        const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
+        const data = await response.text();
+        setWeekSchedule(JSON.parse(data));
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
+      }
+    };
 
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    setCurrentDay(days[new Date().getDay()]);
+    fetchSchedule();
   }, []);
 
   useEffect(() => {
-    const updateCurrentPeriod = () => {
-      const now = new Date();
-      const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    setCurrentDay(today);
 
-      if (weekSchedule[currentDay]) {
-        const period = weekSchedule[currentDay].find((p) => {
-          return currentTime >= p.start && currentTime < p.end;
-        });
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    const currentMinute = currentTime.getMinutes();
 
-        setCurrentPeriod(period || null);
-      }
-    };
+    const schedule = weekSchedule[today];
+    if (schedule) {
+      const currentPeriodIndex = schedule.findIndex((period) => {
+        const [startHour, startMinute] = period.split('-')[0].split(':').map(Number);
+        const [endHour, endMinute] = period.split('-')[1].split(':').map(Number);
+        return (
+          (currentHour > startHour || (currentHour === startHour && currentMinute >= startMinute)) &&
+          (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute))
+        );
+      });
 
-    updateCurrentPeriod();
-    const intervalId = setInterval(updateCurrentPeriod, 60000);
+      if (currentPeriodIndex !== -1) {
+        setCurrentPeriod(schedule[currentPeriodIndex]);
+        const [endHour, endMinute] = schedule[currentPeriodIndex].split('-')[1].split(':').map(Number);
+        const totalMinutes = (endHour - currentHour) * 60 + (endMinute - currentMinute);
+        const elapsedMinutes = (currentHour - startHour) * 60 + (currentMinute - startMinute);
+        const progressPercentage = (elapsedMinutes / totalMinutes) * 100;
+        setProgress(progressPercentage);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [weekSchedule, currentDay]);
-
-  useEffect(() => {
-    const updateProgress = () => {
-      if (currentPeriod) {
-        const startTime = new Date(`1970-01-01T${currentPeriod.start}`);
-        const endTime = new Date(`1970-01-01T${currentPeriod.end}`);
-        const now = new Date();
-
-        const totalDuration = endTime - startTime;
-        const elapsedDuration = now - startTime;
-        const remainingDuration = endTime - now;
-        const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
-
-        setProgress(progress);
-
-        const minutes = Math.floor(remainingDuration / 60000);
-        const seconds = Math.floor((remainingDuration % 60000) / 1000);
-        setTimeRemaining(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
-
-        document.title = `${currentPeriod.name} | ${timeRemaining} remaining | Schedule-SPX`;
+        const remainingMinutes = totalMinutes - elapsedMinutes;
+        const remainingHours = Math.floor(remainingMinutes / 60);
+        const remainingMinutesFormatted = remainingMinutes % 60;
+        setTimeRemaining(`${remainingHours}h ${remainingMinutesFormatted}m`);
       } else {
+        setCurrentPeriod(null);
         setProgress(0);
         setTimeRemaining('');
-        document.title = 'Schedule-SPX';
       }
-    };
-
-    updateProgress();
-    const intervalId = setInterval(updateProgress, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [currentPeriod]);
-
-  const getProgressColor = () => {
-    if (progress < 50) {
-      return 'bg-green-500';
-    } else if (progress < 75) {
-      return 'bg-yellow-500';
-    } else {
-      return 'bg-red-500';
     }
-  };
+  }, [weekSchedule, currentDay]);
 
   return (
-    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
-      <div className="mb-2">
-        <span className="text-lg font-semibold">
-          {currentPeriod ? currentPeriod.name : 'No active period'}
-        </span>
-      </div>
-      <div className="w-full bg-gray-300 dark:bg-gray-600 rounded-full h-12">
-        <div
-          className={`h-12 rounded-full transition-all duration-1000 ease-linear ${getProgressColor()}`}
-          style={{ width: `${progress}%` }}
-        >
-          <span className="text-lg text-white font-semibold ml-4 py-2 inline-block">
-            {timeRemaining ? `${timeRemaining} remaining` : ''}
-          </span>
+    <div>
+      <h2>Period Progress</h2>
+      {currentPeriod ? (
+        <div>
+          <p>Current Period: {currentPeriod}</p>
+          <progress value={progress} max="100" />
+          <p>Time Remaining: {timeRemaining}</p>
         </div>
-      </div>
+      ) : (
+        <p>No ongoing period.</p>
+      )}
     </div>
   );
 };
