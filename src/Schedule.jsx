@@ -50,24 +50,21 @@ const Schedule = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Today's Schedule ({currentDay})</h2>
-      <div className="grid grid-cols-1 gap-2">
+      <h2 className="text-lg font-bold mb-2">Today's Schedule ({currentDay})</h2>
+      <ul className="text-sm">
         {weekSchedule[currentDay].map((period, index) => (
           period.visible && (
-            <div
+            <li
               key={index}
-              className={`p-2 rounded shadow ${
-                currentPeriod === period ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-700'
+              className={`py-1 ${
+                currentPeriod === period ? 'font-bold text-blue-500' : ''
               }`}
             >
-              <div className="font-semibold text-sm">{period.name}</div>
-              <div className="text-xs">
-                {period.start} - {period.end}
-              </div>
-            </div>
+              {period.name} ({period.start} - {period.end})
+            </li>
           )
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
