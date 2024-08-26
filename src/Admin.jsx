@@ -1,7 +1,6 @@
-// src/Admin.jsx
 import React, { useState, useEffect } from 'react';
 
-const Admin = ({ user, weekSchedule, setWeekSchedule, socket }) => {
+const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
@@ -11,19 +10,6 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, socket }) => {
       fetchSchedule();
     }
   }, []);
-
-  const fetchSchedule = async () => {
-    try {
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
-      if (!response.ok) throw new Error('Failed to fetch schedule');
-      const data = await response.json();
-      console.log('Fetched schedule:', data);
-      setWeekSchedule(data);
-    } catch (error) {
-      console.error('Error fetching schedule:', error);
-      alert('Failed to fetch schedule');
-    }
-  };
 
   const handleAddPeriod = () => {
     if (newPeriod.name && newPeriod.start && newPeriod.end) {
@@ -62,28 +48,11 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, socket }) => {
       console.log('Save response:', result);
       setSaveStatus('Schedule saved successfully');
       setTimeout(() => setSaveStatus(''), 3000);
+      fetchSchedule(); // Fetch the updated schedule after saving
     } catch (error) {
       console.error('Error saving schedule:', error);
       setSaveStatus(`Failed to save schedule: ${error.message}`);
     }
-  };
-
-  const convertTo12Hour = (time24) => {
-    const [hours, minutes] = time24.split(':');
-    let period = 'AM';
-    let hours12 = parseInt(hours, 10);
-    
-    if (hours12 >= 12) {
-      period = 'PM';
-      if (hours12 > 12) {
-        hours12 -= 12;
-      }
-    }
-    if (hours12 === 0) {
-      hours12 = 12;
-    }
-    
-    return `${hours12.toString().padStart(2, '0')}:${minutes} ${period}`;
   };
 
   return (

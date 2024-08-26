@@ -1,5 +1,4 @@
-// src/App.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
@@ -23,14 +22,7 @@ function AppContent() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
-  const [socket, setSocket] = useState(null);
   const [showAgreement, setShowAgreement] = useState(false);
-
-  const handleScheduleUpdate = useCallback((newSchedule) => {
-    setWeekSchedule(newSchedule);
-    // Force a page refresh to ensure all components update
-    window.location.reload();
-  }, []);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -47,37 +39,24 @@ function AppContent() {
       setShowAgreement(true);
     }
 
-    // Set up WebSocket connection
-    const ws = new WebSocket('wss://schedule-api.devs4u.workers.dev');
-    setSocket(ws);
+    fetchSchedule();
 
-    ws.onopen = () => {
-      console.log('WebSocket connected');
-    };
+    // Set up polling
+    const pollInterval = setInterval(fetchSchedule, 30000); // Poll every 30 seconds
 
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === 'scheduleUpdate') {
-        handleScheduleUpdate(message.data);
-      }
-    };
+    return () => clearInterval(pollInterval);
+  }, []);
 
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket disconnected');
-      // Attempt to reconnect after a short delay
-      setTimeout(() => {
-        setSocket(new WebSocket('wss://schedule-api.devs4u.workers.dev'));
-      }, 5000);
-    };
-
-    return () => {
-      ws.close();
-    };
-  }, [handleScheduleUpdate]);
+  const fetchSchedule = async () => {
+    try {
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
+      if (!response.ok) throw new Error('Failed to fetch schedule');
+      const data = await response.json();
+      setWeekSchedule(data);
+    } catch (error) {
+      console.error('Error fetching schedule:', error);
+    }
+  };
 
   const updateUser = (newUser) => {
     setUser(newUser);
@@ -104,7 +83,7 @@ function AppContent() {
       <PeriodTitleUpdater />
       {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
-        <Route path="/admin" element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} socket={socket} />} />
+        <Route path="/admin" element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />} />
         <Route path="/account" element={<Account user={user} />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
