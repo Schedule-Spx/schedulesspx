@@ -1,3 +1,4 @@
+// src/Account.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,13 +14,23 @@ const Account = ({ user }) => {
         <p>Name: {user.name}</p>
         <p>Email: {user.email}</p>
       </div>
-      <div className="mt-8">
-        <Link 
-          to="/privacy" 
-          className="text-blue-500 hover:text-blue-700 underline"
-        >
-          View Privacy Policy
-        </Link>
+      <div className="mt-8 space-y-2">
+        <p>
+          <Link 
+            to="/privacy" 
+            className="text-blue-500 hover:text-blue-700 underline"
+          >
+            View Privacy Policy
+          </Link>
+        </p>
+        <p>
+          <Link 
+            to="/terms" 
+            className="text-blue-500 hover:text-blue-700 underline"
+          >
+            View Terms and Conditions
+          </Link>
+        </p>
       </div>
     </div>
   );

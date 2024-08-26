@@ -14,6 +14,7 @@ import Admin from './Admin';
 import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
+import TermsAndConditions from './TermsAndConditions';
 import AdComponent from './AdComponent';
 
 function AppContent() {
@@ -84,6 +85,7 @@ function AppContent() {
         <Route path="/account" element={<Account user={user} />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
         <Route
           path="/"
           element={
