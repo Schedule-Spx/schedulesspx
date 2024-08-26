@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
@@ -103,4 +103,10 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <Router>
-        <App
+        <AppContent />
+      </Router>
+    </GoogleOAuthProvider>
+  );
+}
+
+export default App;
