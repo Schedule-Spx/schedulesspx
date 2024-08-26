@@ -13,7 +13,6 @@ import NavBar from './NavBar';
 import Admin from './Admin';
 import Account from './Account';
 import About from './About';
-import AdComponent from './AdComponent';
 
 function AppContent() {
   const { theme } = useTheme();
@@ -88,20 +87,9 @@ function AppContent() {
                 <PeriodProgress user={user} periodNames={periodNames} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <Schedule periodNames={periodNames} />
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <GoogleCalendar />
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <DayHeader />
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-4 h-20 mt-4">
-                <AdComponent adSlot="1234567890" />
-                <AdComponent adSlot="1234567891" />
-                <AdComponent adSlot="1234567892" />
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
               </div>
             </main>
           }
