@@ -14,7 +14,6 @@ import Admin from './Admin';
 import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
-import AdSense from './components/AdSense';
 
 function AppContent() {
   const { theme } = useTheme();
@@ -82,13 +81,13 @@ function AppContent() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[40vh]">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <AdSense adSlot="1234567890" />
+                  Ad Placeholder
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <AdSense adSlot="2345678901" />
+                  Ad Placeholder
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <AdSense adSlot="3456789012" />
+                  Ad Placeholder
                 </div>
               </div>
             </main>
