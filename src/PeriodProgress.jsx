@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const PeriodProgress = () => {
-  const [weekSchedule, setWeekSchedule] = useState({});
+const PeriodProgress = ({ weekSchedule }) => {
   const [currentDay, setCurrentDay] = useState('');
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
-
-  useEffect(() => {
-    const fetchSchedule = async () => {
-      try {
-        const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
-        if (!response.ok) throw new Error('Failed to fetch schedule');
-        const data = await response.json();
-        console.log('Fetched schedule:', data);
-        setWeekSchedule(data);
-      } catch (error) {
-        console.error('Error fetching schedule:', error);
-      }
-    };
-
-    fetchSchedule();
-  }, []);
 
   const convertTo24Hour = (time12) => {
     const [time, period] = time12.split(' ');

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-const Admin = () => {
-  const [weekSchedule, setWeekSchedule] = useState({
-    Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: []
-  });
+const Admin = ({ user, weekSchedule, setWeekSchedule, socket }) => {
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
 
   useEffect(() => {
-    fetchSchedule();
+    if (Object.keys(weekSchedule).length === 0) {
+      fetchSchedule();
+    }
   }, []);
 
   const fetchSchedule = async () => {
@@ -25,70 +24,35 @@ const Admin = () => {
     }
   };
 
-  const convertTo12Hour = (time24) => {
-    const [hours, minutes] = time24.split(':');
-    let period = 'AM';
-    let hours12 = parseInt(hours, 10);
-    
-    if (hours12 >= 12) {
-      period = 'PM';
-      if (hours12 > 12) {
-        hours12 -= 12;
-      }
-    }
-    if (hours12 === 0) {
-      hours12 = 12;
-    }
-    
-    return `${hours12.toString().padStart(2, '0')}:${minutes} ${period}`;
-  };
-
   const handleAddPeriod = () => {
     if (newPeriod.name && newPeriod.start && newPeriod.end) {
-      const start12 = convertTo12Hour(newPeriod.start);
-      const end12 = convertTo12Hour(newPeriod.end);
-      const newPeriodString = `${newPeriod.name} - ${start12}-${end12}`;
-      setWeekSchedule(prev => ({
-        ...prev,
-        [selectedDay]: [...prev[selectedDay], newPeriodString]
-      }));
+      const newPeriodString = `${newPeriod.name} - ${newPeriod.start}-${newPeriod.end}`;
+      const updatedSchedule = {
+        ...weekSchedule,
+        [selectedDay]: [...weekSchedule[selectedDay], newPeriodString]
+      };
+      setWeekSchedule(updatedSchedule);
       setNewPeriod({ name: '', start: '', end: '' });
+      saveSchedule(updatedSchedule);
     }
   };
 
   const handleRemovePeriod = async (index) => {
-    try {
-      const updatedSchedule = {
-        ...weekSchedule,
-        [selectedDay]: weekSchedule[selectedDay].filter((_, i) => i !== index)
-      };
-      
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedSchedule)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      setWeekSchedule(updatedSchedule);
-      setSaveStatus('Period removed successfully');
-      setTimeout(() => setSaveStatus(''), 3000);
-    } catch (error) {
-      console.error('Error removing period:', error);
-      setSaveStatus(`Failed to remove period: ${error.message}`);
-    }
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: weekSchedule[selectedDay].filter((_, i) => i !== index)
+    };
+    setWeekSchedule(updatedSchedule);
+    saveSchedule(updatedSchedule);
   };
 
-  const handleSave = async () => {
+  const saveSchedule = async (schedule) => {
     try {
       setSaveStatus('Saving...');
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(weekSchedule)
+        body: JSON.stringify(schedule)
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -121,7 +85,7 @@ const Admin = () => {
       <div className="mb-4">
         <h3 className="text-xl font-semibold mb-2">{selectedDay}'s Schedule</h3>
         <ul className="space-y-2">
-          {weekSchedule[selectedDay].map((period, index) => (
+          {weekSchedule[selectedDay] && weekSchedule[selectedDay].map((period, index) => (
             <li key={index} className="flex justify-between items-center">
               <span>{period}</span>
               <button
@@ -162,12 +126,6 @@ const Admin = () => {
           Add Period
         </button>
       </div>
-      <button
-        onClick={handleSave}
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
-        Save Schedule
-      </button>
       {saveStatus && (
         <p className={`mt-2 ${saveStatus.includes('Failed') ? 'text-red-500' : 'text-green-500'}`}>
           {saveStatus}
