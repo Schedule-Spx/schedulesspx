@@ -16,7 +16,9 @@ const PeriodProgress = () => {
 
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     setCurrentDay(days[new Date().getDay()]);
+  }, []);
 
+  useEffect(() => {
     const updateCurrentPeriod = () => {
       const now = new Date();
       const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -88,7 +90,7 @@ const PeriodProgress = () => {
         className={`h-6 rounded-full transition-all duration-1000 ease-linear ${getProgressColor()}`}
         style={{ width: `${progress}%` }}
       >
-        <span className="text-xs text-white ml-2">{timeRemaining}</span>
+        <span className="text-xs text-white ml-2">{currentPeriod ? `${currentPeriod.name} | ${timeRemaining}` : 'No active period'}</span>
       </div>
     </div>
   );
