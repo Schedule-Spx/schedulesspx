@@ -1,4 +1,3 @@
-// src/PeriodProgress.jsx
 import React, { useState, useEffect } from 'react';
 
 const PeriodProgress = () => {
@@ -7,87 +6,77 @@ const PeriodProgress = () => {
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
         const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.text();
-        console.log('Raw schedule data:', data); // Log raw data
-        const parsedData = JSON.parse(data);
-        console.log('Parsed schedule data:', parsedData); // Log parsed data
-        if (typeof parsedData === 'object' && parsedData !== null) {
-          setWeekSchedule(parsedData);
-        } else {
-          throw new Error('Invalid schedule data format');
-        }
+        if (!response.ok) throw new Error('Failed to fetch schedule');
+        const data = await response.json();
+        console.log('Fetched schedule:', data);
+        setWeekSchedule(data);
       } catch (error) {
         console.error('Error fetching schedule:', error);
-        setError(error.message);
       }
     };
 
     fetchSchedule();
   }, []);
 
+  const convertTo24Hour = (time12) => {
+    const [time, period] = time12.split(' ');
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours, 10);
+    
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+  };
+
   useEffect(() => {
     const updateCurrentPeriod = () => {
-      const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+      const now = new Date();
+      const currentTime = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+      const today = now.toLocaleDateString('en-US', { weekday: 'long' });
       setCurrentDay(today);
-
-      const currentTime = new Date();
-      const currentHour = currentTime.getHours();
-      const currentMinute = currentTime.getMinutes();
 
       const schedule = weekSchedule[today];
       if (Array.isArray(schedule)) {
         const currentPeriodIndex = schedule.findIndex((period) => {
-          if (period && typeof period === 'string') {
-            const [startTime, endTime] = period.split('-');
-            if (startTime && endTime) {
-              const [startHour, startMinute] = startTime.split(':').map(Number);
-              const [endHour, endMinute] = endTime.split(':').map(Number);
-              return (
-                (currentHour > startHour || (currentHour === startHour && currentMinute >= startMinute)) &&
-                (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute))
-              );
-            }
-          }
-          return false;
+          const [, time] = period.split(' - ');
+          const [start, end] = time.split('-');
+          const startTime = convertTo24Hour(start.trim());
+          const endTime = convertTo24Hour(end.trim());
+          return currentTime >= startTime && currentTime < endTime;
         });
 
         if (currentPeriodIndex !== -1) {
           setCurrentPeriod(schedule[currentPeriodIndex]);
-          const [startTime, endTime] = schedule[currentPeriodIndex].split('-');
-          if (startTime && endTime) {
-            const [startHour, startMinute] = startTime.split(':').map(Number);
-            const [endHour, endMinute] = endTime.split(':').map(Number);
-            const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-            const elapsedMinutes = (currentHour - startHour) * 60 + (currentMinute - startMinute);
-            const progressPercentage = (elapsedMinutes / totalMinutes) * 100;
-            setProgress(progressPercentage);
+          const [, time] = schedule[currentPeriodIndex].split(' - ');
+          const [start, end] = time.split('-');
+          const startTime = convertTo24Hour(start.trim());
+          const endTime = convertTo24Hour(end.trim());
+          
+          const [startHour, startMinute] = startTime.split(':').map(Number);
+          const [endHour, endMinute] = endTime.split(':').map(Number);
+          const [currentHour, currentMinute] = currentTime.split(':').map(Number);
+          
+          const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
+          const elapsedMinutes = (currentHour - startHour) * 60 + (currentMinute - startMinute);
+          const progressPercentage = (elapsedMinutes / totalMinutes) * 100;
+          setProgress(progressPercentage);
 
-            const remainingMinutes = totalMinutes - elapsedMinutes;
-            const remainingHours = Math.floor(remainingMinutes / 60);
-            const remainingMinutesFormatted = remainingMinutes % 60;
-            setTimeRemaining(`${remainingHours}h ${remainingMinutesFormatted}m`);
-          } else {
-            console.error('Invalid period format:', schedule[currentPeriodIndex]);
-            setCurrentPeriod(null);
-            setProgress(0);
-            setTimeRemaining('');
-          }
+          const remainingMinutes = totalMinutes - elapsedMinutes;
+          setTimeRemaining(`${Math.floor(remainingMinutes / 60)}h ${remainingMinutes % 60}m`);
         } else {
           setCurrentPeriod(null);
           setProgress(0);
           setTimeRemaining('');
         }
-      } else {
-        console.error('Invalid schedule for today:', schedule);
       }
     };
 
@@ -97,18 +86,19 @@ const PeriodProgress = () => {
     return () => clearInterval(timer);
   }, [weekSchedule]);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
-    <div>
-      <h2>Period Progress</h2>
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4">Period Progress</h2>
       {currentPeriod ? (
         <div>
-          <p>Current Period: {currentPeriod}</p>
-          <progress value={progress} max="100" />
-          <p>Time Remaining: {timeRemaining}</p>
+          <p className="mb-2">Current Period: {currentPeriod.split(' - ')[0]}</p>
+          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div 
+              className="bg-blue-600 h-2.5 rounded-full" 
+              style={{width: `${progress}%`}}
+            ></div>
+          </div>
+          <p className="mt-2">Time Remaining: {timeRemaining}</p>
         </div>
       ) : (
         <p>No ongoing period.</p>

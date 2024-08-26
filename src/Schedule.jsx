@@ -21,7 +21,7 @@ const Schedule = () => {
         console.log('Current day:', today);
         setCurrentDay(today);
         
-        if (data && data[today] && Array.isArray(data[today])) {
+        if (data[today] && Array.isArray(data[today])) {
           console.log(`Schedule for ${today}:`, data[today]);
           setDaySchedule(data[today]);
         } else {
@@ -38,6 +38,30 @@ const Schedule = () => {
 
     fetchSchedule();
   }, []);
+
+  const formatTime = (timeString) => {
+    // Check if the time is already in 12-hour format
+    if (timeString.includes('AM') || timeString.includes('PM')) {
+      return timeString;
+    }
+    
+    // Convert 24-hour format to 12-hour format
+    const [hours, minutes] = timeString.split(':');
+    let period = 'AM';
+    let hours12 = parseInt(hours, 10);
+    
+    if (hours12 >= 12) {
+      period = 'PM';
+      if (hours12 > 12) {
+        hours12 -= 12;
+      }
+    }
+    if (hours12 === 0) {
+      hours12 = 12;
+    }
+    
+    return `${hours12.toString().padStart(2, '0')}:${minutes} ${period}`;
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -64,7 +88,7 @@ const Schedule = () => {
               <li key={index} className="flex justify-between items-center">
                 <span className="font-medium">{name}</span>
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {start} - {end}
+                  {formatTime(start)} - {formatTime(end)}
                 </span>
               </li>
             );

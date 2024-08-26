@@ -25,9 +25,29 @@ const Admin = () => {
     }
   };
 
+  const convertTo12Hour = (time24) => {
+    const [hours, minutes] = time24.split(':');
+    let period = 'AM';
+    let hours12 = parseInt(hours, 10);
+    
+    if (hours12 >= 12) {
+      period = 'PM';
+      if (hours12 > 12) {
+        hours12 -= 12;
+      }
+    }
+    if (hours12 === 0) {
+      hours12 = 12;
+    }
+    
+    return `${hours12.toString().padStart(2, '0')}:${minutes} ${period}`;
+  };
+
   const handleAddPeriod = () => {
     if (newPeriod.name && newPeriod.start && newPeriod.end) {
-      const newPeriodString = `${newPeriod.name} - ${newPeriod.start}-${newPeriod.end}`;
+      const start12 = convertTo12Hour(newPeriod.start);
+      const end12 = convertTo12Hour(newPeriod.end);
+      const newPeriodString = `${newPeriod.name} - ${start12}-${end12}`;
       setWeekSchedule(prev => ({
         ...prev,
         [selectedDay]: [...prev[selectedDay], newPeriodString]
