@@ -2,92 +2,84 @@
 import React, { useState, useEffect } from 'react';
 
 const PeriodProgress = ({ weekSchedule }) => {
-  const [currentDay, setCurrentDay] = useState('');
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
   const [renamedPeriods, setRenamedPeriods] = useState({});
 
-  const convertTo24Hour = (time12) => {
-    const [time, period] = time12.split(' ');
-    let [hours, minutes] = time.split(':');
-    hours = parseInt(hours, 10);
-    
-    if (period === 'PM' && hours !== 12) {
-      hours += 12;
-    } else if (period === 'AM' && hours === 12) {
-      hours = 0;
-    }
-    
-    return `${hours.toString().padStart(2, '0')}:${minutes}`;
-  };
-
   useEffect(() => {
     const savedRenames = JSON.parse(localStorage.getItem('renamedPeriods') || '{}');
     setRenamedPeriods(savedRenames);
+  }, []);
 
+  useEffect(() => {
     const updateCurrentPeriod = () => {
       const now = new Date();
-      const currentTime = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+      const currentTime = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
       const today = now.toLocaleDateString('en-US', { weekday: 'long' });
-      setCurrentDay(today);
 
-      const schedule = weekSchedule[today];
-      if (Array.isArray(schedule) && schedule.length > 0) {
-        const currentPeriodIndex = schedule.findIndex((period) => {
+      const todaySchedule = weekSchedule[today];
+      if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
+        const currentPeriodInfo = todaySchedule.find(period => {
           const [name, time] = period.split(' - ');
           const [start, end] = time.split('-');
-          const startTime = convertTo24Hour(start.trim());
-          const endTime = convertTo24Hour(end.trim());
-          return currentTime >= startTime && currentTime < endTime;
+          return currentTime >= start.trim() && currentTime < end.trim();
         });
 
-        if (currentPeriodIndex !== -1) {
-          const period = schedule[currentPeriodIndex];
-          setCurrentPeriod(period);
-          const [name, time] = period.split(' - ');
+        if (currentPeriodInfo) {
+          const [name, time] = currentPeriodInfo.split(' - ');
           const [start, end] = time.split('-');
-          const startTime = convertTo24Hour(start.trim());
-          const endTime = convertTo24Hour(end.trim());
           
-          const [startHour, startMinute] = startTime.split(':').map(Number);
-          const [endHour, endMinute] = endTime.split(':').map(Number);
-          const [currentHour, currentMinute] = currentTime.split(':').map(Number);
-          
-          const totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-          const elapsedMinutes = (currentHour - startHour) * 60 + (currentMinute - startMinute);
-          const progressPercentage = (elapsedMinutes / totalMinutes) * 100;
-          setProgress(progressPercentage);
+          const startTime = new Date();
+          const [startHour, startMinute] = start.trim().split(':');
+          startTime.setHours(startHour, startMinute, 0);
 
-          const remainingMinutes = totalMinutes - elapsedMinutes;
-          const remainingString = `${Math.floor(remainingMinutes / 60)}h ${remainingMinutes % 60}m`;
-          setTimeRemaining(remainingString);
+          const endTime = new Date();
+          const [endHour, endMinute] = end.trim().split(':');
+          endTime.setHours(endHour, endMinute, 0);
 
-          updateTitle(name, remainingString);
+          const totalDuration = endTime - startTime;
+          const elapsed = now - startTime;
+          const remaining = endTime - now;
+
+          setCurrentPeriod(name);
+          setProgress((elapsed / totalDuration) * 100);
+          setTimeRemaining(formatTimeRemaining(remaining));
+
+          // Update document title
+          document.title = `${getPeriodName(name)} - ${formatTimeRemaining(remaining)} left`;
         } else {
-          resetPeriodState();
+          setCurrentPeriod(null);
+          setProgress(0);
+          setTimeRemaining('');
+          document.title = 'Schedule-SPX'; // Set to website title when no active period
         }
       } else {
-        resetPeriodState();
+        setCurrentPeriod(null);
+        setProgress(0);
+        setTimeRemaining('');
+        document.title = 'Schedule-SPX'; // Set to website title when no schedule for the day
       }
     };
 
-    const timer = setInterval(updateCurrentPeriod, 60000); // Update every minute
+    const timer = setInterval(updateCurrentPeriod, 1000); // Update every second for a more dynamic countdown
     updateCurrentPeriod(); // Initial update
 
     return () => clearInterval(timer);
   }, [weekSchedule]);
 
-  const resetPeriodState = () => {
-    setCurrentPeriod(null);
-    setProgress(0);
-    setTimeRemaining('');
-    document.title = 'Schedule-SPX';
-  };
+  const formatTimeRemaining = (ms) => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
 
-  const updateTitle = (periodName, remainingTime) => {
-    const displayName = getPeriodName(periodName);
-    document.title = `${displayName} - ${remainingTime} left`;
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;
+    } else {
+      return `${seconds}s`;
+    }
   };
 
   const getPeriodName = (originalName) => {
@@ -103,7 +95,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       {currentPeriod ? (
         <div>
           <div className="flex justify-between items-center mb-2">
-            <p className="text-lg font-semibold">{getPeriodName(currentPeriod.split(' - ')[0])}</p>
+            <p className="text-lg font-semibold">{getPeriodName(currentPeriod)}</p>
             <p className="text-sm">{timeRemaining} remaining</p>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
