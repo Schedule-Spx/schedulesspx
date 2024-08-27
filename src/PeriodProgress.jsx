@@ -66,7 +66,113 @@ const PeriodProgress = ({ weekSchedule }) => {
     }
   };
 
-  // ... (rest of the functions remain the same)
+  const handleNonSchoolDay = (now, currentDay) => {
+    const nextDay = getNextSchoolDay(currentDay);
+    if (nextDay) {
+      const nextDaySchedule = weekSchedule[nextDay];
+      const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
+      const nextSchoolDay = new Date(now);
+      nextSchoolDay.setDate(nextSchoolDay.getDate() + getDayDifference(currentDay, nextDay));
+      nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
+      
+      const timeUntilNextSchool = nextSchoolDay - now;
+      setCurrentState({ type: 'nonSchoolDay', nextDay });
+      setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
+      setProgress(0);
+      updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchool));
+    } else {
+      setCurrentState({ type: 'noSchool' });
+      setTimeRemaining('');
+      setProgress(0);
+      updateTitle('No School', '');
+    }
+  };
+
+  const handleAfterSchool = (now, currentDay) => {
+    const nextDay = getNextSchoolDay(currentDay);
+    if (nextDay) {
+      const nextDaySchedule = weekSchedule[nextDay];
+      const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
+      
+      const timeUntilNextSchool = tomorrow - now;
+      setCurrentState({ type: 'afterSchool', nextDay });
+      setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
+      setProgress(0);
+      updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchool));
+    } else {
+      handleNonSchoolDay(now, currentDay);
+    }
+  };
+
+  const getNextSchoolDay = (currentDay) => {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    let nextDay = days[(days.indexOf(currentDay) + 1) % 7];
+    let count = 0;
+    while (!weekSchedule[nextDay] && count < 7) {
+      nextDay = days[(days.indexOf(nextDay) + 1) % 7];
+      count++;
+    }
+    return count < 7 ? nextDay : null;
+  };
+
+  const getDayDifference = (day1, day2) => {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return (days.indexOf(day2) - days.indexOf(day1) + 7) % 7;
+  };
+
+  const formatTimeRemaining = (ms) => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days}d ${hours % 24}h ${minutes % 60}m`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  };
+
+  const updateTitle = (status, time) => {
+    document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
+  };
+
+  const getPercentage = (start, end) => {
+    const total = end - start;
+    const elapsed = new Date() - start;
+    return (elapsed / total) * 100;
+  };
+
+  const convertTo24Hour = (time12h) => {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours, 10);
+    if (hours === 12) {
+      hours = modifier.toLowerCase() === 'pm' ? 12 : 0;
+    } else if (modifier.toLowerCase() === 'pm') {
+      hours += 12;
+    }
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+  };
+
+  const parseTime = (timeString) => {
+    const [time, modifier] = timeString.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier.toLowerCase() === 'pm' && hours !== 12) {
+      hours += 12;
+    } else if (modifier.toLowerCase() === 'am' && hours === 12) {
+      hours = 0;
+    }
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
