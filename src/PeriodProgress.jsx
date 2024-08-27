@@ -60,20 +60,15 @@ const PeriodProgress = ({ weekSchedule }) => {
           setProgress(progressPercentage);
 
           const remainingMinutes = totalMinutes - elapsedMinutes;
-          setTimeRemaining(`${Math.floor(remainingMinutes / 60)}h ${remainingMinutes % 60}m`);
+          const remainingString = `${Math.floor(remainingMinutes / 60)}h ${remainingMinutes % 60}m`;
+          setTimeRemaining(remainingString);
 
-          updateTitle(name, remainingMinutes);
+          updateTitle(name, remainingString);
         } else {
-          setCurrentPeriod(null);
-          setProgress(0);
-          setTimeRemaining('');
-          document.title = 'Schedule-SPX';
+          resetPeriodState();
         }
       } else {
-        setCurrentPeriod(null);
-        setProgress(0);
-        setTimeRemaining('');
-        document.title = 'Schedule-SPX';
+        resetPeriodState();
       }
     };
 
@@ -83,22 +78,16 @@ const PeriodProgress = ({ weekSchedule }) => {
     return () => clearInterval(timer);
   }, [weekSchedule]);
 
-  const updateTitle = (periodName, remainingMinutes) => {
+  const resetPeriodState = () => {
+    setCurrentPeriod(null);
+    setProgress(0);
+    setTimeRemaining('');
+    document.title = 'Schedule-SPX';
+  };
+
+  const updateTitle = (periodName, remainingTime) => {
     const displayName = getPeriodName(periodName);
-    const updateTitleTimer = setInterval(() => {
-      remainingMinutes--;
-      const hours = Math.floor(remainingMinutes / 60);
-      const minutes = remainingMinutes % 60;
-      const timeString = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-      document.title = `${displayName} - ${timeString} left`;
-
-      if (remainingMinutes <= 0) {
-        clearInterval(updateTitleTimer);
-        document.title = 'Schedule-SPX';
-      }
-    }, 60000); // Update every minute
-
-    return () => clearInterval(updateTitleTimer);
+    document.title = `${displayName} - ${remainingTime} left`;
   };
 
   const getPeriodName = (originalName) => {
