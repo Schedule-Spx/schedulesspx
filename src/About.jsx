@@ -13,7 +13,7 @@ const About = () => {
           But we didn't stop there. Schedule SPX also provides quick access to essential links like your grades, Canvas, sp.org, and even the cafe menu, making it your one-stop hub for everything you need throughout the school day.
         </p>
         <p>
-          The original idea for Schedule SPX came from David, who is also leading the design, marketing, and front-end development of the site. On the other hand, Kagen is the mastermind behind the code, API, and all the technical workings that make the site run smoothly.
+          The original idea for Schedule SPX came from David, who is also leading the design, marketing! On the other hand, Kagen is the mastermind behind the code, API, front-end development of the site and all the technical workings that make the site run smoothly.
         </p>
         <p>
           Together, we're dedicated to enhancing your school experience by providing a reliable and accessible resource for staying on top of your schedule and more.
