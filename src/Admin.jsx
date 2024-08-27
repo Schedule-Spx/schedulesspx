@@ -65,7 +65,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
       console.log('Save response:', result);
       setSaveStatus('Schedule saved successfully');
       setTimeout(() => setSaveStatus(''), 3000);
-      fetchSchedule(); // Fetch the updated schedule after saving
+      fetchSchedule();
     } catch (error) {
       console.error('Error saving schedule:', error);
       setSaveStatus(`Failed to save schedule: ${error.message}`);
@@ -73,7 +73,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Admin Console</h2>
       <div className="mb-4">
         <label className="block mb-2">Select Day:</label>

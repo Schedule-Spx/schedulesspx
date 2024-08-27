@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -40,11 +41,6 @@ function AppContent() {
     }
 
     fetchSchedule();
-
-    // Set up polling
-    const pollInterval = setInterval(fetchSchedule, 30000); // Poll every 30 seconds
-
-    return () => clearInterval(pollInterval);
   }, []);
 
   const fetchSchedule = async () => {
@@ -52,6 +48,7 @@ function AppContent() {
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
       if (!response.ok) throw new Error('Failed to fetch schedule');
       const data = await response.json();
+      console.log('Fetched schedule:', data);
       setWeekSchedule(data);
     } catch (error) {
       console.error('Error fetching schedule:', error);
@@ -75,8 +72,6 @@ function AppContent() {
     setShowAgreement(false);
   };
 
-  const isAdminPage = location.pathname === '/admin';
-
   return (
     <div className={`App ${theme} flex flex-col min-h-screen`}>
       <NavBar user={user} setUser={updateUser} />
@@ -84,7 +79,7 @@ function AppContent() {
       {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
         <Route path="/admin" element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />} />
-        <Route path="/account" element={<Account user={user} />} />
+        <Route path="/account" element={<Account user={user} weekSchedule={weekSchedule} />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />

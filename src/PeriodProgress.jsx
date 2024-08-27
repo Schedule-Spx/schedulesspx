@@ -5,6 +5,7 @@ const PeriodProgress = ({ weekSchedule }) => {
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [renamedPeriods, setRenamedPeriods] = useState({});
 
   const convertTo24Hour = (time12) => {
     const [time, period] = time12.split(' ');
@@ -21,6 +22,9 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   useEffect(() => {
+    const savedRenames = JSON.parse(localStorage.getItem('renamedPeriods') || '{}');
+    setRenamedPeriods(savedRenames);
+
     const updateCurrentPeriod = () => {
       const now = new Date();
       const currentTime = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
@@ -57,22 +61,26 @@ const PeriodProgress = ({ weekSchedule }) => {
           const remainingMinutes = totalMinutes - elapsedMinutes;
           setTimeRemaining(`${Math.floor(remainingMinutes / 60)}h ${remainingMinutes % 60}m`);
 
-          // Update browser tab title
-          document.title = `${name} - ${timeRemaining} left`;
+          const displayName = getPeriodName(name);
+          document.title = `${displayName} - ${timeRemaining} left`;
         } else {
           setCurrentPeriod(null);
           setProgress(0);
           setTimeRemaining('');
-          document.title = 'Schedule-SPX'; // Reset title when no active period
+          document.title = 'Schedule-SPX';
         }
       }
     };
 
-    const timer = setInterval(updateCurrentPeriod, 60000); // Update every minute
-    updateCurrentPeriod(); // Initial update
+    const timer = setInterval(updateCurrentPeriod, 60000);
+    updateCurrentPeriod();
 
     return () => clearInterval(timer);
   }, [weekSchedule]);
+
+  const getPeriodName = (originalName) => {
+    return renamedPeriods[originalName] || originalName;
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
@@ -80,7 +88,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       {currentPeriod ? (
         <div>
           <div className="flex justify-between items-center mb-2">
-            <p className="text-lg font-semibold">{currentPeriod.split(' - ')[0]}</p>
+            <p className="text-lg font-semibold">{getPeriodName(currentPeriod.split(' - ')[0])}</p>
             <p className="text-sm">{timeRemaining} remaining</p>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
