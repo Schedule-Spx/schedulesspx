@@ -33,7 +33,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       setCurrentDay(today);
 
       const schedule = weekSchedule[today];
-      if (Array.isArray(schedule)) {
+      if (Array.isArray(schedule) && schedule.length > 0) {
         const currentPeriodIndex = schedule.findIndex((period) => {
           const [name, time] = period.split(' - ');
           const [start, end] = time.split('-');
@@ -69,6 +69,11 @@ const PeriodProgress = ({ weekSchedule }) => {
           setTimeRemaining('');
           document.title = 'Schedule-SPX';
         }
+      } else {
+        setCurrentPeriod(null);
+        setProgress(0);
+        setTimeRemaining('');
+        document.title = 'Schedule-SPX';
       }
     };
 
@@ -120,7 +125,7 @@ const PeriodProgress = ({ weekSchedule }) => {
           </div>
         </div>
       ) : (
-        <p>No ongoing period.</p>
+        <p>No ongoing period</p>
       )}
     </div>
   );
