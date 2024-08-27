@@ -1,16 +1,10 @@
 // src/PeriodProgress.jsx
 import React, { useState, useEffect } from 'react';
 
-const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
+const PeriodProgress = ({ weekSchedule }) => {
   const [currentState, setCurrentState] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
-  const [renamedPeriods, setRenamedPeriods] = useState({});
-
-  useEffect(() => {
-    const savedRenames = JSON.parse(localStorage.getItem('renamedPeriods') || '{}');
-    setRenamedPeriods(savedRenames);
-  }, []);
 
   useEffect(() => {
     const updateCurrentState = () => {
@@ -20,9 +14,7 @@ const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
 
       const todaySchedule = weekSchedule[currentDay];
 
-      if (isWeekend(now)) {
-        handleWeekend(now);
-      } else if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
+      if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
         handleSchoolDay(todaySchedule, currentTime, now);
       } else {
         handleNonSchoolDay(now);
@@ -33,42 +25,19 @@ const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
     updateCurrentState(); // Initial update
 
     return () => clearInterval(timer);
-  }, [weekSchedule, googleCalendarEvents]);
-
-  const isWeekend = (date) => {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  };
-
-  const handleWeekend = (now) => {
-    const nextSchoolDay = findNextSchoolDay(now);
-    if (nextSchoolDay) {
-      const timeUntilNextSchoolDay = nextSchoolDay - now;
-      setCurrentState({ type: 'weekend', nextSchoolDay });
-      setTimeRemaining(formatTimeRemaining(timeUntilNextSchoolDay));
-      setProgress(0);
-      updateTitle('Weekend', formatTimeRemaining(timeUntilNextSchoolDay));
-    } else {
-      setCurrentState({ type: 'noSchool' });
-      setTimeRemaining('');
-      setProgress(0);
-      updateTitle('No School', '');
-    }
-  };
+  }, [weekSchedule]);
 
   const handleSchoolDay = (schedule, currentTime, now) => {
     const currentPeriodInfo = schedule.find(period => {
-      const [, time] = period.split(' - ');
-      const [start, end] = time.split('-');
-      return currentTime >= start.trim() && currentTime < end.trim();
+      const [, time] = period.split('\n');
+      const [start, end] = time.split(' - ');
+      return currentTime >= convertTo24Hour(start.trim()) && currentTime < convertTo24Hour(end.trim());
     });
 
     if (currentPeriodInfo) {
-      const [name, time] = currentPeriodInfo.split(' - ');
-      const [, end] = time.split('-');
-      const endTime = new Date(now);
-      const [endHour, endMinute] = end.trim().split(':');
-      endTime.setHours(endHour, endMinute, 0);
+      const [name, time] = currentPeriodInfo.split('\n');
+      const [, end] = time.split(' - ');
+      const endTime = parseTime(end.trim());
 
       const remaining = endTime - now;
       const duration = getPercentage(now, endTime);
@@ -76,41 +45,35 @@ const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
       setCurrentState({ type: 'activePeriod', name });
       setProgress(duration);
       setTimeRemaining(formatTimeRemaining(remaining));
-      updateTitle(getPeriodName(name), formatTimeRemaining(remaining));
-    } else if (currentTime < schedule[0].split(' - ')[1].split('-')[0].trim()) {
+      updateTitle(name, formatTimeRemaining(remaining));
+    } else if (currentTime < convertTo24Hour(schedule[0].split('\n')[1].split(' - ')[0].trim())) {
       // Before first period
-      const firstPeriodStart = new Date(now);
-      const [startHour, startMinute] = schedule[0].split(' - ')[1].split('-')[0].trim().split(':');
-      firstPeriodStart.setHours(startHour, startMinute, 0);
-
+      const firstPeriodStart = parseTime(schedule[0].split('\n')[1].split(' - ')[0].trim());
       const timeUntilStart = firstPeriodStart - now;
-      setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
+      setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split('\n')[0] });
       setTimeRemaining(formatTimeRemaining(timeUntilStart));
       setProgress(0);
       updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
-    } else if (currentTime >= schedule[schedule.length - 1].split(' - ')[1].split('-')[1].trim()) {
-      // After last period
-      handleAfterSchool(now);
     } else {
-      // Between periods
+      // After last period or between periods
       const nextPeriod = schedule.find(period => {
-        const [, time] = period.split(' - ');
-        const [start] = time.split('-');
-        return currentTime < start.trim();
+        const [, time] = period.split('\n');
+        const [start] = time.split(' - ');
+        return currentTime < convertTo24Hour(start.trim());
       });
 
       if (nextPeriod) {
-        const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
-        const [nextPeriodStart] = nextPeriodTime.split('-');
-        const nextStartTime = new Date(now);
-        const [nextStartHour, nextStartMinute] = nextPeriodStart.trim().split(':');
-        nextStartTime.setHours(nextStartHour, nextStartMinute, 0);
+        const [nextPeriodName, nextPeriodTime] = nextPeriod.split('\n');
+        const [nextPeriodStart] = nextPeriodTime.split(' - ');
+        const nextStartTime = parseTime(nextPeriodStart.trim());
 
         const timeUntilNext = nextStartTime - now;
         setCurrentState({ type: 'betweenPeriods', nextPeriod: nextPeriodName });
         setTimeRemaining(formatTimeRemaining(timeUntilNext));
         setProgress(0);
-        updateTitle(`Next: ${getPeriodName(nextPeriodName)}`, formatTimeRemaining(timeUntilNext));
+        updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
+      } else {
+        handleAfterSchool(now);
       }
     }
   };
@@ -120,68 +83,35 @@ const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
 
-    const nextSchoolDay = findNextSchoolDay(tomorrow);
-    if (nextSchoolDay) {
-      const timeUntilNextSchoolDay = nextSchoolDay - now;
-      setCurrentState({ type: 'afterSchool', nextSchoolDay });
-      setTimeRemaining(formatTimeRemaining(timeUntilNextSchoolDay));
-      setProgress(0);
-      updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchoolDay));
-    } else {
-      setCurrentState({ type: 'noSchool' });
-      setTimeRemaining('');
-      setProgress(0);
-      updateTitle('No School', '');
-    }
+    setCurrentState({ type: 'afterSchool' });
+    setTimeRemaining(formatTimeRemaining(tomorrow - now));
+    setProgress(0);
+    updateTitle('School day ended', formatTimeRemaining(tomorrow - now));
   };
 
   const handleNonSchoolDay = (now) => {
-    const nextSchoolDay = findNextSchoolDay(now);
-    if (nextSchoolDay) {
-      const timeUntilNextSchoolDay = nextSchoolDay - now;
-      setCurrentState({ type: 'nonSchoolDay', nextSchoolDay });
-      setTimeRemaining(formatTimeRemaining(timeUntilNextSchoolDay));
-      setProgress(0);
-      updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchoolDay));
-    } else {
-      setCurrentState({ type: 'noSchool' });
-      setTimeRemaining('');
-      setProgress(0);
-      updateTitle('No School', '');
-    }
-  };
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
 
-  const findNextSchoolDay = (startDate) => {
-    // This function should use googleCalendarEvents to find the next school day
-    // For now, we'll use a placeholder implementation
-    const nextDay = new Date(startDate);
-    nextDay.setDate(nextDay.getDate() + 1);
-    nextDay.setHours(8, 0, 0, 0); // Assume school starts at 8 AM
-    return nextDay;
+    setCurrentState({ type: 'nonSchoolDay' });
+    setTimeRemaining(formatTimeRemaining(tomorrow - now));
+    setProgress(0);
+    updateTitle('No School', formatTimeRemaining(tomorrow - now));
   };
 
   const formatTimeRemaining = (ms) => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
 
-    if (days > 0) {
-      return `${days}d ${hours % 24}h ${minutes % 60}m`;
-    } else if (hours > 0) {
+    if (hours > 0) {
       return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
     } else if (minutes > 0) {
       return `${minutes}m ${seconds % 60}s`;
     } else {
       return `${seconds}s`;
     }
-  };
-
-  const getPeriodName = (originalName) => {
-    if (/^[1-8]$/.test(originalName)) {
-      return renamedPeriods[originalName] || `Period ${originalName}`;
-    }
-    return originalName;
   };
 
   const updateTitle = (status, time) => {
@@ -194,6 +124,30 @@ const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
     return (elapsed / total) * 100;
   };
 
+  const convertTo24Hour = (time12h) => {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
+  };
+
+  const parseTime = (timeString) => {
+    const [time, modifier] = timeString.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (modifier === 'AM' && hours === 12) {
+      hours = 0;
+    }
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
       <h2 className="text-xl font-bold mb-4">Period Progress</h2>
@@ -201,11 +155,10 @@ const PeriodProgress = ({ weekSchedule, googleCalendarEvents }) => {
         <div>
           <div className="flex justify-between items-center mb-2">
             <p className="text-lg font-semibold">
-              {currentState.type === 'activePeriod' ? getPeriodName(currentState.name) :
-               currentState.type === 'betweenPeriods' ? `Next: ${getPeriodName(currentState.nextPeriod)}` :
-               currentState.type === 'weekend' ? 'Weekend' :
+              {currentState.type === 'activePeriod' ? `Period ${currentState.name}` :
+               currentState.type === 'betweenPeriods' ? `Next: Period ${currentState.nextPeriod}` :
                currentState.type === 'beforeSchool' ? 'School starts soon' :
-               currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? 'Next school day' :
+               currentState.type === 'afterSchool' ? 'School day ended' :
                'No School'}
             </p>
             <p className="text-sm">{timeRemaining}</p>
