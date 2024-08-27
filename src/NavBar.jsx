@@ -1,3 +1,4 @@
+// src/NavBar.jsx
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
@@ -22,34 +23,34 @@ const NavBar = ({ user, setUser }) => {
   const isAdmin = user && adminEmails.includes(user.email.toLowerCase());
 
   return (
-    <nav className="bg-gray-900 text-white py-2 px-4 flex justify-between items-center">
+    <nav className="bg-stpius-blue text-stpius-white py-2 px-4 flex justify-between items-center">
       <div className="flex items-center space-x-4">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Schedule-SPX Logo" className="h-8 w-auto mr-2" />
-          <span className="text-xl font-bold hover:text-gray-300">Schedule-SPX</span>
+          <span className="text-xl font-bold hover:text-stpius-gold">Schedule-SPX</span>
         </Link>
-        <Link to="/about" className="text-sm hover:text-gray-300">About</Link>
+        <Link to="/about" className="text-sm hover:text-stpius-gold">About</Link>
       </div>
       <div className="flex items-center space-x-4">
         <button
-          className="text-sm hover:text-gray-300"
+          className="text-sm hover:text-stpius-gold"
           onClick={toggleTheme}
         >
-          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          {theme === 'dark' ? '🌞' : '🌙'}
         </button>
         {user ? (
           <>
-            <Link to="/account" className="text-sm hover:text-gray-300">{user.name}</Link>
+            <Link to="/account" className="text-sm hover:text-stpius-gold">{user.name}</Link>
             {isAdmin && (
               <Link 
                 to="/admin" 
-                className="bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 px-3 rounded"
+                className="bg-stpius-gold hover:bg-stpius-gold/80 text-stpius-blue text-sm py-1 px-3 rounded"
               >
                 Admin Console
               </Link>
             )}
             <button
-              className="bg-red-500 hover:bg-red-600 text-white text-sm py-1 px-3 rounded"
+              className="bg-stpius-gold hover:bg-stpius-gold/80 text-stpius-blue text-sm py-1 px-3 rounded"
               onClick={handleLogout}
             >
               Logout

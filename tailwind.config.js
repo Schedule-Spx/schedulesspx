@@ -5,7 +5,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Add custom colors if needed
+        'stpius-white': '#ffffff',
+        'stpius-gold': '#b98827',
+        'stpius-blue': '#012143',
       },
     },
   },

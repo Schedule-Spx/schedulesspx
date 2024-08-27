@@ -72,7 +72,7 @@ function AppContent() {
   };
 
   return (
-    <div className={`App ${theme} flex flex-col min-h-screen`}>
+    <div className={`App ${theme} flex flex-col min-h-screen bg-stpius-white dark:bg-stpius-blue text-stpius-blue dark:text-stpius-white`}>
       <NavBar user={user} setUser={updateUser} />
       {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
@@ -108,13 +108,13 @@ function AppContent() {
           element={
             <main className="flex-grow p-4 flex flex-col">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div className="bg-stpius-white dark:bg-stpius-blue border border-stpius-blue dark:border-stpius-gold rounded-lg shadow-md overflow-hidden">
                   <DayHeader />
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div className="bg-stpius-white dark:bg-stpius-blue border border-stpius-blue dark:border-stpius-gold rounded-lg shadow-md overflow-hidden">
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div className="bg-stpius-white dark:bg-stpius-blue border border-stpius-blue dark:border-stpius-gold rounded-lg shadow-md overflow-hidden">
                   <GoogleCalendar />
                 </div>
               </div>
