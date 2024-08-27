@@ -7,7 +7,6 @@ import { useTheme } from './ThemeContext';
 import DayHeader from './DayHeader';
 import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
-import PeriodTitleUpdater from './PeriodTitleUpdater';
 import Schedule from './Schedule';
 import NavBar from './NavBar';
 import Admin from './Admin';
@@ -75,7 +74,6 @@ function AppContent() {
   return (
     <div className={`App ${theme} flex flex-col min-h-screen`}>
       <NavBar user={user} setUser={updateUser} />
-      <PeriodTitleUpdater />
       {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
         <Route 
@@ -94,7 +92,7 @@ function AppContent() {
         <Route 
           path="/account" 
           element={
-            <div className="flex-grow flex flex-col h-[calc(100vh-64px)]"> {/* Adjust 64px if your navbar height is different */}
+            <div className="flex-grow flex flex-col h-[calc(100vh-64px)]">
               <Account user={user} weekSchedule={weekSchedule} />
             </div>
           } 
