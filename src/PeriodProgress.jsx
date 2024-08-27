@@ -30,7 +30,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       const schedule = weekSchedule[today];
       if (Array.isArray(schedule)) {
         const currentPeriodIndex = schedule.findIndex((period) => {
-          const [, time] = period.split(' - ');
+          const [name, time] = period.split(' - ');
           const [start, end] = time.split('-');
           const startTime = convertTo24Hour(start.trim());
           const endTime = convertTo24Hour(end.trim());
@@ -38,8 +38,9 @@ const PeriodProgress = ({ weekSchedule }) => {
         });
 
         if (currentPeriodIndex !== -1) {
-          setCurrentPeriod(schedule[currentPeriodIndex]);
-          const [, time] = schedule[currentPeriodIndex].split(' - ');
+          const period = schedule[currentPeriodIndex];
+          setCurrentPeriod(period);
+          const [name, time] = period.split(' - ');
           const [start, end] = time.split('-');
           const startTime = convertTo24Hour(start.trim());
           const endTime = convertTo24Hour(end.trim());
@@ -55,10 +56,14 @@ const PeriodProgress = ({ weekSchedule }) => {
 
           const remainingMinutes = totalMinutes - elapsedMinutes;
           setTimeRemaining(`${Math.floor(remainingMinutes / 60)}h ${remainingMinutes % 60}m`);
+
+          // Update browser tab title
+          document.title = `${name} - ${timeRemaining} left`;
         } else {
           setCurrentPeriod(null);
           setProgress(0);
           setTimeRemaining('');
+          document.title = 'Schedule-SPX'; // Reset title when no active period
         }
       }
     };

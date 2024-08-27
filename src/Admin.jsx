@@ -4,6 +4,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
+  const [bulkInput, setBulkInput] = useState('');
 
   useEffect(() => {
     if (Object.keys(weekSchedule).length === 0) {
@@ -31,6 +32,22 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
     };
     setWeekSchedule(updatedSchedule);
     saveSchedule(updatedSchedule);
+  };
+
+  const handleBulkInput = () => {
+    const lines = bulkInput.trim().split('\n');
+    const newPeriods = lines.slice(1).map(line => {
+      const [name, start, end] = line.split('\t');
+      return `${name} - ${start}-${end}`;
+    });
+
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: newPeriods
+    };
+    setWeekSchedule(updatedSchedule);
+    saveSchedule(updatedSchedule);
+    setBulkInput('');
   };
 
   const saveSchedule = async (schedule) => {
@@ -112,6 +129,22 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           Add Period
+        </button>
+      </div>
+      <div className="mb-4">
+        <h3 className="text-xl font-semibold mb-2">Bulk Add Periods</h3>
+        <textarea
+          value={bulkInput}
+          onChange={(e) => setBulkInput(e.target.value)}
+          placeholder="Paste formatted schedule here..."
+          className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          rows="10"
+        />
+        <button
+          onClick={handleBulkInput}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Add Bulk Periods
         </button>
       </div>
       {saveStatus && (
