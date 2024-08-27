@@ -19,7 +19,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       const todaySchedule = weekSchedule[currentDay];
 
       if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
-        handleSchoolDay(todaySchedule, currentTime, now, currentDay);
+        handleSchoolDay(todaySchedule, now, currentDay);
       } else {
         handleNonSchoolDay(now, currentDay);
       }
@@ -31,13 +31,13 @@ const PeriodProgress = ({ weekSchedule }) => {
     return () => clearInterval(timer);
   }, [weekSchedule]);
 
-  const handleSchoolDay = (schedule, currentTime, now, currentDay) => {
+  const handleSchoolDay = (schedule, now, currentDay) => {
     const currentPeriodInfo = schedule.find(period => {
       const [, time] = period.split(' - ');
       const [start, end] = time.split('-');
-      const startTime = convertTo24Hour(start.trim());
-      const endTime = convertTo24Hour(end.trim());
-      return currentTime >= startTime && currentTime < endTime;
+      const startTime = parseTime(start.trim());
+      const endTime = parseTime(end.trim());
+      return now >= startTime && now < endTime;
     });
 
     if (currentPeriodInfo) {
@@ -55,7 +55,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       setProgress(progressPercentage);
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
-    } else if (currentTime < convertTo24Hour(schedule[0].split(' - ')[1].split('-')[0].trim())) {
+    } else if (now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
       // Before first period of the day
       const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
       const timeUntilStart = firstPeriodStart - now;
@@ -145,18 +145,6 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const updateTitle = (status, time) => {
     document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
-  };
-
-  const convertTo24Hour = (time12h) => {
-    const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':');
-    hours = parseInt(hours, 10);
-    if (hours === 12) {
-      hours = modifier.toLowerCase() === 'pm' ? 12 : 0;
-    } else if (modifier.toLowerCase() === 'pm') {
-      hours += 12;
-    }
-    return `${hours.toString().padStart(2, '0')}:${minutes}`;
   };
 
   const parseTime = (timeString) => {
