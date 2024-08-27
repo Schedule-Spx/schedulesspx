@@ -1,3 +1,4 @@
+// src/PeriodProgress.jsx
 import React, { useState, useEffect } from 'react';
 
 const PeriodProgress = ({ weekSchedule }) => {
@@ -79,7 +80,10 @@ const PeriodProgress = ({ weekSchedule }) => {
   }, [weekSchedule]);
 
   const getPeriodName = (originalName) => {
-    return renamedPeriods[originalName] || originalName;
+    if (/^[1-8]$/.test(originalName)) {
+      return renamedPeriods[originalName] || `Period ${originalName}`;
+    }
+    return originalName;
   };
 
   return (
