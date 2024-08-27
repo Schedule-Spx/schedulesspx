@@ -27,17 +27,17 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className="bg-stpius-white dark:bg-stpius-blue border border-stpius-blue dark:border-stpius-gold p-4 rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4 text-stpius-blue dark:text-stpius-white">{currentDay}'s Schedule</h2>
+    <div className="bg-stpius-blue border border-stpius-gold p-4 rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4 text-stpius-white">{currentDay}'s Schedule</h2>
       {daySchedule.length > 0 ? (
         <ul className="space-y-2">
           {daySchedule.map((period, index) => {
             const [name, time] = period.split(' - ');
             const [start, end] = time.split('-');
             return (
-              <li key={index} className="flex justify-between items-center bg-stpius-gold/10 dark:bg-stpius-gold/30 p-2 rounded">
-                <span className="font-medium text-stpius-blue dark:text-stpius-white">{name}</span>
-                <span className="text-sm text-stpius-blue/70 dark:text-stpius-white/70">
+              <li key={index} className="flex justify-between items-center bg-stpius-gold/30 p-2 rounded">
+                <span className="font-medium text-stpius-white">{name}</span>
+                <span className="text-sm text-stpius-white/70">
                   {formatTime(start)} - {formatTime(end)}
                 </span>
               </li>
@@ -45,7 +45,7 @@ const Schedule = ({ weekSchedule }) => {
           })}
         </ul>
       ) : (
-        <p className="text-stpius-blue dark:text-stpius-white">No schedule available for today.</p>
+        <p className="text-stpius-white">No schedule available for today.</p>
       )}
     </div>
   );

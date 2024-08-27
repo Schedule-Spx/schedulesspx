@@ -178,29 +178,29 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   return (
-    <div className="bg-stpius-white dark:bg-stpius-blue border border-stpius-blue dark:border-stpius-gold p-4 rounded-lg shadow w-full">
-      <h2 className="text-xl font-bold mb-4 text-stpius-blue dark:text-stpius-white">Period Progress</h2>
+    <div className="bg-stpius-blue border border-stpius-gold p-4 rounded-lg shadow w-full">
+      <h2 className="text-xl font-bold mb-4 text-stpius-white">Period Progress</h2>
       {currentState ? (
         <div>
           <div className="flex justify-between items-center mb-2">
-            <p className="text-lg font-semibold text-stpius-blue dark:text-stpius-white">
+            <p className="text-lg font-semibold text-stpius-white">
               {currentState.type === 'activePeriod' ? currentState.name :
                currentState.type === 'betweenPeriods' ? `Next: ${currentState.nextPeriod}` :
                currentState.type === 'beforeSchool' ? 'School starts soon' :
                currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? `Next school day (${currentState.nextDay})` :
                'No School'}
             </p>
-            <p className="text-sm text-stpius-blue dark:text-stpius-white">{timeRemaining}</p>
+            <p className="text-sm text-stpius-white">{timeRemaining}</p>
           </div>
           <div className="w-full bg-stpius-gold/30 rounded-full h-4">
             <div 
-              className="bg-stpius-blue dark:bg-stpius-gold h-4 rounded-full transition-all duration-1000 ease-in-out" 
+              className="bg-stpius-gold h-4 rounded-full transition-all duration-1000 ease-in-out" 
               style={{width: `${progress}%`}}
             ></div>
           </div>
         </div>
       ) : (
-        <p className="text-stpius-blue dark:text-stpius-white">Loading...</p>
+        <p className="text-stpius-white">Loading...</p>
       )}
     </div>
   );

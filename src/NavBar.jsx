@@ -1,13 +1,10 @@
-// src/NavBar.jsx
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useTheme } from './ThemeContext';
 import GoogleLogin from './components/GoogleLogin';
 import logo from './assets/logo.svg';
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
 
   const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org'];
 
@@ -32,12 +29,6 @@ const NavBar = ({ user, setUser }) => {
         <Link to="/about" className="text-sm hover:text-stpius-gold">About</Link>
       </div>
       <div className="flex items-center space-x-4">
-        <button
-          className="text-sm hover:text-stpius-gold"
-          onClick={toggleTheme}
-        >
-          {theme === 'dark' ? '🌞' : '🌙'}
-        </button>
         {user ? (
           <>
             <Link to="/account" className="text-sm hover:text-stpius-gold">{user.name}</Link>
