@@ -78,8 +78,27 @@ function AppContent() {
       <PeriodTitleUpdater />
       {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
-        <Route path="/admin" element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />} />
-        <Route path="/account" element={<Account user={user} weekSchedule={weekSchedule} />} />
+        <Route 
+          path="/admin" 
+          element={
+            <div className="flex-grow flex flex-col">
+              <Admin 
+                user={user} 
+                weekSchedule={weekSchedule} 
+                setWeekSchedule={setWeekSchedule} 
+                fetchSchedule={fetchSchedule} 
+              />
+            </div>
+          } 
+        />
+        <Route 
+          path="/account" 
+          element={
+            <div className="flex-grow flex flex-col h-[calc(100vh-64px)]"> {/* Adjust 64px if your navbar height is different */}
+              <Account user={user} weekSchedule={weekSchedule} />
+            </div>
+          } 
+        />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
