@@ -1,5 +1,5 @@
 # Schedule SPX 📅✨
-![Schedule SPX Logo](path/to/your/logo.png)
+![Schedule SPX Logo](src/assets/logo.svg)
 
 ## Real-Time School Schedule at Your Fingertips 🚀
 
@@ -57,8 +57,8 @@ For any questions or concerns, please open an issue or contact the maintainers d
 
 ---
 
-Made with ❤️ by [Your Name/Team]
+Made with ❤️ by Kdogdevs
 
 This README provides a comprehensive overview of your Schedule SPX project, highlighting its key features, how it works, and instructions for getting started. It also includes sections for contributing and licensing, which are important for open-source projects.
-Remember to replace placeholders like path/to/your/logo.png, yourusername, and [Your Name/Team] with your actual information. Also, if you don't have CONTRIBUTING.md and LICENSE.md files, you might want to create those or remove those references.
+Remember to replace placeholders like path/to/your/logo.png, Kdogdevs, with your actual information. Also, if you don't have CONTRIBUTING.md and LICENSE.md files, you might want to create those or remove those references.
 You can further enhance this README by adding screenshots of your application, badges (e.g., build status, version), or any other relevant information specific to your project.
