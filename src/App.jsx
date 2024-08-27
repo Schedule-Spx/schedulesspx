@@ -23,6 +23,7 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showAgreement, setShowAgreement] = useState(false);
+  const [googleCalendarEvents, setGoogleCalendarEvents] = useState([]);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -40,6 +41,7 @@ function AppContent() {
     }
 
     fetchSchedule();
+    fetchGoogleCalendarEvents();
   }, []);
 
   const fetchSchedule = async () => {
@@ -51,6 +53,19 @@ function AppContent() {
       setWeekSchedule(data);
     } catch (error) {
       console.error('Error fetching schedule:', error);
+    }
+  };
+
+  const fetchGoogleCalendarEvents = async () => {
+    try {
+      // Replace this with your actual Google Calendar API endpoint
+      const response = await fetch('YOUR_GOOGLE_CALENDAR_API_ENDPOINT');
+      if (!response.ok) throw new Error('Failed to fetch Google Calendar events');
+      const data = await response.json();
+      console.log('Fetched Google Calendar events:', data);
+      setGoogleCalendarEvents(data);
+    } catch (error) {
+      console.error('Error fetching Google Calendar events:', error);
     }
   };
 
@@ -112,11 +127,11 @@ function AppContent() {
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <GoogleCalendar />
+                  <GoogleCalendar events={googleCalendarEvents} />
                 </div>
               </div>
               <div className="w-full mb-4">
-                <PeriodProgress weekSchedule={weekSchedule} />
+                <PeriodProgress weekSchedule={weekSchedule} googleCalendarEvents={googleCalendarEvents} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <AdComponent adSlot="1234567890" />
