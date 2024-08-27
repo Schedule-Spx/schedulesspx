@@ -12,6 +12,10 @@ const PeriodProgress = ({ weekSchedule }) => {
       const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
       const currentTime = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
+      console.log('Current day:', currentDay);
+      console.log('Current time:', currentTime);
+      console.log('Week schedule:', weekSchedule);
+
       const todaySchedule = weekSchedule[currentDay];
 
       if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
@@ -28,12 +32,21 @@ const PeriodProgress = ({ weekSchedule }) => {
   }, [weekSchedule]);
 
   const handleSchoolDay = (schedule, currentTime, now) => {
+    console.log('Handling school day');
+    console.log('Schedule:', schedule);
+
     const currentPeriodInfo = schedule.find(period => {
-      const [start, end] = period.split(' - ')[1].split('-');
-      return currentTime >= convertTo24Hour(start.trim()) && currentTime < convertTo24Hour(end.trim());
+      const [, time] = period.split(' - ');
+      const [start, end] = time.split('-');
+      const startTime = convertTo24Hour(start.trim());
+      const endTime = convertTo24Hour(end.trim());
+      console.log(`Checking period: ${period}`);
+      console.log(`Start time: ${startTime}, End time: ${endTime}, Current time: ${currentTime}`);
+      return currentTime >= startTime && currentTime < endTime;
     });
 
     if (currentPeriodInfo) {
+      console.log('Current period found:', currentPeriodInfo);
       const [name, time] = currentPeriodInfo.split(' - ');
       const [, end] = time.split('-');
       const endTime = parseTime(end.trim());
@@ -46,6 +59,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
     } else if (currentTime < convertTo24Hour(schedule[0].split(' - ')[1].split('-')[0].trim())) {
+      console.log('Before first period');
       // Before first period
       const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
       const timeUntilStart = firstPeriodStart - now;
@@ -54,13 +68,16 @@ const PeriodProgress = ({ weekSchedule }) => {
       setProgress(0);
       updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
     } else {
+      console.log('After last period or between periods');
       // After last period or between periods
       const nextPeriod = schedule.find(period => {
-        const [start] = period.split(' - ')[1].split('-');
+        const [, time] = period.split(' - ');
+        const [start] = time.split('-');
         return currentTime < convertTo24Hour(start.trim());
       });
 
       if (nextPeriod) {
+        console.log('Next period found:', nextPeriod);
         const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
         const [nextPeriodStart] = nextPeriodTime.split('-');
         const nextStartTime = parseTime(nextPeriodStart.trim());
@@ -77,6 +94,7 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   const handleAfterSchool = (now) => {
+    console.log('Handling after school');
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
@@ -88,6 +106,7 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   const handleNonSchoolDay = (now) => {
+    console.log('Handling non-school day');
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
@@ -125,25 +144,27 @@ const PeriodProgress = ({ weekSchedule }) => {
   const convertTo24Hour = (time12h) => {
     const [time, modifier] = time12h.split(' ');
     let [hours, minutes] = time.split(':');
-    if (hours === '12') {
-      hours = '00';
+    hours = parseInt(hours, 10);
+    if (hours === 12) {
+      hours = modifier.toLowerCase() === 'pm' ? 12 : 0;
+    } else if (modifier.toLowerCase() === 'pm') {
+      hours += 12;
     }
-    if (modifier === 'PM') {
-      hours = parseInt(hours, 10) + 12;
-    }
-    return `${hours}:${minutes}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
   };
 
   const parseTime = (timeString) => {
     const [time, modifier] = timeString.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
-    if (modifier === 'PM' && hours !== 12) {
+    if (modifier.toLowerCase() === 'pm' && hours !== 12) {
       hours += 12;
-    } else if (modifier === 'AM' && hours === 12) {
+    } else if (modifier.toLowerCase() === 'am' && hours === 12) {
       hours = 0;
     }
     const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    const result = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    console.log(`Parsing time: ${timeString} -> ${result}`);
+    return result;
   };
 
   return (
