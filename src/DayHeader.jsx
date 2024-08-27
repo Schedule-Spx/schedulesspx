@@ -1,4 +1,4 @@
-// src/DayHeader.js
+// src/DayHeader.jsx
 import React, { useEffect, useState } from 'react';
 
 const DayHeader = () => {
@@ -18,7 +18,7 @@ const DayHeader = () => {
   const timeString = currentDateTime.toLocaleTimeString();
 
   return (
-    <div className="p-4 bg-stpius-blue border border-stpius-gold rounded glass-tile flex flex-col items-center justify-center">
+    <div className="p-4 bg-stpius-blue border border-stpius-gold rounded-lg flex flex-col items-center justify-center">
       <div className="text-2xl font-bold text-stpius-white">{dayName}</div>
       <div className="text-xl text-stpius-white">{dateString}</div>
       <div className="text-lg text-stpius-gold">{timeString}</div>
