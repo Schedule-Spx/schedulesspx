@@ -1,10 +1,16 @@
 // src/AdComponent.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const AdComponent = ({ adSlot, adFormat = "auto", fullWidthResponsive = "true" }) => {
+  const adRef = useRef(null);
+
   useEffect(() => {
-    if (window.adsbygoogle) {
-      window.adsbygoogle.push({});
+    try {
+      if (adRef.current && window.adsbygoogle) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch (error) {
+      console.error('AdSense error:', error);
     }
   }, []);
 
@@ -17,7 +23,8 @@ const AdComponent = ({ adSlot, adFormat = "auto", fullWidthResponsive = "true" }
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive={fullWidthResponsive}
-      ></ins>
+        ref={adRef}
+      />
     </div>
   );
 };
