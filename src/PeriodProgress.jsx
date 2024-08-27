@@ -41,31 +41,49 @@ const PeriodProgress = ({ weekSchedule }) => {
     });
 
     if (currentPeriodInfo) {
+      // Inside a period
       const [name, time] = currentPeriodInfo.split(' - ');
-      const [start, end] = time.split('-');
-      const startTime = parseTime(start.trim());
+      const [, end] = time.split('-');
       const endTime = parseTime(end.trim());
 
-      const totalDuration = endTime - startTime;
-      const elapsed = now - startTime;
       const remaining = endTime - now;
-      const progressPercentage = (elapsed / totalDuration) * 100;
+      const totalDuration = endTime - parseTime(time.split('-')[0].trim());
+      const progressPercentage = ((totalDuration - remaining) / totalDuration) * 100;
 
       setCurrentState({ type: 'activePeriod', name });
       setProgress(progressPercentage);
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
-    } else if (now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
-      // Before first period of the day
-      const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
-      const timeUntilStart = firstPeriodStart - now;
-      setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
-      setTimeRemaining(formatTimeRemaining(timeUntilStart));
-      setProgress(0);
-      updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
     } else {
-      // After last period, find next school day
-      handleAfterSchool(now, currentDay);
+      // Between periods or before/after school
+      const nextPeriod = schedule.find(period => {
+        const [, time] = period.split(' - ');
+        const startTime = parseTime(time.split('-')[0].trim());
+        return now < startTime;
+      });
+
+      if (nextPeriod) {
+        // Next period exists (between periods)
+        const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
+        const nextPeriodStart = parseTime(nextPeriodTime.split('-')[0].trim());
+        const timeUntilNext = nextPeriodStart - now;
+
+        setCurrentState({ type: 'betweenPeriods', nextPeriod: nextPeriodName });
+        setTimeRemaining(formatTimeRemaining(timeUntilNext));
+        setProgress(0);
+        updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
+      } else if (now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
+        // Before first period of the day
+        const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
+        const timeUntilStart = firstPeriodStart - now;
+        setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
+        setTimeRemaining(formatTimeRemaining(timeUntilStart));
+        setProgress(0);
+        updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
+      } else {
+        // After last period, find next school day
+        handleAfterSchool(now, currentDay);
+      }
     }
   };
 
