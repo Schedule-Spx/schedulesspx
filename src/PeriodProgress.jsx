@@ -42,14 +42,17 @@ const PeriodProgress = ({ weekSchedule }) => {
 
     if (currentPeriodInfo) {
       const [name, time] = currentPeriodInfo.split(' - ');
-      const [, end] = time.split('-');
+      const [start, end] = time.split('-');
+      const startTime = parseTime(start.trim());
       const endTime = parseTime(end.trim());
 
+      const totalDuration = endTime - startTime;
+      const elapsed = now - startTime;
       const remaining = endTime - now;
-      const duration = getPercentage(now, endTime);
+      const progressPercentage = (elapsed / totalDuration) * 100;
 
       setCurrentState({ type: 'activePeriod', name });
-      setProgress(duration);
+      setProgress(progressPercentage);
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
     } else if (currentTime < convertTo24Hour(schedule[0].split(' - ')[1].split('-')[0].trim())) {
@@ -142,12 +145,6 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const updateTitle = (status, time) => {
     document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
-  };
-
-  const getPercentage = (start, end) => {
-    const total = end - start;
-    const elapsed = new Date() - start;
-    return (elapsed / total) * 100;
   };
 
   const convertTo24Hour = (time12h) => {
