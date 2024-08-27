@@ -1,7 +1,6 @@
 // src/Account.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PeriodRenamer from './PeriodRenamer';
 
 const Account = ({ user, weekSchedule }) => {
   if (!user) {
@@ -27,11 +26,6 @@ const Account = ({ user, weekSchedule }) => {
               <p className="bg-gray-100 dark:bg-gray-700 p-2 rounded">{user.email}</p>
             </div>
           </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-bold mb-4">Customize Period Names</h2>
-          <PeriodRenamer weekSchedule={weekSchedule} />
         </div>
       </div>
 

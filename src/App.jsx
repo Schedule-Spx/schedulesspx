@@ -23,7 +23,6 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showAgreement, setShowAgreement] = useState(false);
-  const [customPeriodNames, setCustomPeriodNames] = useState({});
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -41,7 +40,6 @@ function AppContent() {
     }
 
     fetchSchedule();
-    loadCustomPeriodNames();
   }, []);
 
   const fetchSchedule = async () => {
@@ -54,21 +52,6 @@ function AppContent() {
     } catch (error) {
       console.error('Error fetching schedule:', error);
     }
-  };
-
-  const loadCustomPeriodNames = () => {
-    const savedNames = localStorage.getItem('customPeriodNames');
-    if (savedNames) {
-      setCustomPeriodNames(JSON.parse(savedNames));
-    }
-  };
-
-  const updateCustomPeriodName = (originalName, customName) => {
-    setCustomPeriodNames(prev => {
-      const updated = { ...prev, [originalName]: customName };
-      localStorage.setItem('customPeriodNames', JSON.stringify(updated));
-      return updated;
-    });
   };
 
   const updateUser = (newUser) => {
@@ -113,8 +96,6 @@ function AppContent() {
               <Account 
                 user={user} 
                 weekSchedule={weekSchedule}
-                customPeriodNames={customPeriodNames}
-                updateCustomPeriodName={updateCustomPeriodName}
               />
             </div>
           } 
@@ -131,14 +112,14 @@ function AppContent() {
                   <DayHeader />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <Schedule weekSchedule={weekSchedule} customPeriodNames={customPeriodNames} />
+                  <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                   <GoogleCalendar />
                 </div>
               </div>
               <div className="w-full mb-4">
-                <PeriodProgress weekSchedule={weekSchedule} customPeriodNames={customPeriodNames} />
+                <PeriodProgress weekSchedule={weekSchedule} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <AdComponent adSlot="1234567890" />
