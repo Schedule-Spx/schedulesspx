@@ -29,14 +29,13 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleSchoolDay = (schedule, currentTime, now) => {
     const currentPeriodInfo = schedule.find(period => {
-      const [, time] = period.split('\n');
-      const [start, end] = time.split(' - ');
+      const [start, end] = period.split(' - ')[1].split('-');
       return currentTime >= convertTo24Hour(start.trim()) && currentTime < convertTo24Hour(end.trim());
     });
 
     if (currentPeriodInfo) {
-      const [name, time] = currentPeriodInfo.split('\n');
-      const [, end] = time.split(' - ');
+      const [name, time] = currentPeriodInfo.split(' - ');
+      const [, end] = time.split('-');
       const endTime = parseTime(end.trim());
 
       const remaining = endTime - now;
@@ -46,25 +45,24 @@ const PeriodProgress = ({ weekSchedule }) => {
       setProgress(duration);
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
-    } else if (currentTime < convertTo24Hour(schedule[0].split('\n')[1].split(' - ')[0].trim())) {
+    } else if (currentTime < convertTo24Hour(schedule[0].split(' - ')[1].split('-')[0].trim())) {
       // Before first period
-      const firstPeriodStart = parseTime(schedule[0].split('\n')[1].split(' - ')[0].trim());
+      const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
       const timeUntilStart = firstPeriodStart - now;
-      setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split('\n')[0] });
+      setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
       setTimeRemaining(formatTimeRemaining(timeUntilStart));
       setProgress(0);
       updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
     } else {
       // After last period or between periods
       const nextPeriod = schedule.find(period => {
-        const [, time] = period.split('\n');
-        const [start] = time.split(' - ');
+        const [start] = period.split(' - ')[1].split('-');
         return currentTime < convertTo24Hour(start.trim());
       });
 
       if (nextPeriod) {
-        const [nextPeriodName, nextPeriodTime] = nextPeriod.split('\n');
-        const [nextPeriodStart] = nextPeriodTime.split(' - ');
+        const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
+        const [nextPeriodStart] = nextPeriodTime.split('-');
         const nextStartTime = parseTime(nextPeriodStart.trim());
 
         const timeUntilNext = nextStartTime - now;
