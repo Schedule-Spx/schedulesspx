@@ -69,7 +69,7 @@ const GoogleCalendar = () => {
       <h2 className="text-xl font-bold p-4 text-stpius-white">Upcoming Events</h2>
       <div className="flex-grow overflow-y-auto">
         {Object.entries(events).map(([date, dayEvents]) => (
-          <div key={date} className="p-4">
+          <div key={date} className="mb-4 px-4">
             <h3 className="text-lg font-semibold mb-2 text-stpius-white">{formatDate(date)}</h3>
             <ul className="space-y-2">
               {dayEvents.map((event) => (
