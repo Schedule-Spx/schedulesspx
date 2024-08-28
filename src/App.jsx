@@ -105,31 +105,32 @@ function AppContent() {
         <Route
           path="/"
           element={
-            <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <main className="flex-grow p-4 flex flex-col justify-between">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-32">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-28">
                     <DayHeader />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100vh-16rem)]">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(40vh-4rem)]">
                     <QuickLinks />
                   </div>
                 </div>
-                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100vh-12rem)]">
+                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(40vh+2rem)]">
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100vh-20rem)]">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(40vh-4rem)]">
                     <GoogleCalendar />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-32">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-28">
                     <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>
-              <div className="w-full max-w-3xl mx-auto mt-4">
+              <div className="w-full max-w-3xl mx-auto my-4">
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
+              <div className="h-4"></div> {/* Spacer */}
             </main>
           }
         />
