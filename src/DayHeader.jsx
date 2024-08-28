@@ -18,10 +18,10 @@ const DayHeader = () => {
   const timeString = currentDateTime.toLocaleTimeString();
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold rounded-lg flex flex-col items-center justify-between h-full p-4">
-      <div className="text-3xl font-bold text-stpius-white mb-2">{dayName}</div>
-      <div className="text-xl text-stpius-white mb-2">{dateString}</div>
-      <div className="text-2xl font-semibold text-stpius-gold">{timeString}</div>
+    <div className="p-4 bg-stpius-blue border border-stpius-gold rounded-lg flex flex-col items-center justify-center">
+      <div className="text-2xl font-bold text-stpius-white">{dayName}</div>
+      <div className="text-xl text-stpius-white">{dateString}</div>
+      <div className="text-lg text-stpius-gold">{timeString}</div>
     </div>
   );
 };
