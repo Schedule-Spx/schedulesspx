@@ -19,7 +19,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 5,
+              maxResults: 10,
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -65,11 +65,11 @@ const GoogleCalendar = () => {
   if (Object.keys(events).length === 0) return <div className="p-4 text-stpius-white">No upcoming events</div>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4 text-stpius-white">Upcoming Events</h2>
-      <div className="space-y-4">
+    <div className="h-full flex flex-col">
+      <h2 className="text-xl font-bold p-4 text-stpius-white">Upcoming Events</h2>
+      <div className="flex-grow overflow-y-auto">
         {Object.entries(events).map(([date, dayEvents]) => (
-          <div key={date}>
+          <div key={date} className="p-4">
             <h3 className="text-lg font-semibold mb-2 text-stpius-white">{formatDate(date)}</h3>
             <ul className="space-y-2">
               {dayEvents.map((event) => (

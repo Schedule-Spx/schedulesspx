@@ -119,7 +119,7 @@ function AppContent() {
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100%-7rem)]">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
                     <GoogleCalendar />
                   </div>
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-28">
