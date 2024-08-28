@@ -14,7 +14,6 @@ import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
-import AdComponent from './AdComponent';
 import AgreementPopup from './components/AgreementPopup';
 
 function AppContent() {
@@ -124,11 +123,6 @@ function AppContent() {
               </div>
               <div className="w-full mb-4">
                 <PeriodProgress weekSchedule={weekSchedule} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <AdComponent adSlot="1234567890" />
-                <AdComponent adSlot="2345678901" />
-                <AdComponent adSlot="3456789012" />
               </div>
             </main>
           }
