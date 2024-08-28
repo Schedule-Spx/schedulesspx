@@ -8,7 +8,6 @@ import QuickLinks from './QuickLinks';
 import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
-import Events from './Events';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
 import NavBar from './NavBar';
 import Admin from './Admin';
@@ -122,9 +121,6 @@ function AppContent() {
                 <div className="flex flex-col space-y-4">
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <GoogleCalendar />
-                  </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                    <Events user={user} />
                   </div>
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <GoogleSuiteLinks />
