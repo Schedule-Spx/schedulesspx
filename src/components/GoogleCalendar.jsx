@@ -19,7 +19,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 50,
+              maxResults: 10,
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -39,7 +39,7 @@ const GoogleCalendar = () => {
   }, []);
 
   const formatDate = (dateString) => {
-    const options = { weekday: 'long', month: 'long', day: 'numeric' };
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -48,31 +48,10 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  const isToday = (dateString) => {
-    const today = new Date();
-    const eventDate = new Date(dateString);
-    return today.toDateString() === eventDate.toDateString();
-  };
-
-  const renderEventList = (eventList, isToday = false) => (
-    <ul className="space-y-2">
-      {eventList.map((event) => (
-        <li key={event.id} className="bg-white dark:bg-gray-700 p-2 rounded shadow">
-          <div className="font-semibold">{event.summary}</div>
-          {event.start.dateTime && (
-            <div className="text-sm text-gray-600 dark:text-gray-300">
-              {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
-      <div className="flex-grow overflow-y-auto">
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-64">
+      <h2 className="text-lg font-bold mb-2">Upcoming Events</h2>
+      <div className="overflow-y-auto h-52">
         {loading ? (
           <div>Loading events...</div>
         ) : error ? (
@@ -80,16 +59,17 @@ const GoogleCalendar = () => {
         ) : events.length === 0 ? (
           <div>No upcoming events</div>
         ) : (
-          <>
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">Today's Events</h3>
-              {renderEventList(events.filter(event => isToday(event.start.dateTime || event.start.date)), true)}
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Future Events</h3>
-              {renderEventList(events.filter(event => !isToday(event.start.dateTime || event.start.date)))}
-            </div>
-          </>
+          <ul className="space-y-2">
+            {events.map((event) => (
+              <li key={event.id} className="text-sm">
+                <div className="font-semibold">{event.summary}</div>
+                <div className="text-xs text-gray-600 dark:text-gray-300">
+                  {formatDate(event.start.dateTime || event.start.date)}
+                  {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
