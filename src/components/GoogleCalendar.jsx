@@ -6,7 +6,7 @@ const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';
 
 const GoogleCalendar = () => {
-  const [events, setEvents] = useState({});
+  const [events, setEvents] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -19,26 +19,14 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 20,
+              maxResults: 50,
               singleEvents: true,
               orderBy: 'startTime',
             },
           }
         );
         
-        const groupedEvents = response.data.items.reduce((acc, event) => {
-          const eventDate = new Date(event.start.dateTime || event.start.date);
-          const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
-          const dateString = localDate.toDateString();
-          
-          if (!acc[dateString]) {
-            acc[dateString] = [];
-          }
-          acc[dateString].push(event);
-          return acc;
-        }, {});
-
-        setEvents(groupedEvents);
+        setEvents(response.data.items);
       } catch (error) {
         console.error('Error fetching events:', error.response?.data || error.message);
         setError(`Failed to fetch events: ${error.response?.data?.error?.message || error.message}`);
@@ -60,34 +48,48 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
+  const isToday = (dateString) => {
+    const today = new Date();
+    const eventDate = new Date(dateString);
+    return today.toDateString() === eventDate.toDateString();
+  };
+
+  const renderEventList = (eventList, isToday = false) => (
+    <ul className="space-y-2">
+      {eventList.map((event) => (
+        <li key={event.id} className="bg-white dark:bg-gray-700 p-2 rounded shadow">
+          <div className="font-semibold">{event.summary}</div>
+          {event.start.dateTime && (
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
-    <div className="h-full flex flex-col">
-      <h2 className="text-xl font-bold p-4">Upcoming Events</h2>
+    <div className="h-full flex flex-col bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
       <div className="flex-grow overflow-y-auto">
         {loading ? (
-          <div className="p-4">Loading events...</div>
+          <div>Loading events...</div>
         ) : error ? (
-          <div className="p-4">Error: {error}</div>
-        ) : Object.keys(events).length === 0 ? (
-          <div className="p-4">No upcoming events</div>
+          <div>Error: {error}</div>
+        ) : events.length === 0 ? (
+          <div>No upcoming events</div>
         ) : (
-          Object.entries(events).map(([date, dayEvents]) => (
-            <div key={date} className="mb-4 px-4">
-              <h3 className="text-lg font-semibold mb-2">{formatDate(date)}</h3>
-              <ul className="space-y-2">
-                {dayEvents.map((event) => (
-                  <li key={event.id} className="bg-white dark:bg-gray-700 p-2 rounded shadow">
-                    <div className="font-semibold">{event.summary}</div>
-                    {event.start.dateTime && (
-                      <div className="text-sm text-gray-600 dark:text-gray-300">
-                        {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+          <>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Today's Events</h3>
+              {renderEventList(events.filter(event => isToday(event.start.dateTime || event.start.date)), true)}
             </div>
-          ))
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Future Events</h3>
+              {renderEventList(events.filter(event => !isToday(event.start.dateTime || event.start.date)))}
+            </div>
+          </>
         )}
       </div>
     </div>
