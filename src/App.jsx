@@ -108,26 +108,26 @@ function AppContent() {
             <main className="flex-grow p-4 flex flex-col">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-32">
                     <DayHeader />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100vh-16rem)]">
                     <QuickLinks />
                   </div>
                 </div>
-                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100vh-12rem)]">
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-[calc(100vh-20rem)]">
                     <GoogleCalendar />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-32">
                     <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>
-              <div className="w-full mb-4 max-w-3xl mx-auto">
+              <div className="w-full max-w-3xl mx-auto mt-4">
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
             </main>
