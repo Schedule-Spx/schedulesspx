@@ -19,17 +19,15 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 10,
+              maxResults: 5,
               singleEvents: true,
               orderBy: 'startTime',
             },
           }
         );
         
-        // Group events by date, adjusting for timezone
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
-          // Adjust date to local timezone
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
           const dateString = localDate.toDateString();
           
@@ -67,18 +65,18 @@ const GoogleCalendar = () => {
   if (Object.keys(events).length === 0) return <div className="p-4 text-stpius-white">No upcoming events</div>;
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold rounded-lg p-4">
-      <h2 className="text-xl font-bold mb-2 text-stpius-white">Upcoming Events</h2>
-      <div className="space-y-2 max-h-[300px] overflow-y-auto">
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4 text-stpius-white">Upcoming Events</h2>
+      <div className="space-y-4">
         {Object.entries(events).map(([date, dayEvents]) => (
-          <div key={date} className="mb-2">
-            <h3 className="text-sm font-semibold mb-1 text-stpius-white">{formatDate(date)}</h3>
-            <ul className="space-y-1">
+          <div key={date}>
+            <h3 className="text-lg font-semibold mb-2 text-stpius-white">{formatDate(date)}</h3>
+            <ul className="space-y-2">
               {dayEvents.map((event) => (
-                <li key={event.id} className="bg-stpius-gold/30 p-1 rounded text-xs">
+                <li key={event.id} className="bg-stpius-gold/30 p-2 rounded">
                   <div className="font-semibold text-stpius-white">{event.summary}</div>
                   {event.start.dateTime && (
-                    <div className="text-stpius-white/70">
+                    <div className="text-sm text-stpius-white/70">
                       {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
                     </div>
                   )}
