@@ -115,9 +115,6 @@ function AppContent() {
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <QuickLinks />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                    <GoogleSuiteLinks />
-                  </div>
                 </div>
                 <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                   <Schedule weekSchedule={weekSchedule} />
@@ -128,6 +125,9 @@ function AppContent() {
                   </div>
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <Events user={user} />
+                  </div>
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                    <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>

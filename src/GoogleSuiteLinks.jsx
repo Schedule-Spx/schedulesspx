@@ -27,18 +27,18 @@ const GoogleSuiteLinks = () => {
 
   return (
     <div className="p-2">
-      <h2 className="text-lg font-bold mb-2 text-stpius-white">Google Suite</h2>
-      <div className="grid grid-cols-2 gap-2">
+      <h2 className="text-sm font-bold mb-1 text-stpius-white">Google Suite</h2>
+      <div className="grid grid-cols-2 gap-1">
         {apps.map((app) => (
           <a
             key={app.name}
             href={app.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-stpius-gold hover:bg-stpius-gold/80 transition-colors duration-200 p-2 rounded-lg flex flex-col items-center justify-center aspect-square"
+            className="bg-stpius-gold hover:bg-stpius-gold/80 transition-colors duration-200 p-1 rounded-lg flex flex-col items-center justify-center"
           >
-            <img src={app.logo} alt={`${app.name} logo`} className="w-8 h-8 mb-1" />
-            <span className="text-stpius-blue font-semibold text-xs">{app.name}</span>
+            <img src={app.logo} alt={`${app.name} logo`} className="w-6 h-6" />
+            <span className="text-stpius-blue font-semibold text-xs mt-1">{app.name}</span>
           </a>
         ))}
       </div>
