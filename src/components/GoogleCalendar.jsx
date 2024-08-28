@@ -26,10 +26,8 @@ const GoogleCalendar = () => {
           }
         );
         
-        // Group events by date, adjusting for timezone
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
-          // Adjust date to local timezone
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
           const dateString = localDate.toDateString();
           
