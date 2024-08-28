@@ -49,9 +49,9 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold p-2 rounded-lg h-full">
+    <div className="bg-stpius-blue border border-stpius-gold p-2 rounded-lg h-full flex flex-col">
       <h2 className="text-sm font-bold mb-1 text-stpius-white">Upcoming Events</h2>
-      <div className="overflow-y-auto h-[calc(100%-1.5rem)]">
+      <div className="overflow-y-auto flex-grow">
         {loading ? (
           <div className="text-stpius-white text-xs">Loading events...</div>
         ) : error ? (
