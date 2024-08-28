@@ -3,9 +3,10 @@ import React from 'react';
 
 const QuickLinks = () => {
   const links = [
-    { name: 'Canvas', url: 'https://spx.instructure.com/' },
-    { name: 'PowerSchool', url: 'https://spx.powerschool.com/public/' },
-    { name: 'x2VOL', url: 'https://x2vol.com/' }
+    { name: 'Canvas', url: 'https://stpius.instructure.com/' },
+    { name: 'PowerSchool', url: 'https://powerschool.spx.org/public/' },
+    { name: 'x2VOL', url: 'https://x2vol.com/' },
+    { name: 'SPX Website', url: 'https://www.spx.org/' }
   ];
 
   return (
