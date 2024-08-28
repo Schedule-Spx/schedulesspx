@@ -127,7 +127,7 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-              <div className="w-full max-w-3xl mx-auto mb-4">
+              <div className="w-full mb-4">
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
             </main>
