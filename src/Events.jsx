@@ -24,20 +24,21 @@ const Events = ({ user }) => {
   }, [user]);
 
   return (
-    <div className="p-4 bg-white dark:bg-gray-800 rounded glass-tile">
-      <h2 className="text-xl font-bold mb-4">Important Events</h2>
+    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md p-4 h-full flex flex-col">
+      <h2 className="text-xl font-bold mb-4 text-stpius-white">Important Events</h2>
       {user ? (
-        <ul>
+        <ul className="flex-grow overflow-y-auto">
           {events.map((event, index) => (
-            <li key={index} className="mb-2">
-              <span className="font-semibold">
+            <li key={index} className="mb-2 bg-stpius-gold/30 p-2 rounded">
+              <span className="font-semibold text-stpius-white">
                 {new Date(event.start.dateTime || event.start.date).toLocaleString()}:
-              </span> {event.summary}
+              </span>{' '}
+              <span className="text-stpius-white">{event.summary}</span>
             </li>
           ))}
         </ul>
       ) : (
-        <p>Please sign in to view events.</p>
+        <p className="text-stpius-white flex-grow flex items-center justify-center">Please sign in to view events.</p>
       )}
     </div>
   );

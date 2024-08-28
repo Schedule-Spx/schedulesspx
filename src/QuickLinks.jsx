@@ -11,16 +11,16 @@ const QuickLinks = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col p-4">
-      <h2 className="text-xl font-bold text-stpius-white mb-4">Quick Links</h2>
-      <div className="flex-grow overflow-y-auto space-y-2">
+    <div className="bg-stpius-blue border border-stpius-gold rounded-lg p-4">
+      <h2 className="text-xl font-bold text-stpius-white mb-2">Quick Links</h2>
+      <div className="space-y-2">
         {links.map((link, index) => (
           <a
             key={index}
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-stpius-gold text-stpius-blue font-semibold py-2 px-4 rounded hover:bg-stpius-gold/80 transition-colors duration-200 text-center block"
+            className="bg-stpius-gold text-stpius-blue font-semibold py-1 px-3 rounded hover:bg-stpius-gold/80 transition-colors duration-200 text-center block text-sm"
           >
             {link.name}
           </a>

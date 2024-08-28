@@ -19,7 +19,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 20,
+              maxResults: 10,
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -62,23 +62,23 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  if (loading) return <div className="h-full flex items-center justify-center">Loading events...</div>;
-  if (error) return <div className="h-full flex items-center justify-center">Error: {error}</div>;
-  if (Object.keys(events).length === 0) return <div className="h-full flex items-center justify-center">No upcoming events</div>;
+  if (loading) return <div className="p-4 text-stpius-white">Loading events...</div>;
+  if (error) return <div className="p-4 text-stpius-white">Error: {error}</div>;
+  if (Object.keys(events).length === 0) return <div className="p-4 text-stpius-white">No upcoming events</div>;
 
   return (
-    <div className="h-full flex flex-col p-4">
-      <h2 className="text-xl font-bold mb-4 text-stpius-white">Upcoming Events</h2>
-      <div className="flex-grow overflow-y-auto">
+    <div className="bg-stpius-blue border border-stpius-gold rounded-lg p-4">
+      <h2 className="text-xl font-bold mb-2 text-stpius-white">Upcoming Events</h2>
+      <div className="space-y-2 max-h-[300px] overflow-y-auto">
         {Object.entries(events).map(([date, dayEvents]) => (
-          <div key={date} className="mb-4">
-            <h3 className="text-lg font-semibold mb-2 text-stpius-white">{formatDate(date)}</h3>
-            <ul className="space-y-2">
+          <div key={date} className="mb-2">
+            <h3 className="text-sm font-semibold mb-1 text-stpius-white">{formatDate(date)}</h3>
+            <ul className="space-y-1">
               {dayEvents.map((event) => (
-                <li key={event.id} className="bg-stpius-gold/30 p-2 rounded shadow">
+                <li key={event.id} className="bg-stpius-gold/30 p-1 rounded text-xs">
                   <div className="font-semibold text-stpius-white">{event.summary}</div>
                   {event.start.dateTime && (
-                    <div className="text-sm text-stpius-white/70">
+                    <div className="text-stpius-white/70">
                       {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
                     </div>
                   )}

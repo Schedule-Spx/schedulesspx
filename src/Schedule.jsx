@@ -54,32 +54,30 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className="h-full flex flex-col p-4">
-      <h2 className="text-xl font-bold mb-4 text-stpius-white">{currentDay}'s Schedule</h2>
-      <div className="flex-grow overflow-y-auto">
+    <div className="bg-stpius-blue border border-stpius-gold rounded-lg p-4">
+      <h2 className="text-xl font-bold mb-2 text-stpius-white">{currentDay}'s Schedule</h2>
+      <div className="space-y-1 max-h-[300px] overflow-y-auto">
         {daySchedule.length > 0 ? (
-          <ul className="space-y-2">
-            {daySchedule.map((period, index) => {
-              const [name, time] = period.split(' - ');
-              const [start, end] = time.split('-');
-              const active = isActivePeriod(start.trim(), end.trim());
-              return (
-                <li 
-                  key={index} 
-                  className={`flex justify-between items-center p-2 rounded transition-all duration-300 ${
-                    active 
-                      ? 'bg-stpius-gold text-stpius-blue font-bold shadow-lg shadow-stpius-gold/50 scale-105' 
-                      : 'bg-stpius-gold/30 text-stpius-white'
-                  }`}
-                >
-                  <span className="font-medium">{name}</span>
-                  <span className={`text-sm ${active ? 'text-stpius-blue/80' : 'text-stpius-white/70'}`}>
-                    {formatTime(start)} - {formatTime(end)}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
+          daySchedule.map((period, index) => {
+            const [name, time] = period.split(' - ');
+            const [start, end] = time.split('-');
+            const active = isActivePeriod(start.trim(), end.trim());
+            return (
+              <div 
+                key={index} 
+                className={`flex justify-between items-center p-1 rounded text-sm ${
+                  active 
+                    ? 'bg-stpius-gold text-stpius-blue font-bold' 
+                    : 'bg-stpius-gold/30 text-stpius-white'
+                }`}
+              >
+                <span className="font-medium">{name}</span>
+                <span className={active ? 'text-stpius-blue/80' : 'text-stpius-white/70'}>
+                  {formatTime(start)} - {formatTime(end)}
+                </span>
+              </div>
+            );
+          })
         ) : (
           <p className="text-stpius-white">No schedule available for today.</p>
         )}
