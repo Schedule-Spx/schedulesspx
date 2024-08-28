@@ -6,7 +6,8 @@ const QuickLinks = () => {
     { name: 'Canvas', url: 'https://stpius.instructure.com/' },
     { name: 'PowerSchool', url: 'https://powerschool.spx.org/public/' },
     { name: 'x2VOL', url: 'https://x2vol.com/' },
-    { name: 'SPX Website', url: 'https://www.spx.org/' }
+    { name: 'SPX Website', url: 'https://www.spx.org/' },
+    { name: 'Sage Dining', url: 'https://www.sagedining.com/sites/stpiusxcatholichighschool/menu' }
   ];
 
   return (
