@@ -111,15 +111,15 @@ function AppContent() {
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <DayHeader />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
                     <QuickLinks />
                   </div>
                 </div>
-                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex flex-col">
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
                     <GoogleCalendar />
                   </div>
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
