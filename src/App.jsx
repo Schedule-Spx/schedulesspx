@@ -8,6 +8,7 @@ import QuickLinks from './QuickLinks';
 import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
+import Events from './Events';
 import NavBar from './NavBar';
 import Admin from './Admin';
 import Account from './Account';
@@ -105,20 +106,25 @@ function AppContent() {
           path="/"
           element={
             <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 h-[calc(100vh-200px)]">
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
                     <DayHeader />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
                     <QuickLinks />
                   </div>
                 </div>
                 <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
-                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                  <GoogleCalendar />
+                <div className="flex flex-col space-y-4">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                    <GoogleCalendar />
+                  </div>
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                    <Events user={user} />
+                  </div>
                 </div>
               </div>
               <div className="w-full mb-4">
