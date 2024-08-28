@@ -19,7 +19,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 10,
+              maxResults: 20,
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -62,24 +62,24 @@ const GoogleCalendar = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <h2 className="text-xl font-bold p-4 text-stpius-white">Upcoming Events</h2>
+      <h2 className="text-xl font-bold p-4">Upcoming Events</h2>
       <div className="flex-grow overflow-y-auto">
         {loading ? (
-          <div className="p-4 text-stpius-white">Loading events...</div>
+          <div className="p-4">Loading events...</div>
         ) : error ? (
-          <div className="p-4 text-stpius-white">Error: {error}</div>
+          <div className="p-4">Error: {error}</div>
         ) : Object.keys(events).length === 0 ? (
-          <div className="p-4 text-stpius-white">No upcoming events</div>
+          <div className="p-4">No upcoming events</div>
         ) : (
           Object.entries(events).map(([date, dayEvents]) => (
             <div key={date} className="mb-4 px-4">
-              <h3 className="text-lg font-semibold mb-2 text-stpius-white">{formatDate(date)}</h3>
+              <h3 className="text-lg font-semibold mb-2">{formatDate(date)}</h3>
               <ul className="space-y-2">
                 {dayEvents.map((event) => (
-                  <li key={event.id} className="bg-stpius-gold/30 p-2 rounded">
-                    <div className="font-semibold text-stpius-white">{event.summary}</div>
+                  <li key={event.id} className="bg-white dark:bg-gray-700 p-2 rounded shadow">
+                    <div className="font-semibold">{event.summary}</div>
                     {event.start.dateTime && (
-                      <div className="text-sm text-stpius-white/70">
+                      <div className="text-sm text-gray-600 dark:text-gray-300">
                         {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
                       </div>
                     )}
