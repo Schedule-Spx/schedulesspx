@@ -106,12 +106,12 @@ function AppContent() {
           path="/"
           element={
             <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 h-[calc(100vh-200px)]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <DayHeader />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <QuickLinks />
                   </div>
                 </div>
@@ -119,10 +119,10 @@ function AppContent() {
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <GoogleCalendar />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <Events user={user} />
                   </div>
                 </div>
