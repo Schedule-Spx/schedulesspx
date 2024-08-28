@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
 import DayHeader from './DayHeader';
-import CanvasWidget from './CanvasWidget';
+import QuickLinks from './QuickLinks';
 import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
@@ -111,8 +111,8 @@ function AppContent() {
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
                     <DayHeader />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-40">
-                    <CanvasWidget />
+                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                    <QuickLinks />
                   </div>
                 </div>
                 <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
