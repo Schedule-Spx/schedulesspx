@@ -147,7 +147,54 @@ const PeriodProgress = ({ weekSchedule }) => {
     }
   };
 
-  // ... (rest of the code remains the same)
+  const getNextSchoolDay = (currentDay) => {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    let nextDay = days[(days.indexOf(currentDay) + 1) % 7];
+    let count = 0;
+    while (!weekSchedule[nextDay] && count < 7) {
+      nextDay = days[(days.indexOf(nextDay) + 1) % 7];
+      count++;
+    }
+    return count < 7 ? nextDay : null;
+  };
+
+  const getDayDifference = (day1, day2) => {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return (days.indexOf(day2) - days.indexOf(day1) + 7) % 7;
+  };
+
+  const formatTimeRemaining = (ms) => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days}d ${hours % 24}h ${minutes % 60}m`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  };
+
+  const updateTitle = (status, time) => {
+    document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
+  };
+
+  const parseTime = (timeString) => {
+    const [time, modifier] = timeString.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier.toLowerCase() === 'pm' && hours !== 12) {
+      hours += 12;
+    } else if (modifier.toLowerCase() === 'am' && hours === 12) {
+      hours = 0;
+    }
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+  };
 
   return (
     <div className="bg-stpius-blue border border-stpius-gold p-4 rounded-lg shadow w-full flex flex-col items-center">
