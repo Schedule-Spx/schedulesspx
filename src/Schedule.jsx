@@ -58,47 +58,49 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`h-full flex flex-col ${currentTheme.accent} rounded-lg shadow-md`}>
-      <h2 className={`text-xl font-bold p-4 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
-      <div className="flex-grow flex flex-col justify-between p-2">
-        {loading ? (
-          <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
-        ) : daySchedule.length > 0 ? (
-          daySchedule.map((period, index) => {
-            const [name, time] = period.split(' - ');
-            const [start, end] = time.split('-');
-            const active = isActivePeriod(start.trim(), end.trim());
-            return (
-              <div 
-                key={index} 
-                className={`
-                  relative flex justify-between items-center p-1 rounded-lg text-xs
-                  ${active ? `${currentTheme.main} ${currentTheme.text} font-bold` : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`}
-                  transition-all duration-300 ease-in-out
-                  animate-fadeIn
-                `}
-                style={{animationDelay: `${index * 100}ms`}}
-              >
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
+      <div className="p-5">
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>{currentDay}'s Schedule</h2>
+        <div className="space-y-2">
+          {loading ? (
+            <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
+          ) : daySchedule.length > 0 ? (
+            daySchedule.map((period, index) => {
+              const [name, time] = period.split(' - ');
+              const [start, end] = time.split('-');
+              const active = isActivePeriod(start.trim(), end.trim());
+              return (
                 <div 
+                  key={index} 
                   className={`
-                    absolute inset-0 rounded-lg 
-                    ${active ? 'animate-highlightFadeIn' : ''}
+                    relative flex justify-between items-center p-2 rounded-lg
+                    ${active ? `${currentTheme.accent}` : `${currentTheme.main} bg-opacity-50`}
+                    transition-all duration-300 ease-in-out
+                    animate-fadeIn
                   `}
-                  style={{
-                    animationDelay: `${(index * 100) + 500}ms`,
-                    animationDuration: '1.5s',
-                  }}
-                ></div>
-                <span className="font-medium relative z-10">{name}</span>
-                <span className={`relative z-10 ${active ? currentTheme.text : `${currentTheme.text} opacity-80`}`}>
-                  {formatTime(start)} - {formatTime(end)}
-                </span>
-              </div>
-            );
-          })
-        ) : (
-          <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
-        )}
+                  style={{animationDelay: `${index * 100}ms`}}
+                >
+                  <div 
+                    className={`
+                      absolute inset-0 rounded-lg 
+                      ${active ? 'animate-highlightFadeIn' : ''}
+                    `}
+                    style={{
+                      animationDelay: `${(index * 100) + 500}ms`,
+                      animationDuration: '1.5s',
+                    }}
+                  ></div>
+                  <span className={`font-medium relative z-10 ${currentTheme.text}`}>{name}</span>
+                  <span className={`relative z-10 ${currentTheme.text} ${active ? '' : 'opacity-80'}`}>
+                    {formatTime(start)} - {formatTime(end)}
+                  </span>
+                </div>
+              );
+            })
+          ) : (
+            <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
+          )}
+        </div>
       </div>
     </div>
   );
