@@ -6,6 +6,7 @@ export const themes = {
   default: {
     name: 'Default',
     main: 'bg-stpius-blue',
+    mainBackground: '#012143', // Assuming this is the color code for bg-stpius-blue
     accent: 'bg-stpius-gold',
     text: 'text-stpius-white',
     border: 'border-stpius-gold'
@@ -13,6 +14,7 @@ export const themes = {
   dark: {
     name: 'Dark',
     main: 'bg-gray-900',
+    mainBackground: '#1a1a1a', // Color code for bg-gray-900
     accent: 'bg-gray-600',
     text: 'text-white',
     border: 'border-gray-600'
@@ -20,6 +22,7 @@ export const themes = {
   light: {
     name: 'Light',
     main: 'bg-gray-100',
+    mainBackground: '#f7fafc', // Color code for bg-gray-100
     accent: 'bg-gray-300',
     text: 'text-gray-900',
     border: 'border-gray-300'
@@ -27,6 +30,7 @@ export const themes = {
   forest: {
     name: 'Forest',
     main: 'bg-green-800',
+    mainBackground: '#22543d', // Color code for bg-green-800
     accent: 'bg-green-500',
     text: 'text-white',
     border: 'border-green-500'
@@ -34,6 +38,7 @@ export const themes = {
   ocean: {
     name: 'Ocean',
     main: 'bg-blue-800',
+    mainBackground: '#2a4365', // Color code for bg-blue-800
     accent: 'bg-blue-500',
     text: 'text-white',
     border: 'border-blue-500'
@@ -42,6 +47,7 @@ export const themes = {
   christmas: {
     name: 'Christmas',
     main: 'bg-red-700',
+    mainBackground: '#c53030', // Color code for bg-red-700
     accent: 'bg-green-600',
     text: 'text-white',
     border: 'border-yellow-300'
@@ -49,6 +55,7 @@ export const themes = {
   halloween: {
     name: 'Halloween',
     main: 'bg-orange-600',
+    mainBackground: '#dd6b20', // Color code for bg-orange-600
     accent: 'bg-purple-700',
     text: 'text-white',
     border: 'border-black'
@@ -56,6 +63,7 @@ export const themes = {
   valentines: {
     name: "Valentine's Day",
     main: 'bg-pink-500',
+    mainBackground: '#d53f8c', // Color code for bg-pink-500
     accent: 'bg-red-400',
     text: 'text-white',
     border: 'border-pink-300'
@@ -63,6 +71,7 @@ export const themes = {
   stpatricks: {
     name: "St. Patrick's Day",
     main: 'bg-green-600',
+    mainBackground: '#2f855a', // Color code for bg-green-600
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-green-300'
@@ -70,6 +79,7 @@ export const themes = {
   easter: {
     name: 'Easter',
     main: 'bg-purple-400',
+    mainBackground: '#9f7aea', // Color code for bg-purple-400
     accent: 'bg-yellow-300',
     text: 'text-gray-800',
     border: 'border-pink-300'
@@ -77,6 +87,7 @@ export const themes = {
   independence: {
     name: 'Independence Day',
     main: 'bg-blue-700',
+    mainBackground: '#2c5282', // Color code for bg-blue-700
     accent: 'bg-red-600',
     text: 'text-white',
     border: 'border-white'
@@ -84,6 +95,7 @@ export const themes = {
   thanksgiving: {
     name: 'Thanksgiving',
     main: 'bg-orange-700',
+    mainBackground: '#c05621', // Color code for bg-orange-700
     accent: 'bg-yellow-600',
     text: 'text-white',
     border: 'border-brown-400'
