@@ -17,7 +17,7 @@ const QuickLinks = () => {
       className="h-full p-4 border-2 rounded"
       style={{ 
         borderColor: currentTheme.accent, 
-        backgroundColor: currentTheme.main, 
+        backgroundColor: currentTheme.mainBackground,  // Dynamically use the site's background color
         color: currentTheme.text 
       }}
     >
