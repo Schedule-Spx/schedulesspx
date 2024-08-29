@@ -8,7 +8,71 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const [saveStatus, setSaveStatus] = useState('');
   const [bulkInput, setBulkInput] = useState('');
 
-  // ... (rest of the component logic remains the same)
+  useEffect(() => {
+    if (Object.keys(weekSchedule).length === 0) {
+      fetchSchedule();
+    }
+  }, []);
+
+  const handleAddPeriod = () => {
+    if (newPeriod.name && newPeriod.start && newPeriod.end) {
+      const newPeriodString = `${newPeriod.name} - ${newPeriod.start}-${newPeriod.end}`;
+      const updatedSchedule = {
+        ...weekSchedule,
+        [selectedDay]: [...weekSchedule[selectedDay], newPeriodString]
+      };
+      setWeekSchedule(updatedSchedule);
+      setNewPeriod({ name: '', start: '', end: '' });
+      saveSchedule(updatedSchedule);
+    }
+  };
+
+  const handleRemovePeriod = (index) => {
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: weekSchedule[selectedDay].filter((_, i) => i !== index)
+    };
+    setWeekSchedule(updatedSchedule);
+    saveSchedule(updatedSchedule);
+  };
+
+  const handleBulkInput = () => {
+    const lines = bulkInput.trim().split('\n');
+    const newPeriods = lines.slice(1).map(line => {
+      const [name, start, end] = line.split('\t');
+      return `${name} - ${start}-${end}`;
+    });
+
+    const updatedSchedule = {
+      ...weekSchedule,
+      [selectedDay]: newPeriods
+    };
+    setWeekSchedule(updatedSchedule);
+    saveSchedule(updatedSchedule);
+    setBulkInput('');
+  };
+
+  const saveSchedule = async (schedule) => {
+    try {
+      setSaveStatus('Saving...');
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(schedule)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log('Save response:', result);
+      setSaveStatus('Schedule saved successfully');
+      setTimeout(() => setSaveStatus(''), 3000);
+      fetchSchedule();
+    } catch (error) {
+      console.error('Error saving schedule:', error);
+      setSaveStatus(`Failed to save schedule: ${error.message}`);
+    }
+  };
 
   return (
     <div className="flex-grow flex flex-col h-full">
