@@ -37,6 +37,56 @@ export const themes = {
     accent: 'bg-blue-500',
     text: 'text-white',
     border: 'border-blue-500'
+  },
+  // Holiday themes
+  christmas: {
+    name: 'Christmas',
+    main: 'bg-red-700',
+    accent: 'bg-green-600',
+    text: 'text-white',
+    border: 'border-yellow-300'
+  },
+  halloween: {
+    name: 'Halloween',
+    main: 'bg-orange-600',
+    accent: 'bg-purple-700',
+    text: 'text-white',
+    border: 'border-black'
+  },
+  valentines: {
+    name: "Valentine's Day",
+    main: 'bg-pink-500',
+    accent: 'bg-red-400',
+    text: 'text-white',
+    border: 'border-pink-300'
+  },
+  stpatricks: {
+    name: "St. Patrick's Day",
+    main: 'bg-green-600',
+    accent: 'bg-yellow-400',
+    text: 'text-white',
+    border: 'border-green-300'
+  },
+  easter: {
+    name: 'Easter',
+    main: 'bg-purple-400',
+    accent: 'bg-yellow-300',
+    text: 'text-gray-800',
+    border: 'border-pink-300'
+  },
+  independence: {
+    name: 'Independence Day',
+    main: 'bg-blue-700',
+    accent: 'bg-red-600',
+    text: 'text-white',
+    border: 'border-white'
+  },
+  thanksgiving: {
+    name: 'Thanksgiving',
+    main: 'bg-orange-700',
+    accent: 'bg-yellow-600',
+    text: 'text-white',
+    border: 'border-brown-400'
   }
 };
 
