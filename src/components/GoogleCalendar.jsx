@@ -49,21 +49,21 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold p-2 rounded-lg h-full flex flex-col">
-      <h2 className="text-sm font-bold mb-1 text-stpius-white">Upcoming Events</h2>
-      <div className="overflow-y-auto flex-grow">
+    <div className="bg-stpius-blue p-4 rounded-lg shadow-md h-64">
+      <h2 className="text-lg font-bold mb-2 text-stpius-white">Upcoming Events</h2>
+      <div className="overflow-y-auto h-52">
         {loading ? (
-          <div className="text-stpius-white text-xs">Loading events...</div>
+          <div className="text-stpius-white">Loading events...</div>
         ) : error ? (
-          <div className="text-stpius-white text-xs">Error: {error}</div>
+          <div className="text-stpius-white">Error: {error}</div>
         ) : events.length === 0 ? (
-          <div className="text-stpius-white text-xs">No upcoming events</div>
+          <div className="text-stpius-white">No upcoming events</div>
         ) : (
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {events.map((event) => (
-              <li key={event.id} className="text-xs">
+              <li key={event.id} className="text-sm">
                 <div className="font-semibold text-stpius-white">{event.summary}</div>
-                <div className="text-[0.65rem] text-stpius-gold">
+                <div className="text-xs text-stpius-gold">
                   {formatDate(event.start.dateTime || event.start.date)}
                   {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
                 </div>
