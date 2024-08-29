@@ -90,7 +90,7 @@ function ThemedApp() {
   };
 
   return (
-    <div className={`App flex flex-col min-h-screen ${currentTheme.primary} ${currentTheme.text}`}>
+    <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <NavBar user={user} setUser={updateUser} />
       {showAgreement && <AgreementPopup onAgree={handleAgree} />}
       <Routes>
@@ -127,21 +127,21 @@ function ThemedApp() {
             <main className="flex-grow p-4 flex flex-col">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
                     <DayHeader />
                   </div>
-                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
                     <QuickLinks />
                   </div>
                 </div>
-                <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
                     <GoogleCalendar />
                   </div>
-                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-28`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-28`}>
                     <GoogleSuiteLinks />
                   </div>
                 </div>

@@ -5,36 +5,36 @@ const ThemeContext = createContext();
 export const themes = {
   default: {
     name: 'Default',
-    primary: 'bg-stpius-blue',
-    secondary: 'bg-stpius-gold',
+    main: 'bg-stpius-blue',
+    accent: 'bg-stpius-gold',
     text: 'text-stpius-white',
     border: 'border-stpius-gold'
   },
   dark: {
     name: 'Dark',
-    primary: 'bg-gray-900',
-    secondary: 'bg-gray-600',
+    main: 'bg-gray-900',
+    accent: 'bg-gray-600',
     text: 'text-white',
     border: 'border-gray-600'
   },
   light: {
     name: 'Light',
-    primary: 'bg-gray-100',
-    secondary: 'bg-gray-300',
+    main: 'bg-gray-100',
+    accent: 'bg-gray-300',
     text: 'text-gray-900',
     border: 'border-gray-300'
   },
   forest: {
     name: 'Forest',
-    primary: 'bg-green-800',
-    secondary: 'bg-green-500',
+    main: 'bg-green-800',
+    accent: 'bg-green-500',
     text: 'text-white',
     border: 'border-green-500'
   },
   ocean: {
     name: 'Ocean',
-    primary: 'bg-blue-800',
-    secondary: 'bg-blue-500',
+    main: 'bg-blue-800',
+    accent: 'bg-blue-500',
     text: 'text-white',
     border: 'border-blue-500'
   }
