@@ -11,15 +11,20 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching schedule data
-    fetch('/path-to-your-schedule-data.json')
-      .then(response => response.json())
-      .then(data => {
+    // Fetch the schedule data
+    fetch('path-to-your-schedule-data.json')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
         setScheduleData(data);
         setLoading(false);
       })
-      .catch(error => {
-        console.error("Error fetching schedule data:", error);
+      .catch((error) => {
+        console.error('Error fetching schedule data:', error);
         setLoading(false);
       });
   }, []);

@@ -7,7 +7,7 @@ const Schedule = ({ scheduleData }) => {
   const { currentTheme } = useTheme();
 
   if (!scheduleData || typeof scheduleData !== 'object') {
-    console.error("Schedule data is undefined or not an object:", scheduleData);
+    console.error('Schedule data is undefined or not an object:', scheduleData);
     return <div style={{ color: currentTheme.text }}>No schedule available</div>;
   }
 
