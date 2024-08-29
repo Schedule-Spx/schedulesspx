@@ -45,10 +45,10 @@ const GoogleSuiteLinks = () => {
                             href={app.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`${currentTheme.accent} hover:opacity-80 transition-opacity duration-200 px-4 py-2 rounded-md flex flex-col items-center justify-center`}
+                            className={`${currentTheme.accent} hover:opacity-80 transition-opacity duration-200 px-3 py-1 rounded-md flex flex-col items-center justify-center`}
                         >
-                            <img src={app.logo} alt={`${app.name} logo`} className="h-8 w-10 mb-2 object-contain" />
-                            <span className={`${currentTheme.text} font-semibold text-xs`}>{app.name}</span>
+                            <img src={app.logo} alt={`${app.name} logo`} className="h-6 w-8 mb-1 object-contain" />
+                            <span className={`${currentTheme.text} font-semibold text-[0.6rem]`}>{app.name}</span>
                         </a>
                     ))}
                 </div>
