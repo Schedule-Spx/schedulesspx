@@ -12,7 +12,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
     if (Object.keys(weekSchedule).length === 0) {
       fetchSchedule();
     }
-  }, []);
+  }, [fetchSchedule, weekSchedule]);
 
   const handleAddPeriod = () => {
     if (newPeriod.name && newPeriod.start && newPeriod.end) {
@@ -55,7 +55,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const saveSchedule = async (schedule) => {
     try {
       setSaveStatus('Saving...');
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
+      const response = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(schedule)
