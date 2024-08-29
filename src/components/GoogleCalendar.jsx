@@ -1,3 +1,4 @@
+// src/components/GoogleCalendar.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
@@ -49,27 +50,47 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
+  const isEventActive = (event) => {
+    const now = new Date();
+    const start = new Date(event.start.dateTime || event.start.date);
+    const end = new Date(event.end.dateTime || event.end.date);
+    return now >= start && now < end;
+  };
+
   return (
-    <div className={`${currentTheme.accent} p-4 rounded-lg shadow-md h-64`}>
+    <div className={`${currentTheme.accent} p-4 rounded-lg shadow-md h-64 overflow-hidden`}>
       <h2 className={`text-lg font-bold mb-2 ${currentTheme.text}`}>Upcoming Events</h2>
       <div className="overflow-y-auto h-52">
         {loading ? (
-          <div className={currentTheme.text}>Loading events...</div>
+          <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
         ) : error ? (
-          <div className={currentTheme.text}>Error: {error}</div>
+          <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
         ) : events.length === 0 ? (
           <div className={currentTheme.text}>No upcoming events</div>
         ) : (
           <ul className="space-y-2">
-            {events.map((event) => (
-              <li key={event.id} className={`text-sm ${currentTheme.main} bg-opacity-60 p-2 rounded`}>
-                <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
-                <div className={`text-xs ${currentTheme.text} opacity-80`}>
-                  {formatDate(event.start.dateTime || event.start.date)}
-                  {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
-                </div>
-              </li>
-            ))}
+            {events.map((event, index) => {
+              const isActive = isEventActive(event);
+              return (
+                <li 
+                  key={event.id} 
+                  className={`
+                    text-sm ${currentTheme.main} bg-opacity-60 p-2 rounded
+                    ${isActive ? 'animate-glow' : ''}
+                    transition-all duration-300 ease-in-out
+                    transform hover:scale-105
+                    animate-fadeIn
+                  `}
+                  style={{animationDelay: `${index * 100}ms`}}
+                >
+                  <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
+                  <div className={`text-xs ${currentTheme.text} opacity-80`}>
+                    {formatDate(event.start.dateTime || event.start.date)}
+                    {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
