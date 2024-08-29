@@ -13,20 +13,22 @@ const QuickLinks = () => {
   ];
 
   return (
-    <div className={`h-full p-4 ${currentTheme.accent}`}>
-      <h2 className={`text-xl font-bold ${currentTheme.text} mb-2`}>Quick Links</h2>
-      <div className="space-y-2">
-        {links.map((link, index) => (
-          <a
-            key={index}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${currentTheme.main} ${currentTheme.text} font-semibold py-1 px-3 rounded hover:opacity-80 transition-opacity duration-200 text-center block text-sm`}
-          >
-            {link.name}
-          </a>
-        ))}
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
+      <div className="p-5">
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Quick Links</h2>
+        <div className="space-y-2">
+          {links.map((link, index) => (
+            <a
+              key={index}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${currentTheme.accent} ${currentTheme.text} font-semibold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 text-center block`}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );
