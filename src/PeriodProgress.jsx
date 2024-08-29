@@ -199,32 +199,34 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`${currentTheme.main} p-6 rounded-lg shadow-lg w-full border border-${currentTheme.accent}`}>
-      {currentState ? (
-        <div className="flex flex-col items-center">
-          <p className={`text-xl font-bold ${currentTheme.text} text-center mb-4`}>
-            {currentState.type === 'activePeriod' ? currentState.name :
-             currentState.type === 'betweenPeriods' ? `Next: ${currentState.nextPeriod}` :
-             currentState.type === 'beforeSchool' ? 'School starts soon' :
-             currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? `Next school day (${currentState.nextDay})` :
-             'No School'}
-          </p>
-          <div className={`w-full bg-opacity-20 bg-${currentTheme.accent} rounded-full h-6 mb-4 relative overflow-hidden`}>
-            <div 
-              className={`bg-${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
-              style={{width: `${progress}%`}}
-            ></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className={`text-sm font-semibold ${currentTheme.text} z-10`}>
-                {progress.toFixed(1)}%
-              </p>
+    <div className={`${currentTheme.main} p-1 rounded-lg shadow-lg w-full`}>
+      <div className={`border border-${currentTheme.accent} rounded-lg p-5`}>
+        {currentState ? (
+          <div className="flex flex-col items-center">
+            <p className={`text-xl font-bold ${currentTheme.text} text-center mb-4`}>
+              {currentState.type === 'activePeriod' ? currentState.name :
+               currentState.type === 'betweenPeriods' ? `Next: ${currentState.nextPeriod}` :
+               currentState.type === 'beforeSchool' ? 'School starts soon' :
+               currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? `Next school day (${currentState.nextDay})` :
+               'No School'}
+            </p>
+            <div className={`w-full bg-opacity-20 bg-${currentTheme.accent} rounded-full h-6 mb-4 relative overflow-hidden`}>
+              <div 
+                className={`bg-${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
+                style={{width: `${progress}%`}}
+              ></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className={`text-sm font-semibold ${currentTheme.text} z-10`}>
+                  {progress.toFixed(1)}%
+                </p>
+              </div>
             </div>
+            <p className={`text-lg font-medium ${currentTheme.text}`}>{timeRemaining}</p>
           </div>
-          <p className={`text-lg font-medium ${currentTheme.text}`}>{timeRemaining}</p>
-        </div>
-      ) : (
-        <p className={`text-lg font-medium ${currentTheme.text} text-center`}>Loading...</p>
-      )}
+        ) : (
+          <p className={`text-lg font-medium ${currentTheme.text} text-center`}>Loading...</p>
+        )}
+      </div>
     </div>
   );
 };
