@@ -75,14 +75,14 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   return (
     <div className="flex-grow flex flex-col h-full">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg overflow-y-auto flex-grow">
-        <h2 className="text-2xl font-bold mb-4">Admin Console</h2>
+      <div className="bg-stpius-blue border border-stpius-gold p-6 rounded-lg shadow-lg overflow-y-auto flex-grow">
+        <h2 className="text-2xl font-bold mb-4 text-stpius-white">Admin Console</h2>
         <div className="mb-4">
-          <label className="block mb-2">Select Day:</label>
+          <label className="block mb-2 text-stpius-white">Select Day:</label>
           <select
             value={selectedDay}
             onChange={(e) => setSelectedDay(e.target.value)}
-            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className="w-full p-2 border rounded bg-stpius-blue text-stpius-white border-stpius-gold"
           >
             {Object.keys(weekSchedule).map(day => (
               <option key={day} value={day}>{day}</option>
@@ -90,14 +90,14 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
           </select>
         </div>
         <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-2">{selectedDay}'s Schedule</h3>
+          <h3 className="text-xl font-semibold mb-2 text-stpius-white">{selectedDay}'s Schedule</h3>
           <ul className="space-y-2">
             {weekSchedule[selectedDay] && weekSchedule[selectedDay].map((period, index) => (
-              <li key={index} className="flex justify-between items-center">
+              <li key={index} className="flex justify-between items-center text-stpius-white">
                 <span>{period}</span>
                 <button
                   onClick={() => handleRemovePeriod(index)}
-                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                  className="bg-stpius-gold text-stpius-blue px-2 py-1 rounded hover:bg-stpius-gold/80"
                 >
                   Remove
                 </button>
@@ -106,45 +106,45 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
           </ul>
         </div>
         <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-2">Add New Period</h3>
+          <h3 className="text-xl font-semibold mb-2 text-stpius-white">Add New Period</h3>
           <input
             type="text"
             placeholder="Period Name"
             value={newPeriod.name}
             onChange={(e) => setNewPeriod(prev => ({ ...prev, name: e.target.value }))}
-            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className="w-full p-2 mb-2 border rounded bg-stpius-blue text-stpius-white border-stpius-gold"
           />
           <input
             type="time"
             value={newPeriod.start}
             onChange={(e) => setNewPeriod(prev => ({ ...prev, start: e.target.value }))}
-            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className="w-full p-2 mb-2 border rounded bg-stpius-blue text-stpius-white border-stpius-gold"
           />
           <input
             type="time"
             value={newPeriod.end}
             onChange={(e) => setNewPeriod(prev => ({ ...prev, end: e.target.value }))}
-            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className="w-full p-2 mb-2 border rounded bg-stpius-blue text-stpius-white border-stpius-gold"
           />
           <button
             onClick={handleAddPeriod}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-stpius-gold text-stpius-blue px-4 py-2 rounded hover:bg-stpius-gold/80"
           >
             Add Period
           </button>
         </div>
         <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-2">Bulk Add Periods</h3>
+          <h3 className="text-xl font-semibold mb-2 text-stpius-white">Bulk Add Periods</h3>
           <textarea
             value={bulkInput}
             onChange={(e) => setBulkInput(e.target.value)}
             placeholder="Paste formatted schedule here..."
-            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className="w-full p-2 mb-2 border rounded bg-stpius-blue text-stpius-white border-stpius-gold"
             rows="10"
           />
           <button
             onClick={handleBulkInput}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            className="bg-stpius-gold text-stpius-blue px-4 py-2 rounded hover:bg-stpius-gold/80"
           >
             Add Bulk Periods
           </button>
