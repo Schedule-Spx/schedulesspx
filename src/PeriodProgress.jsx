@@ -199,7 +199,7 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border border-${currentTheme.border}`}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
       <div className="p-5">
         {currentState ? (
           <div className="flex flex-col items-center">
