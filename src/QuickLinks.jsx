@@ -13,8 +13,15 @@ const QuickLinks = () => {
   ];
 
   return (
-    <div className={`h-full p-4 border-2 rounded ${currentTheme.accent} bg-${currentTheme.main} ${currentTheme.text}`}>
-      <h2 className={`text-xl font-bold ${currentTheme.text} mb-2`}>Quick Links</h2>
+    <div 
+      className="h-full p-4 border-2 rounded"
+      style={{ 
+        borderColor: currentTheme.accent, 
+        backgroundColor: currentTheme.main, 
+        color: currentTheme.text 
+      }}
+    >
+      <h2 className="text-xl font-bold mb-2" style={{ color: currentTheme.text }}>Quick Links</h2>
       <div className="space-y-2">
         {links.map((link, index) => (
           <a
@@ -22,7 +29,12 @@ const QuickLinks = () => {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`border border-${currentTheme.accent} bg-${currentTheme.main} text-${currentTheme.text} font-semibold py-1 px-3 rounded hover:opacity-80 transition-opacity duration-200 text-center block text-sm`}
+            style={{
+              backgroundColor: currentTheme.accent,
+              color: currentTheme.text,
+              borderColor: currentTheme.accent
+            }}
+            className="font-semibold py-1 px-3 rounded hover:opacity-80 transition-opacity duration-200 text-center block text-sm"
           >
             {link.name}
           </a>
