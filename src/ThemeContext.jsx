@@ -41,19 +41,15 @@ export const themes = {
   }
 };
 
-export const ThemeProvider = ({ children, initialTheme }) => {
-  const [currentTheme, setCurrentTheme] = useState(initialTheme || themes.default);
+export const ThemeProvider = ({ children }) => {
+  const [currentTheme, setCurrentTheme] = useState(themes.default);
 
   useEffect(() => {
-    if (initialTheme) {
-      setCurrentTheme(initialTheme);
-    } else {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        setCurrentTheme(JSON.parse(savedTheme));
-      }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setCurrentTheme(JSON.parse(savedTheme));
     }
-  }, [initialTheme]);
+  }, []);
 
   const changeTheme = (themeName) => {
     const newTheme = themes[themeName] || themes.default;

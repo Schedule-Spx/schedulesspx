@@ -23,15 +23,12 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showAgreement, setShowAgreement] = useState(false);
-  const [userTheme, setUserTheme] = useState(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
     if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      fetchUserTheme(parsedUser.email);
+      setUser(JSON.parse(savedUser));
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
@@ -44,33 +41,6 @@ function AppContent() {
 
     fetchSchedule();
   }, []);
-
-  const fetchUserTheme = async (email) => {
-    try {
-      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/user-theme?email=${email}`);
-      if (!response.ok) throw new Error('Failed to fetch user theme');
-      const data = await response.json();
-      setUserTheme(data.theme);
-    } catch (error) {
-      console.error('Error fetching user theme:', error);
-    }
-  };
-
-  const updateUserTheme = async (email, newTheme) => {
-    try {
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/user-theme', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, theme: newTheme }),
-      });
-      if (!response.ok) throw new Error('Failed to update user theme');
-      setUserTheme(newTheme);
-    } catch (error) {
-      console.error('Error updating user theme:', error);
-    }
-  };
 
   const fetchSchedule = async () => {
     try {
@@ -90,11 +60,9 @@ function AppContent() {
       localStorage.setItem('user', JSON.stringify(newUser));
       const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000;
       localStorage.setItem('sessionExpiry', expiry.toString());
-      fetchUserTheme(newUser.email);
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
-      setUserTheme(null);
     }
   };
 
@@ -104,7 +72,7 @@ function AppContent() {
   };
 
   return (
-    <ThemeProvider initialTheme={userTheme}>
+    <ThemeProvider>
       <div className="App flex flex-col min-h-screen bg-stpius-blue text-stpius-white">
         <NavBar user={user} setUser={updateUser} />
         {showAgreement && <AgreementPopup onAgree={handleAgree} />}
@@ -129,7 +97,6 @@ function AppContent() {
                 <Account 
                   user={user} 
                   weekSchedule={weekSchedule}
-                  updateUserTheme={(newTheme) => updateUserTheme(user.email, newTheme)}
                 />
               </div>
             } 

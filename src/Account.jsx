@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme, themes } from './ThemeContext';
 
-const Account = ({ user, weekSchedule, updateUserTheme }) => {
+const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, setCustomTheme } = useTheme();
   const [customPrimary, setCustomPrimary] = useState('');
   const [customSecondary, setCustomSecondary] = useState('');
@@ -17,9 +17,7 @@ const Account = ({ user, weekSchedule, updateUserTheme }) => {
   }
 
   const handleThemeChange = (themeName) => {
-    const newTheme = themes[themeName];
     changeTheme(themeName);
-    updateUserTheme(newTheme);
   };
 
   const handleCustomTheme = () => {
@@ -32,7 +30,6 @@ const Account = ({ user, weekSchedule, updateUserTheme }) => {
         border: customSecondary
       };
       setCustomTheme(customTheme);
-      updateUserTheme(customTheme);
     }
   };
 
