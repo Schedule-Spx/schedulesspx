@@ -199,34 +199,31 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`${currentTheme.main} p-4 rounded-lg shadow-lg w-full border ${currentTheme.border}`}>
+    <div className={`${currentTheme.main} p-6 rounded-lg shadow-lg w-full`}>
       {currentState ? (
-        <div className="flex flex-col">
-          <p className={`text-xl font-bold ${currentTheme.text} mb-2`}>
-            Next:
-          </p>
-          <p className={`text-2xl font-bold ${currentTheme.accent} mb-4`}>
+        <div className="flex flex-col items-center">
+          <p className={`text-xl font-bold ${currentTheme.text} text-center mb-4`}>
             {currentState.type === 'activePeriod' ? currentState.name :
-             currentState.type === 'betweenPeriods' ? currentState.nextPeriod :
-             currentState.type === 'beforeSchool' ? currentState.nextPeriod :
-             currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? '1' :
+             currentState.type === 'betweenPeriods' ? `Next: ${currentState.nextPeriod}` :
+             currentState.type === 'beforeSchool' ? 'School starts soon' :
+             currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? `Next school day (${currentState.nextDay})` :
              'No School'}
           </p>
-          <div className={`w-full bg-gray-700 rounded-full h-3 mb-2`}>
+          <div className={`w-full ${currentTheme.accent} bg-opacity-20 rounded-full h-6 mb-4 relative overflow-hidden`}>
             <div 
-              className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out`} 
+              className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
               style={{width: `${progress}%`}}
             ></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className={`text-sm font-semibold ${currentTheme.text} z-10`}>
+                {progress.toFixed(1)}%
+              </p>
+            </div>
           </div>
-          <div className="flex justify-between w-full">
-            <p className={`text-sm font-medium ${currentTheme.text}`}>{timeRemaining}</p>
-            <p className={`text-sm font-medium ${currentTheme.text}`}>
-              {progress.toFixed(1)}%
-            </p>
-          </div>
+          <p className={`text-lg font-medium ${currentTheme.text}`}>{timeRemaining}</p>
         </div>
       ) : (
-        <p className={`text-lg font-medium ${currentTheme.text}`}>Loading...</p>
+        <p className={`text-lg font-medium ${currentTheme.text} text-center`}>Loading...</p>
       )}
     </div>
   );
