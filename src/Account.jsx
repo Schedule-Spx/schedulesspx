@@ -16,11 +16,12 @@ const Account = ({ user, weekSchedule }) => {
     );
   }
 
-  const handleThemeChange = (themeName) => {
+  const handleThemeChange = async (themeName) => {
     changeTheme(themeName);
+    await saveUserTheme(user.email, themes[themeName]);
   };
 
-  const handleCustomTheme = () => {
+  const handleCustomTheme = async () => {
     if (customPrimary && customSecondary) {
       const customTheme = {
         name: 'Custom',
@@ -30,6 +31,24 @@ const Account = ({ user, weekSchedule }) => {
         border: customSecondary
       };
       setCustomTheme(customTheme);
+      await saveUserTheme(user.email, customTheme);
+    }
+  };
+
+  const saveUserTheme = async (email, theme) => {
+    try {
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/user-theme', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, theme }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save theme');
+      }
+    } catch (error) {
+      console.error('Error saving theme:', error);
     }
   };
 

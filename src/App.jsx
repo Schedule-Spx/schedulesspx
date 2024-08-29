@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { ThemeProvider, useTheme } from './ThemeContext';
+import { ThemeProvider, useTheme, themes } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
@@ -19,7 +19,7 @@ import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
 
 function ThemedApp() {
-  const { currentTheme } = useTheme();
+  const { currentTheme, changeTheme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
@@ -29,7 +29,9 @@ function ThemedApp() {
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
     if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-      setUser(JSON.parse(savedUser));
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+      fetchUserTheme(parsedUser.email);
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
@@ -42,6 +44,20 @@ function ThemedApp() {
 
     fetchSchedule();
   }, []);
+
+  const fetchUserTheme = async (email) => {
+    try {
+      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/user-theme?email=${email}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.theme) {
+          changeTheme(data.theme.name);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user theme:', error);
+    }
+  };
 
   const fetchSchedule = async () => {
     try {
@@ -61,9 +77,11 @@ function ThemedApp() {
       localStorage.setItem('user', JSON.stringify(newUser));
       const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000;
       localStorage.setItem('sessionExpiry', expiry.toString());
+      fetchUserTheme(newUser.email);
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
+      changeTheme('default');
     }
   };
 
