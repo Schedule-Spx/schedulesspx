@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from 'react';
+// src/DayHeader.jsx
+import React from 'react';
 import { useTheme } from './ThemeContext';
 
-const DayHeader = () => {
+const DayHeader = ({ day, schedule }) => {
   const { currentTheme } = useTheme();
-  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDateTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const dayName = daysOfWeek[currentDateTime.getDay()];
-  const dateString = currentDateTime.toLocaleDateString();
-  const timeString = currentDateTime.toLocaleTimeString();
+  if (!schedule) {
+    console.warn(`No schedule available for ${day}`);
+    return (
+      <div style={{ color: currentTheme.text }}>
+        <h2>{day}</h2>
+        <p>No schedule available</p>
+      </div>
+    );
+  }
 
   return (
-    <div className={`p-4 ${currentTheme.accent} ${currentTheme.border} rounded-lg flex flex-col items-center justify-center`}>
-      <div className={`text-2xl font-bold ${currentTheme.text}`}>{dayName}</div>
-      <div className={`text-xl ${currentTheme.text}`}>{dateString}</div>
-      <div className={`text-lg ${currentTheme.main} ${currentTheme.text} px-2 py-1 rounded mt-1`}>{timeString}</div>
+    <div style={{ color: currentTheme.text }}>
+      <h2>{day}</h2>
+      <ul>
+        {schedule.map((period, index) => (
+          <li key={index}>
+            {period.name}: {period.time}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

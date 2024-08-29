@@ -1,105 +1,25 @@
 // src/Schedule.jsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import DayHeader from './DayHeader';
 import { useTheme } from './ThemeContext';
 
-const Schedule = ({ weekSchedule }) => {
+const Schedule = ({ scheduleData }) => {
   const { currentTheme } = useTheme();
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [loading, setLoading] = useState(true);
-  const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
-  const daySchedule = weekSchedule[currentDay] || [];
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    setLoading(false);
-    return () => clearInterval(timer);
-  }, []);
+  if (!scheduleData || typeof scheduleData !== 'object') {
+    console.error("Schedule data is undefined or not an object:", scheduleData);
+    return <div style={{ color: currentTheme.text }}>No schedule available</div>;
+  }
 
-  const formatTime = (timeString) => {
-    if (timeString.includes('AM') || timeString.includes('PM')) {
-      return timeString;
-    }
-    
-    const [hours, minutes] = timeString.split(':');
-    let period = 'AM';
-    let hours12 = parseInt(hours, 10);
-    
-    if (hours12 >= 12) {
-      period = 'PM';
-      if (hours12 > 12) {
-        hours12 -= 12;
-      }
-    }
-    if (hours12 === 0) {
-      hours12 = 12;
-    }
-    
-    return `${hours12.toString().padStart(2, '0')}:${minutes} ${period}`;
-  };
-
-  const isActivePeriod = (start, end) => {
-    const now = currentTime;
-    const startTime = parseTime(start);
-    const endTime = parseTime(end);
-    return now >= startTime && now < endTime;
-  };
-
-  const parseTime = (timeString) => {
-    const [time, modifier] = timeString.split(' ');
-    let [hours, minutes] = time.split(':');
-    if (modifier === 'PM' && hours !== '12') {
-      hours = parseInt(hours, 10) + 12;
-    }
-    if (modifier === 'AM' && hours === '12') {
-      hours = '00';
-    }
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours, 10), parseInt(minutes, 10));
-  };
+  const { Monday, Tuesday, Wednesday, Thursday, Friday } = scheduleData;
 
   return (
-    <div className={`h-full flex flex-col ${currentTheme.accent} rounded-lg shadow-md`}>
-      <h2 className={`text-xl font-bold p-4 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
-      <div className="flex-grow flex flex-col justify-between p-2">
-        {loading ? (
-          <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
-        ) : daySchedule.length > 0 ? (
-          daySchedule.map((period, index) => {
-            const [name, time] = period.split(' - ');
-            const [start, end] = time.split('-');
-            const active = isActivePeriod(start.trim(), end.trim());
-            return (
-              <div 
-                key={index} 
-                className={`
-                  relative flex justify-between items-center p-1 rounded-lg text-xs
-                  ${active ? `${currentTheme.main} ${currentTheme.text} font-bold` : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`}
-                  transition-all duration-300 ease-in-out
-                  animate-fadeIn
-                `}
-                style={{animationDelay: `${index * 100}ms`}}
-              >
-                <div 
-                  className={`
-                    absolute inset-0 rounded-lg 
-                    ${active ? 'animate-highlightFadeIn' : ''}
-                  `}
-                  style={{
-                    animationDelay: `${(index * 100) + 500}ms`,
-                    animationDuration: '1.5s',
-                  }}
-                ></div>
-                <span className="font-medium relative z-10">{name}</span>
-                <span className={`relative z-10 ${active ? currentTheme.text : `${currentTheme.text} opacity-80`}`}>
-                  {formatTime(start)} - {formatTime(end)}
-                </span>
-              </div>
-            );
-          })
-        ) : (
-          <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
-        )}
-      </div>
+    <div style={{ color: currentTheme.text }}>
+      <DayHeader day="Monday" schedule={Monday} />
+      <DayHeader day="Tuesday" schedule={Tuesday} />
+      <DayHeader day="Wednesday" schedule={Wednesday} />
+      <DayHeader day="Thursday" schedule={Thursday} />
+      <DayHeader day="Friday" schedule={Friday} />
     </div>
   );
 };
