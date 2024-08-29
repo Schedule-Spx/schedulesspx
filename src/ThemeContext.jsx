@@ -5,100 +5,100 @@ const ThemeContext = createContext();
 export const themes = {
   default: {
     name: 'Default',
-    main: 'bg-stpius-blue',
-    mainBackground: '#012143', // bg-stpius-blue
-    accent: 'bg-stpius-gold',
-    text: 'text-stpius-white',
-    border: 'border-stpius-gold'
+    main: '#012143',  // Direct color code for background
+    mainBackground: '#012143',
+    accent: '#b98827',
+    text: '#ffffff',
+    border: '#b98827'
   },
   dark: {
     name: 'Dark',
-    main: 'bg-gray-900',
-    mainBackground: '#1a1a1a', // bg-gray-900
-    accent: 'bg-gray-600',
-    text: 'text-white',
-    border: 'border-gray-600'
+    main: '#1a1a1a',
+    mainBackground: '#1a1a1a',
+    accent: '#4a5568',
+    text: '#ffffff',
+    border: '#4a5568'
   },
   light: {
     name: 'Light',
-    main: 'bg-gray-100',
-    mainBackground: '#f7fafc', // bg-gray-100
-    accent: 'bg-gray-300',
-    text: 'text-gray-900',
-    border: 'border-gray-300'
+    main: '#f7fafc',
+    mainBackground: '#f7fafc',
+    accent: '#e2e8f0',
+    text: '#1a202c',
+    border: '#e2e8f0'
   },
   forest: {
     name: 'Forest',
-    main: 'bg-green-800',
-    mainBackground: '#22543d', // bg-green-800
-    accent: 'bg-green-500',
-    text: 'text-white',
-    border: 'border-green-500'
+    main: '#22543d',
+    mainBackground: '#22543d',
+    accent: '#48bb78',
+    text: '#ffffff',
+    border: '#48bb78'
   },
   ocean: {
     name: 'Ocean',
-    main: 'bg-blue-800',
-    mainBackground: '#2a4365', // bg-blue-800
-    accent: 'bg-blue-500',
-    text: 'text-white',
-    border: 'border-blue-500'
+    main: '#2a4365',
+    mainBackground: '#2a4365',
+    accent: '#63b3ed',
+    text: '#ffffff',
+    border: '#63b3ed'
   },
-  // Holiday themes
+  // Holiday themes with adjusted colors
   christmas: {
     name: 'Christmas',
-    main: 'bg-red-700',
-    mainBackground: '#c53030', // bg-red-700
-    accent: 'bg-green-600',
-    text: 'text-white',
-    border: 'border-yellow-300'
+    main: '#c53030',
+    mainBackground: '#c53030',
+    accent: '#2f855a',
+    text: '#ffffff',
+    border: '#fbd38d'
   },
   halloween: {
     name: 'Halloween',
-    main: 'bg-orange-600',
-    mainBackground: '#dd6b20', // bg-orange-600
-    accent: 'bg-purple-700',
-    text: 'text-white',
-    border: 'border-black'
+    main: '#dd6b20',
+    mainBackground: '#dd6b20',
+    accent: '#6b46c1',
+    text: '#ffffff',
+    border: '#000000'
   },
   valentines: {
     name: "Valentine's Day",
-    main: 'bg-pink-500',
-    mainBackground: '#d53f8c', // bg-pink-500
-    accent: 'bg-red-400',
-    text: 'text-white',
-    border: 'border-pink-300'
+    main: '#d53f8c',
+    mainBackground: '#d53f8c',
+    accent: '#e53e3e',
+    text: '#ffffff',
+    border: '#f687b3'
   },
   stpatricks: {
     name: "St. Patrick's Day",
-    main: 'bg-green-600',
-    mainBackground: '#2f855a', // bg-green-600
-    accent: 'bg-yellow-400',
-    text: 'text-white',
-    border: 'border-green-300'
+    main: '#2f855a',
+    mainBackground: '#2f855a',
+    accent: '#ecc94b',
+    text: '#ffffff',
+    border: '#68d391'
   },
   easter: {
     name: 'Easter',
-    main: 'bg-purple-400',
-    mainBackground: '#9f7aea', // bg-purple-400
-    accent: 'bg-yellow-300',
-    text: 'text-gray-800',
-    border: 'border-pink-300'
+    main: '#9f7aea',
+    mainBackground: '#9f7aea',
+    accent: '#faf089',
+    text: '#2d3748',
+    border: '#f687b3'
   },
   independence: {
     name: 'Independence Day',
-    main: 'bg-blue-700',
-    mainBackground: '#2c5282', // bg-blue-700
-    accent: 'bg-red-600',
-    text: 'text-white',
-    border: 'border-white'
+    main: '#2c5282',
+    mainBackground: '#2c5282',
+    accent: '#e53e3e',
+    text: '#ffffff',
+    border: '#ffffff'
   },
   thanksgiving: {
     name: 'Thanksgiving',
-    main: 'bg-orange-700',
-    mainBackground: '#c05621', // bg-orange-700
-    accent: 'bg-yellow-600',
-    text: 'text-white',
-    border: 'border-brown-400'
+    main: '#c05621',
+    mainBackground: '#c05621',
+    accent: '#dd6b20',
+    text: '#ffffff',
+    border: '#744210'
   }
 };
 
