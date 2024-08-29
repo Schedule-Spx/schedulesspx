@@ -1,4 +1,3 @@
-// src/Account.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme, themes } from './ThemeContext';
@@ -17,8 +16,8 @@ const Account = ({ user, weekSchedule }) => {
   }
 
   const handleThemeChange = async (themeName) => {
-    changeTheme(themeName);
-    await saveUserTheme(user.email, themes[themeName]);
+    changeTheme(themeName.toLowerCase());
+    await saveUserTheme(user.email, themes[themeName.toLowerCase()]);
   };
 
   const handleCustomTheme = async () => {

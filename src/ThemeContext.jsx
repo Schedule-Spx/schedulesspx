@@ -1,4 +1,3 @@
-// src/ThemeContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext();
@@ -48,25 +47,20 @@ export const ThemeProvider = ({ children }) => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       try {
-        // Try to parse as JSON first
         const parsedTheme = JSON.parse(savedTheme);
         setCurrentTheme(parsedTheme);
       } catch (error) {
-        // If parsing fails, check if it's a valid theme name
-        if (themes[savedTheme]) {
-          setCurrentTheme(themes[savedTheme]);
-        } else {
-          console.error('Invalid theme:', savedTheme);
-          localStorage.removeItem('theme');
-        }
+        const fallbackTheme = themes[savedTheme.toLowerCase()] || themes.default;
+        setCurrentTheme(fallbackTheme);
       }
     }
   }, []);
 
   const changeTheme = (themeName) => {
-    const newTheme = themes[themeName] || themes.default;
+    const normalizedThemeName = themeName.toLowerCase();
+    const newTheme = themes[normalizedThemeName] || themes.default;
     setCurrentTheme(newTheme);
-    localStorage.setItem('theme', themeName); // Store theme name instead of object
+    localStorage.setItem('theme', JSON.stringify(newTheme));
   };
 
   const setCustomTheme = (customTheme) => {

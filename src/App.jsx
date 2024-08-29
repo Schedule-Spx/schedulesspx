@@ -1,8 +1,7 @@
-// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { ThemeProvider, useTheme, themes } from './ThemeContext';
+import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
@@ -50,8 +49,8 @@ function ThemedApp() {
       const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/user-theme?email=${email}`);
       if (response.ok) {
         const data = await response.json();
-        if (data.theme) {
-          changeTheme(data.theme.name);
+        if (data.theme && data.theme.name) {
+          changeTheme(data.theme.name.toLowerCase());
         }
       }
     } catch (error) {
