@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
@@ -20,9 +20,11 @@ import AgreementPopup from './components/AgreementPopup';
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showAgreement, setShowAgreement] = useState(false);
+  const [hasViewedDocs, setHasViewedDocs] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -43,6 +45,12 @@ function ThemedApp() {
 
     fetchSchedule();
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === '/privacy' || location.pathname === '/terms') {
+      setHasViewedDocs(true);
+    }
+  }, [location]);
 
   const fetchUserTheme = async (email) => {
     try {
@@ -87,12 +95,22 @@ function ThemedApp() {
   const handleAgree = () => {
     localStorage.setItem('agreedToTerms', 'true');
     setShowAgreement(false);
+    if (hasViewedDocs) {
+      navigate('/');
+    }
+  };
+
+  const handleViewDocs = (path) => {
+    setHasViewedDocs(true);
+    navigate(path);
   };
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <NavBar user={user} setUser={updateUser} />
-      {showAgreement && <AgreementPopup onAgree={handleAgree} />}
+      {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
+        <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
+      )}
       <Routes>
         <Route 
           path="/admin" 
