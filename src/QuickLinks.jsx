@@ -11,7 +11,7 @@ const QuickLinks = () => {
   ];
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold rounded-lg p-4">
+    <div className="h-full p-4">
       <h2 className="text-xl font-bold text-stpius-white mb-2">Quick Links</h2>
       <div className="space-y-2">
         {links.map((link, index) => (
