@@ -1,7 +1,9 @@
 // src/PeriodProgress.jsx
 import React, { useState, useEffect } from 'react';
+import { useTheme } from './ThemeContext';
 
 const PeriodProgress = ({ weekSchedule }) => {
+  const { currentTheme } = useTheme();
   const [currentState, setCurrentState] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -197,26 +199,26 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold p-4 rounded-lg shadow w-full flex flex-col items-center">
+    <div className={`${currentTheme.secondary} ${currentTheme.border} p-4 rounded-lg shadow w-full flex flex-col items-center`}>
       {currentState ? (
         <>
-          <p className="text-lg font-semibold text-stpius-white text-center mb-4">
+          <p className={`text-lg font-semibold ${currentTheme.text} text-center mb-4`}>
             {currentState.type === 'activePeriod' ? currentState.name :
              currentState.type === 'betweenPeriods' ? `Next: ${currentState.nextPeriod}` :
              currentState.type === 'beforeSchool' ? 'School starts soon' :
              currentState.type === 'afterSchool' || currentState.type === 'nonSchoolDay' ? `Next school day (${currentState.nextDay})` :
              'No School'}
           </p>
-          <div className="w-full bg-stpius-gold/30 rounded-full h-4 mb-4">
+          <div className={`w-full ${currentTheme.primary} rounded-full h-4 mb-4`}>
             <div 
-              className="bg-stpius-gold h-4 rounded-full transition-all duration-1000 ease-in-out" 
+              className={`${currentTheme.secondary} h-4 rounded-full transition-all duration-1000 ease-in-out`} 
               style={{width: `${progress}%`}}
             ></div>
           </div>
-          <p className="text-sm text-stpius-white">{timeRemaining}</p>
+          <p className={`text-sm ${currentTheme.text}`}>{timeRemaining}</p>
         </>
       ) : (
-        <p className="text-stpius-white">Loading...</p>
+        <p className={currentTheme.text}>Loading...</p>
       )}
     </div>
   );

@@ -1,7 +1,8 @@
-// src/DayHeader.jsx
 import React, { useEffect, useState } from 'react';
+import { useTheme } from './ThemeContext';
 
 const DayHeader = () => {
+  const { currentTheme } = useTheme();
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
@@ -18,10 +19,10 @@ const DayHeader = () => {
   const timeString = currentDateTime.toLocaleTimeString();
 
   return (
-    <div className="p-4 bg-stpius-blue border border-stpius-gold rounded-lg flex flex-col items-center justify-center">
-      <div className="text-2xl font-bold text-stpius-white">{dayName}</div>
-      <div className="text-xl text-stpius-white">{dateString}</div>
-      <div className="text-lg text-stpius-gold">{timeString}</div>
+    <div className={`p-4 ${currentTheme.secondary} ${currentTheme.border} rounded-lg flex flex-col items-center justify-center`}>
+      <div className={`text-2xl font-bold ${currentTheme.text}`}>{dayName}</div>
+      <div className={`text-xl ${currentTheme.text}`}>{dateString}</div>
+      <div className={`text-lg ${currentTheme.primary}`}>{timeString}</div>
     </div>
   );
 };

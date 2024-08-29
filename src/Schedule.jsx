@@ -1,7 +1,8 @@
-// src/Schedule.jsx
 import React, { useState, useEffect } from 'react';
+import { useTheme } from './ThemeContext';
 
 const Schedule = ({ weekSchedule }) => {
+  const { currentTheme } = useTheme();
   const [currentTime, setCurrentTime] = useState(new Date());
   const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
   const daySchedule = weekSchedule[currentDay] || [];
@@ -54,8 +55,8 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className="h-full p-4">
-      <h2 className="text-xl font-bold mb-2 text-stpius-white">{currentDay}'s Schedule</h2>
+    <div className={`h-full p-4 ${currentTheme.secondary}`}>
+      <h2 className={`text-xl font-bold mb-2 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
       <div className="space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100% - 3rem)' }}>
         {daySchedule.length > 0 ? (
           daySchedule.map((period, index) => {
@@ -67,19 +68,19 @@ const Schedule = ({ weekSchedule }) => {
                 key={index} 
                 className={`flex justify-between items-center p-1 rounded text-sm ${
                   active 
-                    ? 'bg-stpius-gold text-stpius-blue font-bold' 
-                    : 'bg-stpius-gold/30 text-stpius-white'
+                    ? `${currentTheme.primary} ${currentTheme.text} font-bold` 
+                    : `${currentTheme.secondary} ${currentTheme.text}`
                 }`}
               >
                 <span className="font-medium">{name}</span>
-                <span className={active ? 'text-stpius-blue/80' : 'text-stpius-white/70'}>
+                <span className={active ? `${currentTheme.text}` : `${currentTheme.text}`}>
                   {formatTime(start)} - {formatTime(end)}
                 </span>
               </div>
             );
           })
         ) : (
-          <p className="text-stpius-white">No schedule available for today.</p>
+          <p className={currentTheme.text}>No schedule available for today.</p>
         )}
       </div>
     </div>
