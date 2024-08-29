@@ -7,7 +7,7 @@ const About = () => {
       <h1 className="text-3xl font-bold mb-6">About Schedule SPX</h1>
       <div className="space-y-4">
         <p>
-          Schedule SPX was created by Kagen Jensen and David Camick with a clear mission: to make life easier for students and teachers at St. Pius X. Tired of the hassle of logging into PowerSchool just to check the bell schedule? So were we. That's why we built Schedule SPX—a streamlined, easy-to-use platform that puts the daily schedule at your fingertips.
+          DAVID 10:42 Schedule SPX was created by Kagen Jensen and David Camick with a clear mission: to make life easier for students and teachers at St. Pius X. Tired of the hassle of logging into PowerSchool just to check the bell schedule? So were we. That's why we built Schedule SPX—a streamlined, easy-to-use platform that puts the daily schedule at your fingertips.
         </p>
         <p>
           But we didn't stop there. Schedule SPX also provides quick access to essential links like your grades, Canvas, sp.org, and even the cafe menu, making it your one-stop hub for everything you need throughout the school day.
