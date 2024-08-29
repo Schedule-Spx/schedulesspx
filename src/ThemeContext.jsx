@@ -5,8 +5,8 @@ const ThemeContext = createContext();
 export const themes = {
   default: {
     name: 'Default',
-    main: '#012143',  // Direct color code for background
-    mainBackground: '#012143',
+    main: '#012143',
+    mainBackground: 'bg-stpius-blue', // Use Tailwind class for site background
     accent: '#b98827',
     text: '#ffffff',
     border: '#b98827'
@@ -14,7 +14,7 @@ export const themes = {
   dark: {
     name: 'Dark',
     main: '#1a1a1a',
-    mainBackground: '#1a1a1a',
+    mainBackground: 'bg-gray-900',
     accent: '#4a5568',
     text: '#ffffff',
     border: '#4a5568'
@@ -22,7 +22,7 @@ export const themes = {
   light: {
     name: 'Light',
     main: '#f7fafc',
-    mainBackground: '#f7fafc',
+    mainBackground: 'bg-gray-100',
     accent: '#e2e8f0',
     text: '#1a202c',
     border: '#e2e8f0'
@@ -30,7 +30,7 @@ export const themes = {
   forest: {
     name: 'Forest',
     main: '#22543d',
-    mainBackground: '#22543d',
+    mainBackground: 'bg-green-800',
     accent: '#48bb78',
     text: '#ffffff',
     border: '#48bb78'
@@ -38,16 +38,16 @@ export const themes = {
   ocean: {
     name: 'Ocean',
     main: '#2a4365',
-    mainBackground: '#2a4365',
+    mainBackground: 'bg-blue-800',
     accent: '#63b3ed',
     text: '#ffffff',
     border: '#63b3ed'
   },
-  // Holiday themes with adjusted colors
+  // Holiday themes with Tailwind class adjustments
   christmas: {
     name: 'Christmas',
     main: '#c53030',
-    mainBackground: '#c53030',
+    mainBackground: 'bg-red-700',
     accent: '#2f855a',
     text: '#ffffff',
     border: '#fbd38d'
@@ -55,7 +55,7 @@ export const themes = {
   halloween: {
     name: 'Halloween',
     main: '#dd6b20',
-    mainBackground: '#dd6b20',
+    mainBackground: 'bg-orange-600',
     accent: '#6b46c1',
     text: '#ffffff',
     border: '#000000'
@@ -63,7 +63,7 @@ export const themes = {
   valentines: {
     name: "Valentine's Day",
     main: '#d53f8c',
-    mainBackground: '#d53f8c',
+    mainBackground: 'bg-pink-500',
     accent: '#e53e3e',
     text: '#ffffff',
     border: '#f687b3'
@@ -71,7 +71,7 @@ export const themes = {
   stpatricks: {
     name: "St. Patrick's Day",
     main: '#2f855a',
-    mainBackground: '#2f855a',
+    mainBackground: 'bg-green-600',
     accent: '#ecc94b',
     text: '#ffffff',
     border: '#68d391'
@@ -79,7 +79,7 @@ export const themes = {
   easter: {
     name: 'Easter',
     main: '#9f7aea',
-    mainBackground: '#9f7aea',
+    mainBackground: 'bg-purple-400',
     accent: '#faf089',
     text: '#2d3748',
     border: '#f687b3'
@@ -87,7 +87,7 @@ export const themes = {
   independence: {
     name: 'Independence Day',
     main: '#2c5282',
-    mainBackground: '#2c5282',
+    mainBackground: 'bg-blue-700',
     accent: '#e53e3e',
     text: '#ffffff',
     border: '#ffffff'
@@ -95,7 +95,7 @@ export const themes = {
   thanksgiving: {
     name: 'Thanksgiving',
     main: '#c05621',
-    mainBackground: '#c05621',
+    mainBackground: 'bg-orange-700',
     accent: '#dd6b20',
     text: '#ffffff',
     border: '#744210'
