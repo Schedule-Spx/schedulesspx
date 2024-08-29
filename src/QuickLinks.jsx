@@ -17,7 +17,7 @@ const QuickLinks = () => {
       className="h-full p-4 border-2 rounded"
       style={{ 
         borderColor: currentTheme.accent, 
-        backgroundColor: currentTheme.mainBackground,  // Match the site's background color
+        backgroundColor: currentTheme.main,  // Match the main theme color for background
         color: currentTheme.text 
       }}
     >
@@ -30,9 +30,9 @@ const QuickLinks = () => {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              backgroundColor: currentTheme.accent,
+              backgroundColor: currentTheme.accent,  // Accent color for buttons
               color: currentTheme.text,
-              borderColor: currentTheme.accent
+              borderColor: currentTheme.accent,
             }}
             className="font-semibold py-1 px-3 rounded hover:opacity-80 transition-opacity duration-200 text-center block text-sm"
           >
