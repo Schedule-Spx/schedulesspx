@@ -10,7 +10,9 @@ ReactDOM.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <ThemeProvider>
-        <App />
+        <div className="main-background min-h-screen">
+          <App />
+        </div>
       </ThemeProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>,
