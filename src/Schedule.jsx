@@ -78,7 +78,6 @@ const Schedule = ({ weekSchedule }) => {
                     : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`
                   }
                   transition-all duration-300 ease-in-out
-                  transform hover:scale-105
                   animate-fadeIn
                 `}
                 style={{animationDelay: `${index * 100}ms`}}
