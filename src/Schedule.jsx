@@ -54,9 +54,9 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className="bg-stpius-blue border border-stpius-gold rounded-lg p-4">
+    <div className="h-full p-4">
       <h2 className="text-xl font-bold mb-2 text-stpius-white">{currentDay}'s Schedule</h2>
-      <div className="space-y-1 max-h-[300px] overflow-y-auto">
+      <div className="space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100% - 3rem)' }}>
         {daySchedule.length > 0 ? (
           daySchedule.map((period, index) => {
             const [name, time] = period.split(' - ');
