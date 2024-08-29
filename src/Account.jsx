@@ -57,7 +57,19 @@ const Account = ({ user, weekSchedule }) => {
   return (
     <div className={`container mx-auto p-4 flex flex-col h-full ${currentTheme.main} ${currentTheme.text}`}>
       <div className="flex-grow overflow-y-auto">
-        {/* Account Information section remains unchanged */}
+        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
+          <h1 className={`text-2xl font-bold mb-6 text-center ${currentTheme.text}`}>Account Information</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mb-4">
+              <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Name</label>
+              <p className={`${currentTheme.main} ${currentTheme.text} p-2 rounded`}>{user.name}</p>
+            </div>
+            <div className="mb-4">
+              <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Email</label>
+              <p className={`${currentTheme.main} ${currentTheme.text} p-2 rounded`}>{user.email}</p>
+            </div>
+          </div>
+        </div>
         
         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>Theme Customization</h2>
@@ -141,7 +153,23 @@ const Account = ({ user, weekSchedule }) => {
         </div>
       </div>
 
-      {/* Legal Information section remains unchanged */}
+      <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6 mt-8`}>
+        <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>Legal Information</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <Link 
+            to="/privacy" 
+            className={`${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
+          >
+            Privacy Policy
+          </Link>
+          <Link 
+            to="/terms" 
+            className={`${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
+          >
+            Terms of Service
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
