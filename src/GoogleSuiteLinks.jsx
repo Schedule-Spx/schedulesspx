@@ -32,24 +32,26 @@ const GoogleSuiteLinks = () => {
     ];
 
     return (
-        <div className={`flex flex-col h-full ${currentTheme.accent} p-2 rounded-lg shadow-md`}>
-            <div className="text-left mb-1">
-                <h1 className={`text-sm font-medium ${currentTheme.text}`}>Document Creator</h1>
-                <h2 className={`text-xs ${currentTheme.primary}`}>Click to create a new document</h2>
-            </div>
-            <div className="flex justify-between items-center flex-grow px-2">
-                {apps.map((app) => (
-                    <a
-                        key={app.name}
-                        href={app.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`${currentTheme.main} hover:opacity-80 transition-opacity duration-200 px-3 py-1 rounded-md flex flex-col items-center justify-center`}
-                    >
-                        <img src={app.logo} alt={`${app.name} logo`} className="h-6 w-8 mb-1 object-contain" />
-                        <span className={`${currentTheme.text} font-semibold text-[0.6rem]`}>{app.name}</span>
-                    </a>
-                ))}
+        <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
+            <div className="p-5">
+                <div className="mb-4">
+                    <h2 className={`text-xl font-bold ${currentTheme.text}`}>Document Creator</h2>
+                    <p className={`text-sm ${currentTheme.text} opacity-80`}>Click to create a new document</p>
+                </div>
+                <div className="flex justify-between items-center">
+                    {apps.map((app) => (
+                        <a
+                            key={app.name}
+                            href={app.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`${currentTheme.accent} hover:opacity-80 transition-opacity duration-200 px-4 py-2 rounded-md flex flex-col items-center justify-center`}
+                        >
+                            <img src={app.logo} alt={`${app.name} logo`} className="h-8 w-10 mb-2 object-contain" />
+                            <span className={`${currentTheme.text} font-semibold text-xs`}>{app.name}</span>
+                        </a>
+                    ))}
+                </div>
             </div>
         </div>
     );
