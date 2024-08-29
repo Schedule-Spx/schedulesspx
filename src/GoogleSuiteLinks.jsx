@@ -32,10 +32,10 @@ const GoogleSuiteLinks = () => {
     ];
 
     return (
-        <div className={`flex flex-col h-full ${currentTheme.accent} p-4 rounded-lg shadow-md`}>
-            <div className="text-left mb-4">
-                <h1 className={`text-lg font-medium mb-1 ${currentTheme.text}`}>Document Creator</h1>
-                <h2 className={`text-sm ${currentTheme.primary} mb-2`}>Click to create a new document in another tab</h2>
+        <div className={`flex flex-col h-full ${currentTheme.accent} p-2 rounded-lg shadow-md`}>
+            <div className="text-left mb-2">
+                <h1 className={`text-sm font-medium ${currentTheme.text}`}>Document Creator</h1>
+                <h2 className={`text-xs ${currentTheme.primary}`}>Click to create a new document</h2>
             </div>
             <div className="flex justify-between items-center flex-grow">
                 {apps.map((app) => (
@@ -44,10 +44,10 @@ const GoogleSuiteLinks = () => {
                         href={app.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`${currentTheme.main} hover:opacity-80 transition-opacity duration-200 p-2 rounded-md flex flex-col items-center justify-center`}
+                        className={`${currentTheme.main} hover:opacity-80 transition-opacity duration-200 p-1 rounded-md flex flex-col items-center justify-center`}
                     >
-                        <img src={app.logo} alt={`${app.name} logo`} className="h-8 w-8 mb-1" />
-                        <span className={`${currentTheme.text} font-semibold text-xs`}>{app.name}</span>
+                        <img src={app.logo} alt={`${app.name} logo`} className="h-6 w-6 mb-1" />
+                        <span className={`${currentTheme.text} font-semibold text-[0.6rem]`}>{app.name}</span>
                     </a>
                 ))}
             </div>
