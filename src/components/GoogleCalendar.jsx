@@ -58,49 +58,51 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.accent} p-4 rounded-lg shadow-md h-64`}>
-      <h2 className={`text-lg font-bold mb-2 ${currentTheme.text}`}>Upcoming Events</h2>
-      <div className="overflow-y-auto h-52">
-        {loading ? (
-          <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
-        ) : error ? (
-          <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
-        ) : events.length === 0 ? (
-          <div className={currentTheme.text}>No upcoming events</div>
-        ) : (
-          <ul className="space-y-2">
-            {events.map((event, index) => {
-              const isActive = isEventActive(event);
-              return (
-                <li 
-                  key={event.id} 
-                  className={`
-                    relative text-sm ${currentTheme.main} bg-opacity-60 p-2 rounded
-                    transition-all duration-300 ease-in-out
-                    animate-fadeIn
-                  `}
-                  style={{animationDelay: `${index * 100}ms`}}
-                >
-                  <div 
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
+      <div className="p-5 flex flex-col h-full">
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
+        <div className="overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100% - 2rem)' }}>
+          {loading ? (
+            <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
+          ) : error ? (
+            <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
+          ) : events.length === 0 ? (
+            <div className={currentTheme.text}>No upcoming events</div>
+          ) : (
+            <ul className="space-y-2">
+              {events.map((event, index) => {
+                const isActive = isEventActive(event);
+                return (
+                  <li 
+                    key={event.id} 
                     className={`
-                      absolute inset-0 rounded-lg 
-                      ${isActive ? 'animate-highlightFadeIn' : ''}
+                      relative text-sm ${currentTheme.accent} p-2 rounded
+                      transition-all duration-300 ease-in-out
+                      animate-fadeIn
                     `}
-                    style={{
-                      animationDelay: `${(index * 100) + 500}ms`,
-                      animationDuration: '1.5s',
-                    }}
-                  ></div>
-                  <div className={`font-semibold ${currentTheme.text} relative z-10`}>{event.summary}</div>
-                  <div className={`text-xs ${currentTheme.text} opacity-80 relative z-10`}>
-                    {formatDate(event.start.dateTime || event.start.date)}
-                    {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                    style={{animationDelay: `${index * 100}ms`}}
+                  >
+                    <div 
+                      className={`
+                        absolute inset-0 rounded-lg 
+                        ${isActive ? 'animate-highlightFadeIn' : ''}
+                      `}
+                      style={{
+                        animationDelay: `${(index * 100) + 500}ms`,
+                        animationDuration: '1.5s',
+                      }}
+                    ></div>
+                    <div className={`font-semibold ${currentTheme.text} relative z-10`}>{event.summary}</div>
+                    <div className={`text-xs ${currentTheme.text} opacity-80 relative z-10`}>
+                      {formatDate(event.start.dateTime || event.start.date)}
+                      {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
