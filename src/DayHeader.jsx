@@ -19,10 +19,10 @@ const DayHeader = () => {
   const timeString = currentDateTime.toLocaleTimeString();
 
   return (
-    <div className={`p-4 ${currentTheme.secondary} ${currentTheme.border} rounded-lg flex flex-col items-center justify-center`}>
+    <div className={`p-4 ${currentTheme.accent} ${currentTheme.border} rounded-lg flex flex-col items-center justify-center`}>
       <div className={`text-2xl font-bold ${currentTheme.text}`}>{dayName}</div>
       <div className={`text-xl ${currentTheme.text}`}>{dateString}</div>
-      <div className={`text-lg ${currentTheme.primary}`}>{timeString}</div>
+      <div className={`text-lg ${currentTheme.main} ${currentTheme.text} px-2 py-1 rounded mt-1`}>{timeString}</div>
     </div>
   );
 };

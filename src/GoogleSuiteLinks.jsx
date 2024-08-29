@@ -1,7 +1,9 @@
-// src/GoogleSuiteLinks.jsx
 import React from 'react';
+import { useTheme } from './ThemeContext';
 
 const GoogleSuiteLinks = () => {
+  const { currentTheme } = useTheme();
+
   const apps = [
     { 
       name: 'Docs', 
@@ -26,8 +28,8 @@ const GoogleSuiteLinks = () => {
   ];
 
   return (
-    <div className="p-1">
-      <h2 className="text-xs font-bold mb-1 text-stpius-white">Google Suite</h2>
+    <div className={`p-1 ${currentTheme.accent}`}>
+      <h2 className={`text-xs font-bold mb-1 ${currentTheme.text}`}>Google Suite</h2>
       <div className="grid grid-cols-2 gap-1">
         {apps.map((app) => (
           <a
@@ -35,10 +37,10 @@ const GoogleSuiteLinks = () => {
             href={app.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-stpius-gold hover:bg-stpius-gold/80 transition-colors duration-200 p-0.5 rounded-md flex items-center justify-center"
+            className={`${currentTheme.main} hover:opacity-80 transition-opacity duration-200 p-0.5 rounded-md flex items-center justify-center`}
           >
             <img src={app.logo} alt={`${app.name} logo`} className="w-4 h-4 mr-1" />
-            <span className="text-stpius-blue font-semibold text-[0.6rem]">{app.name}</span>
+            <span className={`${currentTheme.text} font-semibold text-[0.6rem]`}>{app.name}</span>
           </a>
         ))}
       </div>

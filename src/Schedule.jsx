@@ -55,7 +55,7 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`h-full p-4 ${currentTheme.secondary}`}>
+    <div className={`h-full p-4 ${currentTheme.accent}`}>
       <h2 className={`text-xl font-bold mb-2 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
       <div className="space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100% - 3rem)' }}>
         {daySchedule.length > 0 ? (
@@ -68,12 +68,12 @@ const Schedule = ({ weekSchedule }) => {
                 key={index} 
                 className={`flex justify-between items-center p-1 rounded text-sm ${
                   active 
-                    ? `${currentTheme.primary} ${currentTheme.text} font-bold` 
-                    : `${currentTheme.secondary} ${currentTheme.text}`
+                    ? `${currentTheme.main} ${currentTheme.text} font-bold` 
+                    : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`
                 }`}
               >
                 <span className="font-medium">{name}</span>
-                <span className={active ? `${currentTheme.text}` : `${currentTheme.text}`}>
+                <span className={active ? `${currentTheme.text}` : `${currentTheme.text} opacity-80`}>
                   {formatTime(start)} - {formatTime(end)}
                 </span>
               </div>

@@ -1,7 +1,9 @@
-// src/QuickLinks.jsx
 import React from 'react';
+import { useTheme } from './ThemeContext';
 
 const QuickLinks = () => {
+  const { currentTheme } = useTheme();
+
   const links = [
     { name: 'Canvas', url: 'https://stpius.instructure.com/' },
     { name: 'PowerSchool', url: 'https://powerschool.spx.org/public/' },
@@ -11,8 +13,8 @@ const QuickLinks = () => {
   ];
 
   return (
-    <div className="h-full p-4">
-      <h2 className="text-xl font-bold text-stpius-white mb-2">Quick Links</h2>
+    <div className={`h-full p-4 ${currentTheme.accent}`}>
+      <h2 className={`text-xl font-bold ${currentTheme.text} mb-2`}>Quick Links</h2>
       <div className="space-y-2">
         {links.map((link, index) => (
           <a
@@ -20,7 +22,7 @@ const QuickLinks = () => {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-stpius-gold text-stpius-blue font-semibold py-1 px-3 rounded hover:bg-stpius-gold/80 transition-colors duration-200 text-center block text-sm"
+            className={`${currentTheme.main} ${currentTheme.text} font-semibold py-1 px-3 rounded hover:opacity-80 transition-opacity duration-200 text-center block text-sm`}
           >
             {link.name}
           </a>

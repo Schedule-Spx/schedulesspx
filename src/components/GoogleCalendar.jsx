@@ -50,7 +50,7 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.secondary} p-4 rounded-lg shadow-md h-64`}>
+    <div className={`${currentTheme.accent} p-4 rounded-lg shadow-md h-64`}>
       <h2 className={`text-lg font-bold mb-2 ${currentTheme.text}`}>Upcoming Events</h2>
       <div className="overflow-y-auto h-52">
         {loading ? (
@@ -62,9 +62,9 @@ const GoogleCalendar = () => {
         ) : (
           <ul className="space-y-2">
             {events.map((event) => (
-              <li key={event.id} className="text-sm">
+              <li key={event.id} className={`text-sm ${currentTheme.main} bg-opacity-60 p-2 rounded`}>
                 <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
-                <div className={`text-xs ${currentTheme.primary}`}>
+                <div className={`text-xs ${currentTheme.text} opacity-80`}>
                   {formatDate(event.start.dateTime || event.start.date)}
                   {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
                 </div>
