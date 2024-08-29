@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { ThemeProvider } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
@@ -22,12 +23,15 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showAgreement, setShowAgreement] = useState(false);
+  const [userTheme, setUserTheme] = useState(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
     if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-      setUser(JSON.parse(savedUser));
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+      fetchUserTheme(parsedUser.email);
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
@@ -40,6 +44,33 @@ function AppContent() {
 
     fetchSchedule();
   }, []);
+
+  const fetchUserTheme = async (email) => {
+    try {
+      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/user-theme?email=${email}`);
+      if (!response.ok) throw new Error('Failed to fetch user theme');
+      const data = await response.json();
+      setUserTheme(data.theme);
+    } catch (error) {
+      console.error('Error fetching user theme:', error);
+    }
+  };
+
+  const updateUserTheme = async (email, newTheme) => {
+    try {
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/user-theme', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, theme: newTheme }),
+      });
+      if (!response.ok) throw new Error('Failed to update user theme');
+      setUserTheme(newTheme);
+    } catch (error) {
+      console.error('Error updating user theme:', error);
+    }
+  };
 
   const fetchSchedule = async () => {
     try {
@@ -59,9 +90,11 @@ function AppContent() {
       localStorage.setItem('user', JSON.stringify(newUser));
       const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000;
       localStorage.setItem('sessionExpiry', expiry.toString());
+      fetchUserTheme(newUser.email);
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
+      setUserTheme(null);
     }
   };
 
@@ -71,70 +104,73 @@ function AppContent() {
   };
 
   return (
-    <div className="App flex flex-col min-h-screen bg-stpius-blue text-stpius-white">
-      <NavBar user={user} setUser={updateUser} />
-      {showAgreement && <AgreementPopup onAgree={handleAgree} />}
-      <Routes>
-        <Route 
-          path="/admin" 
-          element={
-            <div className="flex-grow flex flex-col">
-              <Admin 
-                user={user} 
-                weekSchedule={weekSchedule} 
-                setWeekSchedule={setWeekSchedule} 
-                fetchSchedule={fetchSchedule} 
-              />
-            </div>
-          } 
-        />
-        <Route 
-          path="/account" 
-          element={
-            <div className="flex-grow flex flex-col h-[calc(100vh-64px)]">
-              <Account 
-                user={user} 
-                weekSchedule={weekSchedule}
-              />
-            </div>
-          } 
-        />
-        <Route path="/about" element={<About />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsAndConditions />} />
-        <Route
-          path="/"
-          element={
-            <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="flex flex-col space-y-4">
+    <ThemeProvider initialTheme={userTheme}>
+      <div className="App flex flex-col min-h-screen bg-stpius-blue text-stpius-white">
+        <NavBar user={user} setUser={updateUser} />
+        {showAgreement && <AgreementPopup onAgree={handleAgree} />}
+        <Routes>
+          <Route 
+            path="/admin" 
+            element={
+              <div className="flex-grow flex flex-col">
+                <Admin 
+                  user={user} 
+                  weekSchedule={weekSchedule} 
+                  setWeekSchedule={setWeekSchedule} 
+                  fetchSchedule={fetchSchedule} 
+                />
+              </div>
+            } 
+          />
+          <Route 
+            path="/account" 
+            element={
+              <div className="flex-grow flex flex-col h-[calc(100vh-64px)]">
+                <Account 
+                  user={user} 
+                  weekSchedule={weekSchedule}
+                  updateUserTheme={(newTheme) => updateUserTheme(user.email, newTheme)}
+                />
+              </div>
+            } 
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route
+            path="/"
+            element={
+              <main className="flex-grow p-4 flex flex-col">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
+                      <DayHeader />
+                    </div>
+                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                      <QuickLinks />
+                    </div>
+                  </div>
                   <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                    <DayHeader />
+                    <Schedule weekSchedule={weekSchedule} />
                   </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
-                    <QuickLinks />
-                  </div>
-                </div>
-                <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                  <Schedule weekSchedule={weekSchedule} />
-                </div>
-                <div className="flex flex-col space-y-4">
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
-                    <GoogleCalendar />
-                  </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-28">
-                    <GoogleSuiteLinks />
+                  <div className="flex flex-col space-y-4">
+                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
+                      <GoogleCalendar />
+                    </div>
+                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-28">
+                      <GoogleSuiteLinks />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="w-full mb-4">
-                <PeriodProgress weekSchedule={weekSchedule} />
-              </div>
-            </main>
-          }
-        />
-      </Routes>
-    </div>
+                <div className="w-full mb-4">
+                  <PeriodProgress weekSchedule={weekSchedule} />
+                </div>
+              </main>
+            }
+          />
+        </Routes>
+      </div>
+    </ThemeProvider>
   );
 }
 

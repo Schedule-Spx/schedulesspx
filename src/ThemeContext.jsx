@@ -1,27 +1,73 @@
 // src/ThemeContext.jsx
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-export const ThemeContext = createContext();
+const ThemeContext = createContext();
 
-export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'light';
-  });
+export const themes = {
+  default: {
+    name: 'Default',
+    primary: 'bg-stpius-blue',
+    secondary: 'bg-stpius-gold',
+    text: 'text-stpius-white',
+    border: 'border-stpius-gold'
+  },
+  dark: {
+    name: 'Dark',
+    primary: 'bg-gray-900',
+    secondary: 'bg-gray-600',
+    text: 'text-white',
+    border: 'border-gray-600'
+  },
+  light: {
+    name: 'Light',
+    primary: 'bg-gray-100',
+    secondary: 'bg-gray-300',
+    text: 'text-gray-900',
+    border: 'border-gray-300'
+  },
+  forest: {
+    name: 'Forest',
+    primary: 'bg-green-800',
+    secondary: 'bg-green-500',
+    text: 'text-white',
+    border: 'border-green-500'
+  },
+  ocean: {
+    name: 'Ocean',
+    primary: 'bg-blue-800',
+    secondary: 'bg-blue-500',
+    text: 'text-white',
+    border: 'border-blue-500'
+  }
+};
+
+export const ThemeProvider = ({ children, initialTheme }) => {
+  const [currentTheme, setCurrentTheme] = useState(initialTheme || themes.default);
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-  }, [theme]);
+    if (initialTheme) {
+      setCurrentTheme(initialTheme);
+    } else {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        setCurrentTheme(JSON.parse(savedTheme));
+      }
+    }
+  }, [initialTheme]);
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  const changeTheme = (themeName) => {
+    const newTheme = themes[themeName] || themes.default;
+    setCurrentTheme(newTheme);
+    localStorage.setItem('theme', JSON.stringify(newTheme));
+  };
+
+  const setCustomTheme = (customTheme) => {
+    setCurrentTheme(customTheme);
+    localStorage.setItem('theme', JSON.stringify(customTheme));
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ currentTheme, changeTheme, setCustomTheme }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -29,7 +75,7 @@ export const ThemeProvider = ({ children }) => {
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
