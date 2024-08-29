@@ -9,13 +9,11 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 const Root = () => {
   const { currentTheme } = useTheme();
 
-  // Apply the background color directly to the body
-  React.useEffect(() => {
-    document.body.style.backgroundColor = currentTheme.main;  // Apply the main color as background
-  }, [currentTheme]);
-
   return (
-    <div className="min-h-screen">
+    <div 
+      className="min-h-screen"
+      style={{ backgroundColor: currentTheme.main }} // Apply the main color as background to the root div
+    >
       <App />
     </div>
   );
