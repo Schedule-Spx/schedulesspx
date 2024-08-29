@@ -6,6 +6,7 @@ const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, setCustomTheme } = useTheme();
   const [customMain, setCustomMain] = useState('');
   const [customAccent, setCustomAccent] = useState('');
+  const [customText, setCustomText] = useState('');
 
   if (!user) {
     return (
@@ -21,12 +22,12 @@ const Account = ({ user, weekSchedule }) => {
   };
 
   const handleCustomTheme = async () => {
-    if (customMain && customAccent) {
+    if (customMain && customAccent && customText) {
       const customTheme = {
         name: 'Custom',
         main: customMain,
         accent: customAccent,
-        text: customMain.includes('bg-gray-100') ? 'text-gray-900' : 'text-white',
+        text: customText,
         border: customAccent
       };
       setCustomTheme(customTheme);
@@ -70,41 +71,58 @@ const Account = ({ user, weekSchedule }) => {
 
         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>Theme Customization</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-4">
-            {Object.keys(themes).map((themeName) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
+            {Object.entries(themes).map(([themeName, theme]) => (
               <button
                 key={themeName}
                 onClick={() => handleThemeChange(themeName)}
-                className={`${themes[themeName].main} ${themes[themeName].accent} ${themes[themeName].text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
+                className={`${theme.main} ${theme.accent} ${theme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 flex flex-col items-center justify-center h-24`}
               >
-                {themes[themeName].name}
+                <div className={`w-8 h-8 rounded-full ${theme.accent} mb-2`}></div>
+                {theme.name}
               </button>
             ))}
           </div>
-          <div className="mt-4">
-            <h3 className={`text-lg font-bold mb-2 ${currentTheme.text}`}>Custom Theme</h3>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="text"
-                placeholder="Main Color (e.g., bg-red-500)"
-                value={customMain}
-                onChange={(e) => setCustomMain(e.target.value)}
-                className="border rounded p-2 flex-grow text-gray-900"
-              />
-              <input
-                type="text"
-                placeholder="Accent Color (e.g., bg-blue-300)"
-                value={customAccent}
-                onChange={(e) => setCustomAccent(e.target.value)}
-                className="border rounded p-2 flex-grow text-gray-900"
-              />
-              <button
-                onClick={handleCustomTheme}
-                className={`${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
-              >
-                Apply Custom Theme
-              </button>
+          <div className="mt-6">
+            <h3 className={`text-lg font-bold mb-4 ${currentTheme.text}`}>Custom Theme</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Main Color</label>
+                <input
+                  type="text"
+                  placeholder="e.g., bg-red-500"
+                  value={customMain}
+                  onChange={(e) => setCustomMain(e.target.value)}
+                  className="border rounded p-2 w-full text-gray-900"
+                />
+              </div>
+              <div>
+                <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Accent Color</label>
+                <input
+                  type="text"
+                  placeholder="e.g., bg-blue-300"
+                  value={customAccent}
+                  onChange={(e) => setCustomAccent(e.target.value)}
+                  className="border rounded p-2 w-full text-gray-900"
+                />
+              </div>
+              <div>
+                <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Text Color</label>
+                <input
+                  type="text"
+                  placeholder="e.g., text-white"
+                  value={customText}
+                  onChange={(e) => setCustomText(e.target.value)}
+                  className="border rounded p-2 w-full text-gray-900"
+                />
+              </div>
             </div>
+            <button
+              onClick={handleCustomTheme}
+              className={`${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto`}
+            >
+              Apply Custom Theme
+            </button>
           </div>
         </div>
       </div>
