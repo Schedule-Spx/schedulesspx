@@ -58,40 +58,49 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.accent} p-4 rounded-lg shadow-md h-64 overflow-hidden`}>
-      <h2 className={`text-lg font-bold mb-2 ${currentTheme.text}`}>Upcoming Events</h2>
-      <div className="overflow-y-auto h-52">
+    <div className={`h-full flex flex-col ${currentTheme.accent} rounded-lg shadow-md overflow-hidden`}>
+      <h2 className={`text-lg font-bold p-4 ${currentTheme.text}`}>Upcoming Events</h2>
+      <div className="flex-grow flex flex-col">
         {loading ? (
-          <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
+          <div className={`${currentTheme.text} animate-pulse p-4`}>Loading events...</div>
         ) : error ? (
-          <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
+          <div className={`${currentTheme.text} text-red-500 p-4`}>Error: {error}</div>
         ) : events.length === 0 ? (
-          <div className={currentTheme.text}>No upcoming events</div>
+          <div className={`${currentTheme.text} p-4`}>No upcoming events</div>
         ) : (
-          <ul className="space-y-2">
+          <div className="flex-grow grid grid-rows-5 gap-1 p-2">
             {events.map((event, index) => {
               const isActive = isEventActive(event);
               return (
-                <li 
+                <div 
                   key={event.id} 
                   className={`
-                    text-sm ${currentTheme.main} bg-opacity-60 p-2 rounded
-                    ${isActive ? 'animate-glow' : ''}
+                    relative flex flex-col justify-center p-2 rounded-lg text-sm
+                    ${isActive ? `${currentTheme.main} ${currentTheme.text} font-bold` : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`}
                     transition-all duration-300 ease-in-out
-                    transform hover:scale-105
                     animate-fadeIn
                   `}
                   style={{animationDelay: `${index * 100}ms`}}
                 >
-                  <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
-                  <div className={`text-xs ${currentTheme.text} opacity-80`}>
+                  <div 
+                    className={`
+                      absolute inset-0 rounded-lg 
+                      ${isActive ? 'animate-highlightFadeIn' : ''}
+                    `}
+                    style={{
+                      animationDelay: `${(index * 100) + 500}ms`,
+                      animationDuration: '1.5s',
+                    }}
+                  ></div>
+                  <span className="font-semibold relative z-10">{event.summary}</span>
+                  <span className={`text-xs relative z-10 ${isActive ? currentTheme.text : `${currentTheme.text} opacity-80`}`}>
                     {formatDate(event.start.dateTime || event.start.date)}
                     {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
-                  </div>
-                </li>
+                  </span>
+                </div>
               );
             })}
-          </ul>
+          </div>
         )}
       </div>
     </div>
