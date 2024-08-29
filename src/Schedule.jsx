@@ -58,46 +58,48 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`h-full p-4 ${currentTheme.accent} rounded-lg shadow-md`}>
-      <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
-      <div className="space-y-2 overflow-y-auto" style={{ maxHeight: 'calc(100% - 4rem)' }}>
+    <div className={`h-full flex flex-col ${currentTheme.accent} rounded-lg shadow-md overflow-hidden`}>
+      <h2 className={`text-xl font-bold p-4 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
+      <div className="flex-grow flex flex-col">
         {loading ? (
-          <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
+          <div className={`${currentTheme.text} animate-pulse p-4`}>Loading schedule...</div>
         ) : daySchedule.length > 0 ? (
-          daySchedule.map((period, index) => {
-            const [name, time] = period.split(' - ');
-            const [start, end] = time.split('-');
-            const active = isActivePeriod(start.trim(), end.trim());
-            return (
-              <div 
-                key={index} 
-                className={`
-                  relative flex justify-between items-center p-2 rounded-lg text-sm
-                  ${active ? `${currentTheme.main} ${currentTheme.text} font-bold` : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`}
-                  transition-all duration-300 ease-in-out
-                  animate-fadeIn
-                `}
-                style={{animationDelay: `${index * 100}ms`}}
-              >
+          <div className="flex-grow grid grid-rows-8 gap-1 p-2">
+            {daySchedule.map((period, index) => {
+              const [name, time] = period.split(' - ');
+              const [start, end] = time.split('-');
+              const active = isActivePeriod(start.trim(), end.trim());
+              return (
                 <div 
+                  key={index} 
                   className={`
-                    absolute inset-0 rounded-lg 
-                    ${active ? 'animate-highlightFadeIn' : ''}
+                    relative flex justify-between items-center p-2 rounded-lg text-sm
+                    ${active ? `${currentTheme.main} ${currentTheme.text} font-bold` : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`}
+                    transition-all duration-300 ease-in-out
+                    animate-fadeIn
                   `}
-                  style={{
-                    animationDelay: `${(index * 100) + 500}ms`,
-                    animationDuration: '1.5s',
-                  }}
-                ></div>
-                <span className="font-medium relative z-10">{name}</span>
-                <span className={`relative z-10 ${active ? currentTheme.text : `${currentTheme.text} opacity-80`}`}>
-                  {formatTime(start)} - {formatTime(end)}
-                </span>
-              </div>
-            );
-          })
+                  style={{animationDelay: `${index * 100}ms`}}
+                >
+                  <div 
+                    className={`
+                      absolute inset-0 rounded-lg 
+                      ${active ? 'animate-highlightFadeIn' : ''}
+                    `}
+                    style={{
+                      animationDelay: `${(index * 100) + 500}ms`,
+                      animationDuration: '1.5s',
+                    }}
+                  ></div>
+                  <span className="font-medium relative z-10">{name}</span>
+                  <span className={`relative z-10 ${active ? currentTheme.text : `${currentTheme.text} opacity-80`}`}>
+                    {formatTime(start)} - {formatTime(end)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         ) : (
-          <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
+          <p className={`${currentTheme.text} animate-fadeIn p-4`}>No schedule available for today.</p>
         )}
       </div>
     </div>
