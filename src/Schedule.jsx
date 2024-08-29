@@ -1,14 +1,17 @@
+// src/Schedule.jsx
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 
 const Schedule = ({ weekSchedule }) => {
   const { currentTheme } = useTheme();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [loading, setLoading] = useState(true);
   const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
   const daySchedule = weekSchedule[currentDay] || [];
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    setLoading(false);
     return () => clearInterval(timer);
   }, []);
 
@@ -55,10 +58,12 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`h-full p-4 ${currentTheme.accent}`}>
-      <h2 className={`text-xl font-bold mb-2 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
-      <div className="space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100% - 3rem)' }}>
-        {daySchedule.length > 0 ? (
+    <div className={`h-full p-4 ${currentTheme.accent} rounded-lg shadow-md`}>
+      <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>{currentDay}'s Schedule</h2>
+      <div className="space-y-2 overflow-y-auto" style={{ maxHeight: 'calc(100% - 4rem)' }}>
+        {loading ? (
+          <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
+        ) : daySchedule.length > 0 ? (
           daySchedule.map((period, index) => {
             const [name, time] = period.split(' - ');
             const [start, end] = time.split('-');
@@ -66,11 +71,17 @@ const Schedule = ({ weekSchedule }) => {
             return (
               <div 
                 key={index} 
-                className={`flex justify-between items-center p-1 rounded text-sm ${
-                  active 
-                    ? `${currentTheme.main} ${currentTheme.text} font-bold` 
+                className={`
+                  flex justify-between items-center p-2 rounded-lg text-sm
+                  ${active 
+                    ? `${currentTheme.main} ${currentTheme.text} font-bold animate-glow` 
                     : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`
-                }`}
+                  }
+                  transition-all duration-300 ease-in-out
+                  transform hover:scale-105
+                  animate-fadeIn
+                `}
+                style={{animationDelay: `${index * 100}ms`}}
               >
                 <span className="font-medium">{name}</span>
                 <span className={active ? `${currentTheme.text}` : `${currentTheme.text} opacity-80`}>
@@ -80,7 +91,7 @@ const Schedule = ({ weekSchedule }) => {
             );
           })
         ) : (
-          <p className={currentTheme.text}>No schedule available for today.</p>
+          <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
         )}
       </div>
     </div>
