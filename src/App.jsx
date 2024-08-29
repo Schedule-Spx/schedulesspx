@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { ThemeProvider } from './ThemeContext';
+import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
@@ -18,7 +18,8 @@ import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
 
-function AppContent() {
+function ThemedApp() {
+  const { currentTheme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
@@ -72,71 +73,77 @@ function AppContent() {
   };
 
   return (
+    <div className={`App flex flex-col min-h-screen ${currentTheme.primary} ${currentTheme.text}`}>
+      <NavBar user={user} setUser={updateUser} />
+      {showAgreement && <AgreementPopup onAgree={handleAgree} />}
+      <Routes>
+        <Route 
+          path="/admin" 
+          element={
+            <div className="flex-grow flex flex-col">
+              <Admin 
+                user={user} 
+                weekSchedule={weekSchedule} 
+                setWeekSchedule={setWeekSchedule} 
+                fetchSchedule={fetchSchedule} 
+              />
+            </div>
+          } 
+        />
+        <Route 
+          path="/account" 
+          element={
+            <div className="flex-grow flex flex-col h-[calc(100vh-64px)]">
+              <Account 
+                user={user} 
+                weekSchedule={weekSchedule}
+              />
+            </div>
+          } 
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
+        <Route
+          path="/"
+          element={
+            <main className="flex-grow p-4 flex flex-col">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                    <DayHeader />
+                  </div>
+                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                    <QuickLinks />
+                  </div>
+                </div>
+                <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                  <Schedule weekSchedule={weekSchedule} />
+                </div>
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                    <GoogleCalendar />
+                  </div>
+                  <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-28`}>
+                    <GoogleSuiteLinks />
+                  </div>
+                </div>
+              </div>
+              <div className="w-full mb-4">
+                <PeriodProgress weekSchedule={weekSchedule} />
+              </div>
+            </main>
+          }
+        />
+      </Routes>
+    </div>
+  );
+}
+
+function AppContent() {
+  return (
     <ThemeProvider>
-      <div className="App flex flex-col min-h-screen bg-stpius-blue text-stpius-white">
-        <NavBar user={user} setUser={updateUser} />
-        {showAgreement && <AgreementPopup onAgree={handleAgree} />}
-        <Routes>
-          <Route 
-            path="/admin" 
-            element={
-              <div className="flex-grow flex flex-col">
-                <Admin 
-                  user={user} 
-                  weekSchedule={weekSchedule} 
-                  setWeekSchedule={setWeekSchedule} 
-                  fetchSchedule={fetchSchedule} 
-                />
-              </div>
-            } 
-          />
-          <Route 
-            path="/account" 
-            element={
-              <div className="flex-grow flex flex-col h-[calc(100vh-64px)]">
-                <Account 
-                  user={user} 
-                  weekSchedule={weekSchedule}
-                />
-              </div>
-            } 
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsAndConditions />} />
-          <Route
-            path="/"
-            element={
-              <main className="flex-grow p-4 flex flex-col">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                  <div className="flex flex-col space-y-4">
-                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                      <DayHeader />
-                    </div>
-                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
-                      <QuickLinks />
-                    </div>
-                  </div>
-                  <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden">
-                    <Schedule weekSchedule={weekSchedule} />
-                  </div>
-                  <div className="flex flex-col space-y-4">
-                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden flex-grow">
-                      <GoogleCalendar />
-                    </div>
-                    <div className="bg-stpius-blue border border-stpius-gold rounded-lg shadow-md overflow-hidden h-28">
-                      <GoogleSuiteLinks />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full mb-4">
-                  <PeriodProgress weekSchedule={weekSchedule} />
-                </div>
-              </main>
-            }
-          />
-        </Routes>
-      </div>
+      <ThemedApp />
     </ThemeProvider>
   );
 }
