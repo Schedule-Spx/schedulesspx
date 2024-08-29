@@ -1,58 +1,48 @@
+// src/GoogleSuiteLinks.jsx
 import React from 'react';
 import { useTheme } from './ThemeContext';
-import googleDocsIcon from './assets/Google Docs Icon.svg';
-import googleDriveIcon from './assets/Google Drive Icon.svg';
-import googleSheetsIcon from './assets/Google Sheets Icon.svg';
-import googleSlidesIcon from './assets/Google Slide Icon.svg';
 
 const GoogleSuiteLinks = () => {
-    const { currentTheme } = useTheme();
+  const { currentTheme } = useTheme();
 
-    const apps = [
-        { 
-            name: 'Docs', 
-            logo: googleDocsIcon, 
-            url: 'https://doc.new' 
-        },
-        { 
-            name: 'Sheets', 
-            logo: googleSheetsIcon, 
-            url: 'https://sheet.new' 
-        },
-        { 
-            name: 'Slides', 
-            logo: googleSlidesIcon, 
-            url: 'https://slide.new' 
-        },
-        { 
-            name: 'Drive', 
-            logo: googleDriveIcon, 
-            url: 'https://drive.google.com' 
-        },
-    ];
+  const links = [
+    { name: 'Google Docs', url: 'https://docs.new', icon: '/src/assets/GoogleDocsIcon.svg' },
+    { name: 'Google Sheets', url: 'https://sheets.new', icon: '/src/assets/GoogleSheetsIcon.svg' },
+    { name: 'Google Slides', url: 'https://slides.new', icon: '/src/assets/GoogleSlidesIcon.svg' },
+    { name: 'Google Drive', url: 'https://drive.google.com', icon: '/src/assets/GoogleDriveIcon.svg' },
+  ];
 
-    return (
-        <div className={`flex flex-col h-full ${currentTheme.accent} p-2 rounded-lg shadow-md`}>
-            <div className="text-left mb-1">
-                <h1 className={`text-sm font-medium ${currentTheme.text}`}>Document Creator</h1>
-                <h2 className={`text-xs ${currentTheme.primary}`}>Click to create a new document</h2>
-            </div>
-            <div className="flex justify-between items-center flex-grow px-2">
-                {apps.map((app) => (
-                    <a
-                        key={app.name}
-                        href={app.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`${currentTheme.main} hover:opacity-80 transition-opacity duration-200 px-3 py-1 rounded-md flex flex-col items-center justify-center`}
-                    >
-                        <img src={app.logo} alt={`${app.name} logo`} className="h-6 w-8 mb-1 object-contain" />
-                        <span className={`${currentTheme.text} font-semibold text-[0.6rem]`}>{app.name}</span>
-                    </a>
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div 
+      className="h-full p-4 border-2 rounded"
+      style={{ 
+        borderColor: currentTheme.accent, 
+        backgroundColor: currentTheme.main,
+        color: currentTheme.text 
+      }}
+    >
+      <h2 className="text-xl font-bold mb-2" style={{ color: currentTheme.text }}>Google Suite Links</h2>
+      <div className="space-y-2">
+        {links.map((link, index) => (
+          <a
+            key={index}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              backgroundColor: currentTheme.accent,
+              color: currentTheme.text,
+              borderColor: currentTheme.accent,
+            }}
+            className="font-semibold py-1 px-3 rounded hover:opacity-80 transition-opacity duration-200 text-center block text-sm"
+          >
+            <img src={link.icon} alt={link.name} className="inline-block mr-2 w-6 h-6"/>
+            {link.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default GoogleSuiteLinks;

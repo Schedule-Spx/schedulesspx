@@ -1,3 +1,4 @@
+// src/QuickLinks.jsx
 import React from 'react';
 import { useTheme } from './ThemeContext';
 
@@ -17,7 +18,7 @@ const QuickLinks = () => {
       className="h-full p-4 border-2 rounded"
       style={{ 
         borderColor: currentTheme.accent, 
-        backgroundColor: currentTheme.main,  // Match the main theme color for background
+        backgroundColor: currentTheme.main,
         color: currentTheme.text 
       }}
     >
@@ -30,7 +31,7 @@ const QuickLinks = () => {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              backgroundColor: currentTheme.accent,  // Accent color for buttons
+              backgroundColor: currentTheme.accent,
               color: currentTheme.text,
               borderColor: currentTheme.accent,
             }}
