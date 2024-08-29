@@ -34,23 +34,23 @@ const Account = ({ user, weekSchedule }) => {
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-col h-full">
+    <div className={`container mx-auto p-4 flex flex-col h-full ${currentTheme.primary} ${currentTheme.text}`}>
       <div className="flex-grow overflow-y-auto">
-        <div className={`${currentTheme.primary} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
+        <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h1 className={`text-2xl font-bold mb-6 text-center ${currentTheme.text}`}>Account Information</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="mb-4">
               <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Name</label>
-              <p className={`${currentTheme.secondary}/30 ${currentTheme.text} p-2 rounded`}>{user.name}</p>
+              <p className={`${currentTheme.primary} ${currentTheme.text} p-2 rounded`}>{user.name}</p>
             </div>
             <div className="mb-4">
               <label className={`block ${currentTheme.text} text-sm font-bold mb-2`}>Email</label>
-              <p className={`${currentTheme.secondary}/30 ${currentTheme.text} p-2 rounded`}>{user.email}</p>
+              <p className={`${currentTheme.primary} ${currentTheme.text} p-2 rounded`}>{user.email}</p>
             </div>
           </div>
         </div>
 
-        <div className={`${currentTheme.primary} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
+        <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>Theme Customization</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-4">
             {Object.keys(themes).map((themeName) => (
@@ -71,18 +71,18 @@ const Account = ({ user, weekSchedule }) => {
                 placeholder="Primary Color (e.g., bg-red-500)"
                 value={customPrimary}
                 onChange={(e) => setCustomPrimary(e.target.value)}
-                className="border rounded p-2 flex-grow"
+                className="border rounded p-2 flex-grow text-gray-900"
               />
               <input
                 type="text"
                 placeholder="Secondary Color (e.g., bg-blue-300)"
                 value={customSecondary}
                 onChange={(e) => setCustomSecondary(e.target.value)}
-                className="border rounded p-2 flex-grow"
+                className="border rounded p-2 flex-grow text-gray-900"
               />
               <button
                 onClick={handleCustomTheme}
-                className={`${currentTheme.secondary} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
+                className={`${currentTheme.primary} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
               >
                 Apply Custom Theme
               </button>
@@ -91,18 +91,18 @@ const Account = ({ user, weekSchedule }) => {
         </div>
       </div>
 
-      <div className={`${currentTheme.primary} ${currentTheme.border} rounded-lg shadow-lg p-6 mt-8`}>
+      <div className={`${currentTheme.secondary} ${currentTheme.border} rounded-lg shadow-lg p-6 mt-8`}>
         <h2 className={`text-xl font-bold mb-4 ${currentTheme.text}`}>Legal Information</h2>
         <div className="flex flex-col sm:flex-row justify-between items-center">
           <Link 
             to="/privacy" 
-            className={`${currentTheme.secondary} ${currentTheme.text} font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
+            className={`${currentTheme.primary} ${currentTheme.text} font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
           >
             Privacy Policy
           </Link>
           <Link 
             to="/terms" 
-            className={`${currentTheme.secondary} ${currentTheme.text} font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
+            className={`${currentTheme.primary} ${currentTheme.text} font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
           >
             Terms of Service
           </Link>

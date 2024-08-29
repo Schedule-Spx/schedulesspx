@@ -47,7 +47,19 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
-      setCurrentTheme(JSON.parse(savedTheme));
+      try {
+        const parsedTheme = JSON.parse(savedTheme);
+        setCurrentTheme(parsedTheme);
+      } catch (error) {
+        console.error('Error parsing saved theme:', error);
+        // If parsing fails, check if it's a valid theme name
+        if (themes[savedTheme]) {
+          setCurrentTheme(themes[savedTheme]);
+        } else {
+          console.error('Invalid theme name:', savedTheme);
+          localStorage.removeItem('theme');
+        }
+      }
     }
   }, []);
 
