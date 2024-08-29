@@ -72,18 +72,25 @@ const Schedule = ({ weekSchedule }) => {
               <div 
                 key={index} 
                 className={`
-                  flex justify-between items-center p-2 rounded-lg text-sm
-                  ${active 
-                    ? `${currentTheme.main} ${currentTheme.text} font-bold animate-glow` 
-                    : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`
-                  }
+                  relative flex justify-between items-center p-2 rounded-lg text-sm
+                  ${active ? `${currentTheme.main} ${currentTheme.text} font-bold` : `${currentTheme.main} bg-opacity-50 ${currentTheme.text}`}
                   transition-all duration-300 ease-in-out
                   animate-fadeIn
                 `}
                 style={{animationDelay: `${index * 100}ms`}}
               >
-                <span className="font-medium">{name}</span>
-                <span className={active ? `${currentTheme.text}` : `${currentTheme.text} opacity-80`}>
+                <div 
+                  className={`
+                    absolute inset-0 rounded-lg 
+                    ${active ? 'animate-highlightFadeIn' : ''}
+                  `}
+                  style={{
+                    animationDelay: `${(index * 100) + 500}ms`,
+                    animationDuration: '1.5s',
+                  }}
+                ></div>
+                <span className="font-medium relative z-10">{name}</span>
+                <span className={`relative z-10 ${active ? currentTheme.text : `${currentTheme.text} opacity-80`}`}>
                   {formatTime(start)} - {formatTime(end)}
                 </span>
               </div>
