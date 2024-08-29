@@ -58,10 +58,10 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
-      <div className="p-5">
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
+      <div className="p-5 flex flex-col flex-grow">
         <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
-        <div className="overflow-y-auto h-52">
+        <div className="overflow-y-auto flex-grow">
           {loading ? (
             <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
           ) : error ? (
