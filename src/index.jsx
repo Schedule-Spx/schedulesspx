@@ -9,37 +9,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 const Root = () => {
   const { currentTheme } = useTheme();
 
-  const getThemeClass = () => {
-    switch (currentTheme.name.toLowerCase()) {
-      case 'dark':
-        return 'bg-theme-dark';
-      case 'light':
-        return 'bg-theme-light';
-      case 'forest':
-        return 'bg-theme-forest';
-      case 'ocean':
-        return 'bg-theme-ocean';
-      case 'christmas':
-        return 'bg-theme-christmas';
-      case 'halloween':
-        return 'bg-theme-halloween';
-      case 'valentine\'s day':
-        return 'bg-theme-valentines';
-      case 'st. patrick\'s day':
-        return 'bg-theme-stpatricks';
-      case 'easter':
-        return 'bg-theme-easter';
-      case 'independence day':
-        return 'bg-theme-independence';
-      case 'thanksgiving':
-        return 'bg-theme-thanksgiving';
-      default:
-        return 'bg-theme-default';
-    }
-  };
+  // Apply the background color directly to the body
+  React.useEffect(() => {
+    document.body.style.backgroundColor = currentTheme.main;  // Apply the main color as background
+  }, [currentTheme]);
 
   return (
-    <div className={`${getThemeClass()} min-h-screen`}>
+    <div className="min-h-screen">
       <App />
     </div>
   );
