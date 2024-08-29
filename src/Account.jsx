@@ -26,7 +26,7 @@ const Account = ({ user, weekSchedule }) => {
         name: 'Custom',
         primary: customPrimary,
         secondary: customSecondary,
-        text: 'text-white',
+        text: customPrimary.includes('bg-gray-100') ? 'text-gray-900' : 'text-white',
         border: customSecondary
       };
       setCustomTheme(customTheme);

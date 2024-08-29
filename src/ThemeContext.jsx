@@ -48,15 +48,15 @@ export const ThemeProvider = ({ children }) => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       try {
+        // Try to parse as JSON first
         const parsedTheme = JSON.parse(savedTheme);
         setCurrentTheme(parsedTheme);
       } catch (error) {
-        console.error('Error parsing saved theme:', error);
         // If parsing fails, check if it's a valid theme name
         if (themes[savedTheme]) {
           setCurrentTheme(themes[savedTheme]);
         } else {
-          console.error('Invalid theme name:', savedTheme);
+          console.error('Invalid theme:', savedTheme);
           localStorage.removeItem('theme');
         }
       }
@@ -66,7 +66,7 @@ export const ThemeProvider = ({ children }) => {
   const changeTheme = (themeName) => {
     const newTheme = themes[themeName] || themes.default;
     setCurrentTheme(newTheme);
-    localStorage.setItem('theme', JSON.stringify(newTheme));
+    localStorage.setItem('theme', themeName); // Store theme name instead of object
   };
 
   const setCustomTheme = (customTheme) => {
