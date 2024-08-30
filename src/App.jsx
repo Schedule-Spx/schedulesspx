@@ -115,7 +115,7 @@ function ThemedApp() {
         <Route 
           path="/admin" 
           element={
-            <div className="flex-grow flex flex-col">
+            <div className="flex flex-col">
               <Admin 
                 user={user} 
                 weekSchedule={weekSchedule} 
@@ -128,7 +128,7 @@ function ThemedApp() {
         <Route 
           path="/account" 
           element={
-            <div className="flex-grow flex flex-col h-[calc(100vh-64px)]">
+            <div className="flex flex-col h-[calc(100vh-64px)]">
               <Account 
                 user={user} 
                 weekSchedule={weekSchedule}
@@ -142,13 +142,13 @@ function ThemedApp() {
         <Route
           path="/"
           element={
-            <main className="flex-grow p-4 flex flex-col space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
+            <main className="p-4 flex flex-col space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '120px'}}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '160px'}}>
                     <DayHeader />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
                     <QuickLinks />
                   </div>
                 </div>
@@ -156,15 +156,15 @@ function ThemedApp() {
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
                     <GoogleCalendar />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '120px'}}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '160px'}}>
                     <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '120px'}}>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '140px'}}>
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
               <div className="h-16"></div> {/* Extra space at the bottom */}

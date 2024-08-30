@@ -57,12 +57,12 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
-      <div className="p-5">
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>{currentDay}'s Schedule</h2>
-        <div className="space-y-2 overflow-y-auto" style={{ maxHeight: '400px' }}>
+    <div className={`${currentTheme.main} h-full flex flex-col`}>
+      <div className="p-3 flex flex-col h-full">
+        <h2 className={`text-lg font-bold ${currentTheme.text} mb-3`}>{currentDay}'s Schedule</h2>
+        <div className="space-y-2 overflow-y-auto flex-grow">
           {loading ? (
-            <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
+            <div className={`${currentTheme.text} animate-pulse text-sm`}>Loading schedule...</div>
           ) : daySchedule.length > 0 ? (
             daySchedule.map((period, index) => {
               const [name, time] = period.split(' - ');
@@ -72,7 +72,7 @@ const Schedule = ({ weekSchedule }) => {
                 <div 
                   key={index} 
                   className={`
-                    relative flex justify-between items-center p-2 rounded-lg
+                    relative flex flex-col sm:flex-row sm:justify-between sm:items-center p-2 rounded-lg
                     ${active ? `${currentTheme.accent}` : `${currentTheme.main} bg-opacity-50`}
                     transition-all duration-300 ease-in-out
                     animate-fadeIn
@@ -89,15 +89,15 @@ const Schedule = ({ weekSchedule }) => {
                       animationDuration: '1.5s',
                     }}
                   ></div>
-                  <span className={`font-medium relative z-10 ${currentTheme.text}`}>{name}</span>
-                  <span className={`relative z-10 ${currentTheme.text} ${active ? '' : 'opacity-80'}`}>
+                  <span className={`text-sm font-medium relative z-10 ${currentTheme.text} mb-1 sm:mb-0`}>{name}</span>
+                  <span className={`text-xs relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'}`}>
                     {formatTime(start)} - {formatTime(end)}
                   </span>
                 </div>
               );
             })
           ) : (
-            <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
+            <p className={`${currentTheme.text} animate-fadeIn text-sm`}>No schedule available for today.</p>
           )}
         </div>
       </div>
