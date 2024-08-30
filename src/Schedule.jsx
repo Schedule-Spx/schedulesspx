@@ -1,4 +1,3 @@
-// src/Schedule.jsx
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 
@@ -61,7 +60,7 @@ const Schedule = ({ weekSchedule }) => {
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
       <div className="p-5">
         <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>{currentDay}'s Schedule</h2>
-        <div className="space-y-2">
+        <div className="space-y-2 overflow-y-auto" style={{ maxHeight: '400px' }}>
           {loading ? (
             <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
           ) : daySchedule.length > 0 ? (
