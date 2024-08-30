@@ -21,7 +21,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 10,
+              maxResults: 20, // Increased to show more events
               singleEvents: true,
               orderBy: 'startTime',
             },
