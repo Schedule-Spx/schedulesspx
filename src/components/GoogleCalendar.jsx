@@ -63,7 +63,7 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col`} style={{ height: '300px' }}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
       <div className="p-2 flex flex-col h-full">
         <h2 className={`text-lg font-bold ${currentTheme.text} mb-2`}>Upcoming Events</h2>
         <div className="overflow-y-auto flex-grow">
