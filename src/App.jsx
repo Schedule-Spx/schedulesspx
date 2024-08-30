@@ -142,8 +142,8 @@ function ThemedApp() {
         <Route
           path="/"
           element={
-            <main className="flex-grow p-4 flex flex-col justify-between">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 h-[calc(70vh-4rem)]">
+            <main className="flex-grow p-4 flex flex-col">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(50vh-2rem)]">
                 <div className="flex flex-col space-y-4 h-full">
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-1/4`}>
                     <DayHeader />
@@ -164,9 +164,10 @@ function ThemedApp() {
                   </div>
                 </div>
               </div>
-              <div className="w-full mt-4 mb-4 h-20">
+              <div className="w-full my-4 h-20">
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
+              <div className="flex-grow"></div>
             </main>
           }
         />
