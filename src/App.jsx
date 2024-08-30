@@ -26,6 +26,10 @@ function ThemedApp() {
   const [showAgreement, setShowAgreement] = useState(false);
   const [hasViewedDocs, setHasViewedDocs] = useState(false);
 
+  // Height variables for Schedule and GoogleCalendar
+  const scheduleHeight = '400px';
+  const googleCalendarHeight = '200px';
+
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
@@ -152,11 +156,11 @@ function ThemedApp() {
                     <QuickLinks />
                   </div>
                 </div>
-                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`}>
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{height: scheduleHeight}}>
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: googleCalendarHeight}}>
                     <GoogleCalendar />
                   </div>
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '160px'}}>
