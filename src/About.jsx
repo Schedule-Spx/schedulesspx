@@ -1,25 +1,59 @@
 // src/About.jsx
 import React from 'react';
+import { useTheme } from './ThemeContext';
+import { motion } from 'framer-motion';
 
 const About = () => {
+  const { currentTheme } = useTheme();
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">About Schedule SPX</h1>
-      <div className="space-y-4">
-        <p>
-          Schedule SPX was created by Kagen Jensen and David Camick with a clear mission: to make life easier for students and teachers at St. Pius X. Tired of the hassle of logging into PowerSchool just to check the bell schedule? So were we. That's why we built Schedule SPX—a streamlined, easy-to-use platform that puts the daily schedule at your fingertips.
+      <motion.h1
+        className="text-4xl font-bold mb-6"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        style={{ color: currentTheme.text }}
+      >
+        About Schedule SPX
+      </motion.h1>
+
+      <motion.h2
+        className="text-2xl font-semibold mb-4"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+        style={{ color: currentTheme.accent }}
+      >
+        More than just a bell schedule
+      </motion.h2>
+
+      <motion.div
+        className="space-y-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: 'easeOut' }}
+      >
+        <p style={{ color: currentTheme.text }}>
+          Schedule SPX is meticulously crafted and continually refined by Kagen Jensen and David Camick, offering the ultimate digital companion for every St. Pius X student and teacher.
         </p>
-        <p>
-          But we didn't stop there. Schedule SPX also provides quick access to essential links like your grades, Canvas, sp.org, and even the cafe menu, making it your one-stop hub for everything you need throughout the school day.
+        <p style={{ color: currentTheme.text }}>
+          What started with the powerful, "flagship" feature of displaying the current period, complete with real-time tracking, has rapidly evolved into an all-in-one portal designed to simplify your day.
         </p>
-        <p>
-          The original idea for Schedule SPX came from David, who is also leading the design, marketing! On the other hand, Kagen is the mastermind behind the code, API, front-end development of the site and all the technical workings that make the site run smoothly.
+        <p style={{ color: currentTheme.text }}>
+          From Quick Links to Document Creators, calendar integrations from spx.org, and beyond—Schedule SPX is built to empower your academic journey, providing a seamless experience like no other.
         </p>
-        <p>
-          Together, we're dedicated to enhancing your school experience by providing a reliable and accessible resource for staying on top of your schedule and more.
+        <p style={{ color: currentTheme.text }}>
+          Got questions, feature ideas, or even some passionate feedback? Drop us a line at <a href="mailto:admin@schedulespx.com" className="underline hover:text-blue-500">admin@schedulespx.com</a>, and we’ll get back to you promptly!
         </p>
-      </div>
-      <div className="mt-8">
+      </motion.div>
+
+      <motion.div
+        className="mt-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, ease: 'easeOut' }}
+      >
         <a 
           href="https://www.instagram.com/schedulespx/" 
           target="_blank" 
@@ -31,7 +65,7 @@ const About = () => {
           </svg>
           Follow us on Instagram
         </a>
-      </div>
+      </motion.div>
     </div>
   );
 };
