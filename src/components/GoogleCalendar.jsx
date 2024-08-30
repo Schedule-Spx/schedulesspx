@@ -21,7 +21,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 20, // Increased to show more events
+              maxResults: 30, // Increased to ensure more events for scrolling
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -61,7 +61,7 @@ const GoogleCalendar = () => {
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
       <div className="p-5 flex flex-col h-full">
         <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
-        <div className="overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100% - 2rem)' }}>
+        <div className="overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100% - 3rem)' }}>
           {loading ? (
             <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
           ) : error ? (
@@ -69,7 +69,7 @@ const GoogleCalendar = () => {
           ) : events.length === 0 ? (
             <div className={currentTheme.text}>No upcoming events</div>
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-2 pr-2"> {/* Added right padding for scrollbar */}
               {events.map((event, index) => {
                 const isActive = isEventActive(event);
                 return (
