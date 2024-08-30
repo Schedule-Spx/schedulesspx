@@ -28,7 +28,7 @@ function ThemedApp() {
 
   // Height variables for Schedule and GoogleCalendar
   const scheduleHeight = '400px';
-  const googleCalendarHeight = '350px';
+  const googleCalendarHeight = '300px';
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -168,7 +168,7 @@ function ThemedApp() {
                   </div>
                 </div>
               </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '160px'}}>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '150px'}}>
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
               <div className="h-16"></div> {/* Extra space at the bottom */}
