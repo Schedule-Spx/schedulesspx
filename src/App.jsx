@@ -28,7 +28,7 @@ function ThemedApp() {
 
   // Height variables for Schedule and GoogleCalendar
   const scheduleHeight = '400px';
-  const googleCalendarHeight = '200px';
+  const googleCalendarHeight = '350px';
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
