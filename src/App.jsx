@@ -149,7 +149,7 @@ function ThemedApp() {
             <main className="p-4 flex flex-col space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '170px'}}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
                     <DayHeader />
                   </div>
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
@@ -163,12 +163,12 @@ function ThemedApp() {
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: googleCalendarHeight}}>
                     <GoogleCalendar />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '170px'}}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
                     <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '160px'}}>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '155px'}}>
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
               <div className="h-16"></div> {/* Extra space at the bottom */}
