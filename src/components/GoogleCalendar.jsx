@@ -21,7 +21,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 20,
+              maxResults: 10, // Reduced number of events
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -63,27 +63,27 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col`} style={{ height: '250px' }}> {/* Fixed height */}
       <div className="p-2 flex flex-col h-full">
-        <h2 className={`text-lg font-bold ${currentTheme.text} mb-2`}>Upcoming Events</h2>
-        <div className="overflow-y-auto flex-grow">
+        <h2 className={`text-sm font-bold ${currentTheme.text} mb-1`}>Upcoming Events</h2> {/* Smaller title */}
+        <div className="overflow-y-auto flex-grow text-xs"> {/* Smaller text */}
           {loading ? (
-            <div className={`${currentTheme.text} animate-pulse text-sm`}>Loading events...</div>
+            <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
           ) : error ? (
-            <div className={`${currentTheme.text} text-red-500 text-sm`}>Error: {error}</div>
+            <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
           ) : Object.keys(events).length === 0 ? (
-            <div className={`${currentTheme.text} text-sm`}>No upcoming events</div>
+            <div className={currentTheme.text}>No upcoming events</div>
           ) : (
             Object.entries(events).map(([date, dayEvents]) => (
-              <div key={date} className="mb-2">
-                <h3 className={`text-sm font-semibold mb-1 ${currentTheme.text}`}>{formatDate(date)}</h3>
-                <ul className="space-y-1">
+              <div key={date} className="mb-1"> {/* Reduced margin */}
+                <h3 className={`text-xs font-semibold ${currentTheme.text}`}>{formatDate(date)}</h3>
+                <ul className="space-y-0.5"> {/* Reduced space between items */}
                   {dayEvents.map((event) => (
-                    <li key={event.id} className={`${currentTheme.accent} p-1 rounded shadow text-xs`}>
+                    <li key={event.id} className={`${currentTheme.accent} p-0.5 rounded shadow`}>
                       <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
                       {event.start.dateTime && (
                         <div className={`${currentTheme.text} opacity-80`}>
-                          {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+                          {formatTime(event.start.dateTime)}
                         </div>
                       )}
                     </li>
