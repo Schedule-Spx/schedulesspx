@@ -21,7 +21,7 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 20, // Increased to ensure there's content to scroll
+              maxResults: 30, // Increased to ensure there's content to scroll
               singleEvents: true,
               orderBy: 'startTime',
             },
@@ -63,10 +63,10 @@ const GoogleCalendar = () => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col`} style={{ height: '100%' }}>
       <div className="p-2 flex flex-col h-full">
         <h2 className={`text-sm font-bold ${currentTheme.text} mb-1`}>Upcoming Events</h2>
-        <div className="overflow-y-auto flex-grow text-xs scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        <div className="overflow-y-auto flex-grow text-xs" style={{ maxHeight: 'calc(100% - 1.5rem)' }}>
           {loading ? (
             <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
           ) : error ? (
