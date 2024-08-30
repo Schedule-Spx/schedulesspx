@@ -142,31 +142,32 @@ function ThemedApp() {
         <Route
           path="/"
           element={
-            <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <main className="flex-grow p-4 flex flex-col space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-1/4`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '100px'}}>
                     <DayHeader />
                   </div>
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
                     <QuickLinks />
                   </div>
                 </div>
-                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{minHeight: '400px'}}>
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`} style={{minHeight: '300px'}}>
                     <GoogleCalendar />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-28`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '100px'}}>
                     <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-24 mb-8`}>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '100px'}}>
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
+              <div className="h-16"></div> {/* Extra space at the bottom */}
             </main>
           }
         />
