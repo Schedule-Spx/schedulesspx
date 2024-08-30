@@ -8,7 +8,7 @@ const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.go
 
 const GoogleCalendar = () => {
   const { currentTheme } = useTheme();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,14 +21,28 @@ const GoogleCalendar = () => {
             params: {
               key: API_KEY,
               timeMin: new Date().toISOString(),
-              maxResults: 30, // Increased to ensure more events for scrolling
+              maxResults: 20,
               singleEvents: true,
               orderBy: 'startTime',
             },
           }
         );
         
-        setEvents(response.data.items);
+        // Group events by date, adjusting for timezone
+        const groupedEvents = response.data.items.reduce((acc, event) => {
+          const eventDate = new Date(event.start.dateTime || event.start.date);
+          // Adjust date to local timezone
+          const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
+          const dateString = localDate.toDateString();
+          
+          if (!acc[dateString]) {
+            acc[dateString] = [];
+          }
+          acc[dateString].push(event);
+          return acc;
+        }, {});
+
+        setEvents(groupedEvents);
       } catch (error) {
         console.error('Error fetching events:', error.response?.data || error.message);
         setError(`Failed to fetch events: ${error.response?.data?.error?.message || error.message}`);
@@ -41,7 +55,7 @@ const GoogleCalendar = () => {
   }, []);
 
   const formatDate = (dateString) => {
-    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+    const options = { weekday: 'long', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -50,57 +64,35 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  const isEventActive = (event) => {
-    const now = new Date();
-    const start = new Date(event.start.dateTime || event.start.date);
-    const end = new Date(event.end.dateTime || event.end.date);
-    return now >= start && now < end;
-  };
-
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
-      <div className="p-5 flex flex-col h-full">
+      <div className="p-4 flex flex-col h-full">
         <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
         <div className="overflow-y-auto flex-grow" style={{ maxHeight: 'calc(100% - 3rem)' }}>
           {loading ? (
             <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
           ) : error ? (
             <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
-          ) : events.length === 0 ? (
+          ) : Object.keys(events).length === 0 ? (
             <div className={currentTheme.text}>No upcoming events</div>
           ) : (
-            <ul className="space-y-2 pr-2"> {/* Added right padding for scrollbar */}
-              {events.map((event, index) => {
-                const isActive = isEventActive(event);
-                return (
-                  <li 
-                    key={event.id} 
-                    className={`
-                      relative text-sm ${currentTheme.accent} p-2 rounded
-                      transition-all duration-300 ease-in-out
-                      animate-fadeIn
-                    `}
-                    style={{animationDelay: `${index * 100}ms`}}
-                  >
-                    <div 
-                      className={`
-                        absolute inset-0 rounded-lg 
-                        ${isActive ? 'animate-highlightFadeIn' : ''}
-                      `}
-                      style={{
-                        animationDelay: `${(index * 100) + 500}ms`,
-                        animationDuration: '1.5s',
-                      }}
-                    ></div>
-                    <div className={`font-semibold ${currentTheme.text} relative z-10`}>{event.summary}</div>
-                    <div className={`text-xs ${currentTheme.text} opacity-80 relative z-10`}>
-                      {formatDate(event.start.dateTime || event.start.date)}
-                      {event.start.dateTime && ` ${formatTime(event.start.dateTime)}`}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+            Object.entries(events).map(([date, dayEvents]) => (
+              <div key={date} className="mb-4">
+                <h3 className={`text-lg font-semibold mb-2 ${currentTheme.text}`}>{formatDate(date)}</h3>
+                <ul className="space-y-2">
+                  {dayEvents.map((event) => (
+                    <li key={event.id} className={`${currentTheme.accent} p-2 rounded shadow`}>
+                      <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
+                      {event.start.dateTime && (
+                        <div className={`text-sm ${currentTheme.text} opacity-80`}>
+                          {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
           )}
         </div>
       </div>
