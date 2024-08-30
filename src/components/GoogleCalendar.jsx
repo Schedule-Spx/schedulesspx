@@ -64,41 +64,31 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
+  if (loading) return <div className={`p-4 ${currentTheme.text}`}>Loading events...</div>;
+  if (error) return <div className={`p-4 ${currentTheme.text}`}>Error: {error}</div>;
+  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text}`}>No upcoming events</div>;
+
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
-      <div className="p-4 flex flex-col h-full">
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} overflow-hidden`}>
+      <div className="p-4 overflow-y-auto" style={{ maxHeight: '40vh' }}>
         <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
-        <div className="overflow-y-auto flex-grow">
-          {loading ? (
-            <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
-          ) : error ? (
-            <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
-          ) : Object.keys(events).length === 0 ? (
-            <div className={currentTheme.text}>No upcoming events</div>
-          ) : (
-            Object.entries(events).map(([date, dayEvents], index) => (
-              <div key={date} className="mb-4 last:mb-0 animate-fadeIn" style={{animationDelay: `${index * 100}ms`}}>
-                <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2`}>{formatDate(date)}</h3>
-                <ul className="space-y-2">
-                  {dayEvents.map((event, eventIndex) => (
-                    <li 
-                      key={event.id} 
-                      className={`${currentTheme.accent} p-2 rounded shadow transition-all duration-300 ease-in-out animate-fadeIn`}
-                      style={{animationDelay: `${(index * 100) + (eventIndex * 50)}ms`}}
-                    >
-                      <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
-                      {event.start.dateTime && (
-                        <div className={`text-sm ${currentTheme.text} opacity-80`}>
-                          {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          )}
-        </div>
+        {Object.entries(events).map(([date, dayEvents]) => (
+          <div key={date} className="mb-4">
+            <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2`}>{formatDate(date)}</h3>
+            <ul className="space-y-2">
+              {dayEvents.map((event) => (
+                <li key={event.id} className={`${currentTheme.accent} p-2 rounded shadow`}>
+                  <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
+                  {event.start.dateTime && (
+                    <div className={`text-sm ${currentTheme.text} opacity-80`}>
+                      {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );
