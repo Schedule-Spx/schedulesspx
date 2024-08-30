@@ -1,58 +1,50 @@
 // src/About.jsx
 import React from 'react';
-import { useTheme } from './ThemeContext';
 import { motion } from 'framer-motion';
 
 const About = () => {
-  const { currentTheme } = useTheme();
-
   return (
     <div className="container mx-auto px-4 py-8">
       <motion.h1
         className="text-4xl font-bold mb-6"
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        style={{ color: currentTheme.text }}
+        transition={{ duration: 0.8 }}
       >
         About Schedule SPX
       </motion.h1>
-
       <motion.h2
-        className="text-2xl font-semibold mb-4"
-        initial={{ opacity: 0, y: -20 }}
+        className="text-2xl font-semibold mb-6"
+        initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: 'easeOut' }}
-        style={{ color: currentTheme.accent }}
+        transition={{ duration: 0.8, delay: 0.2 }}
       >
         More than just a bell schedule
       </motion.h2>
-
       <motion.div
-        className="space-y-6"
+        className="space-y-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: 'easeOut' }}
+        transition={{ duration: 0.8, delay: 0.4 }}
       >
-        <p style={{ color: currentTheme.text }}>
-          Schedule SPX is meticulously crafted and continually refined by Kagen Jensen and David Camick, offering the ultimate digital companion for every St. Pius X student and teacher.
+        <p>
+          Created, Developed, and Maintained by both Kagen Jensen and David Camick, ScheduleSPX is the essential hub for any St. Pius X student or teacher.
         </p>
-        <p style={{ color: currentTheme.text }}>
-          What started with the powerful, "flagship" feature of displaying the current period, complete with real-time tracking, has rapidly evolved into an all-in-one portal designed to simplify your day.
+        <p>
+          It all started with what many call the "flagship" feature of the site—the ability to see the current period, the period schedule, and how much time is left. But it quickly evolved from there.
         </p>
-        <p style={{ color: currentTheme.text }}>
-          From Quick Links to Document Creators, calendar integrations from spx.org, and beyond—Schedule SPX is built to empower your academic journey, providing a seamless experience like no other.
+        <p>
+          By integrating features like Quick Links, Document Creators, and the official SPX.org calendar, we've transformed this site into the indispensable tool it is today.
         </p>
-        <p style={{ color: currentTheme.text }}>
-          Got questions, feature ideas, or even some passionate feedback? Drop us a line at <a href="mailto:admin@schedulespx.com" className="underline hover:text-blue-500">admin@schedulespx.com</a>, and we’ll get back to you promptly!
+        <p>
+          If you have any questions, feature requests, or simply want to share your thoughts—whether they're good, bad, or otherwise—please email us at <a href="mailto:admin@schedulespx.com" className="text-blue-500 hover:underline">admin@schedulespx.com</a>. We'll get back to you as soon as possible!
         </p>
       </motion.div>
-
       <motion.div
         className="mt-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, ease: 'easeOut' }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
       >
         <a 
           href="https://www.instagram.com/schedulespx/" 
