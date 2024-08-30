@@ -143,19 +143,19 @@ function ThemedApp() {
           path="/"
           element={
             <main className="flex-grow p-4 flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 h-[calc(100vh-12rem)]">
+                <div className="flex flex-col space-y-4 h-full">
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-1/4`}>
                     <DayHeader />
                   </div>
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
                     <QuickLinks />
                   </div>
                 </div>
-                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden h-full`}>
                   <Schedule weekSchedule={weekSchedule} />
                 </div>
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4 h-full">
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex-grow`}>
                     <GoogleCalendar />
                   </div>
@@ -164,7 +164,7 @@ function ThemedApp() {
                   </div>
                 </div>
               </div>
-              <div className="w-full mb-4">
+              <div className="w-full mb-4 h-16">
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
             </main>
