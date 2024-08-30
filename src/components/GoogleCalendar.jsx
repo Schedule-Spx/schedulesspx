@@ -1,11 +1,13 @@
 // src/components/GoogleCalendar.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTheme } from '../ThemeContext';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';
 
 const GoogleCalendar = () => {
+  const { currentTheme } = useTheme();
   const [events, setEvents] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,30 +64,36 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  if (loading) return <div className="p-4">Loading events...</div>;
-  if (error) return <div className="p-4">Error: {error}</div>;
-  if (Object.keys(events).length === 0) return <div className="p-4">No upcoming events</div>;
+  if (loading) return <div className={`p-4 ${currentTheme.text} animate-pulse`}>Loading events...</div>;
+  if (error) return <div className={`p-4 ${currentTheme.text} text-red-500`}>Error: {error}</div>;
+  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text}`}>No upcoming events</div>;
 
   return (
-    <div className="p-4 overflow-auto max-h-[40vh]">
-      <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
-      {Object.entries(events).map(([date, dayEvents]) => (
-        <div key={date} className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">{formatDate(date)}</h3>
-          <ul className="space-y-2">
-            {dayEvents.map((event) => (
-              <li key={event.id} className="bg-white dark:bg-gray-700 p-2 rounded shadow">
-                <div className="font-semibold">{event.summary}</div>
-                {event.start.dateTime && (
-                  <div className="text-sm text-gray-600 dark:text-gray-300">
-                    {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
+      <div className="p-4 overflow-auto max-h-[40vh]">
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
+        {Object.entries(events).map(([date, dayEvents], index) => (
+          <div key={date} className="mb-4 animate-fadeIn" style={{animationDelay: `${index * 100}ms`}}>
+            <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2`}>{formatDate(date)}</h3>
+            <ul className="space-y-2">
+              {dayEvents.map((event, eventIndex) => (
+                <li 
+                  key={event.id} 
+                  className={`${currentTheme.accent} p-2 rounded shadow transition-all duration-300 ease-in-out animate-fadeIn`}
+                  style={{animationDelay: `${(index * 100) + (eventIndex * 50)}ms`}}
+                >
+                  <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
+                  {event.start.dateTime && (
+                    <div className={`text-sm ${currentTheme.text} opacity-80`}>
+                      {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
