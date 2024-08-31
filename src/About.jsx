@@ -36,7 +36,7 @@ const About = () => {
           transition={{ duration: 2 }}
           className="about-main-title"
         >
-          Introducing <a className="glow-link" rel="noopener noreferrer">ScheduleSPX!</a>
+          Introducing <a className="glow-link" rel="noopener noreferrer">ScheduleSPX</a>
         </motion.h1>
         <motion.div
           className="scroll-prompt"
