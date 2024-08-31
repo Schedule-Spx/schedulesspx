@@ -170,7 +170,7 @@ function ThemedApp() {
                     </div>
                   </div>
                 </div>
-                <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '155px'}}>
+                <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '127px'}}>
                   <PeriodProgress weekSchedule={weekSchedule} />
                 </div>
                 <div className="h-16"></div> {/* Extra space at the bottom */}

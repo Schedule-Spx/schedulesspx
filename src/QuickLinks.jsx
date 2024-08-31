@@ -23,7 +23,7 @@ const QuickLinks = () => {
         }}
       ></div>
       <div className="p-5 relative z-10">
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Quick Links</h2>
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4 text-center`}>Quick Links</h2>
         <div className="space-y-2">
           {links.map((link, index) => (
             <a

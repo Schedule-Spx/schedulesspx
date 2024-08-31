@@ -60,12 +60,20 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`${currentTheme.main} h-full flex flex-col`}>
-      <div className="p-4 flex flex-col h-full">
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>{currentDay}'s Schedule</h2>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col`}>
+      {/* Gradient Overlay */}
+      <div 
+        className="absolute inset-0 rounded-lg"
+        style={{
+          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+          zIndex: 0
+        }}
+      ></div>
+      <div className="p-4 flex flex-col h-full relative z-10">
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4 text-center`}>{currentDay}'s Schedule</h2>
         <div className="overflow-y-auto flex-grow">
           {loading ? (
-            <div className={`${currentTheme.text} animate-pulse`}>Loading schedule...</div>
+            <div className={`${currentTheme.text} animate-pulse text-center`}>Loading schedule...</div>
           ) : daySchedule.length > 0 ? (
             <div className="space-y-2">
               {daySchedule.map((period, index) => {
@@ -106,8 +114,8 @@ const Schedule = ({ weekSchedule }) => {
                         animationDuration: '1s',
                       }}
                     ></div>
-                    <span className={`font-medium relative z-10 ${currentTheme.text}`}>{name}</span>
-                    <span className={`relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'}`}>
+                    <span className={`font-medium relative z-10 ${currentTheme.text} text-center`}>{name}</span>
+                    <span className={`relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'} text-center`}>
                       {formatTime(start)} - {formatTime(end)}
                     </span>
                   </div>
@@ -115,7 +123,7 @@ const Schedule = ({ weekSchedule }) => {
               })}
             </div>
           ) : (
-            <p className={`${currentTheme.text} animate-fadeIn`}>No schedule available for today.</p>
+            <p className={`${currentTheme.text} animate-fadeIn text-center`}>No schedule available for today.</p>
           )}
         </div>
       </div>
