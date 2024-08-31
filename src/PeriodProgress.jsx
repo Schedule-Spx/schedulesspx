@@ -35,11 +35,12 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleSchoolDay = (schedule, now, currentDay) => {
     const currentPeriodInfo = schedule.find(period => {
-      const [, time] = period.split(' - ');
-      const [start, end] = time.split('-');
+      const parts = period.split(' - ');
+      if (parts.length !== 2) return false;
+      const [start, end] = parts[1].split('-');
       const startTime = parseTime(start.trim());
       const endTime = parseTime(end.trim());
-      return now >= startTime && now < endTime;
+      return startTime && endTime && now >= startTime && now < endTime;
     });
 
     if (currentPeriodInfo) {
@@ -60,9 +61,10 @@ const PeriodProgress = ({ weekSchedule }) => {
     } else {
       // Between periods or before/after school
       const nextPeriod = schedule.find(period => {
-        const [, time] = period.split(' - ');
-        const startTime = parseTime(time.split('-')[0].trim());
-        return now < startTime;
+        const parts = period.split(' - ');
+        if (parts.length !== 2) return false;
+        const startTime = parseTime(parts[1].split('-')[0].trim());
+        return startTime && now < startTime;
       });
 
       if (nextPeriod) {
@@ -84,7 +86,7 @@ const PeriodProgress = ({ weekSchedule }) => {
         setTimeRemaining(formatTimeRemaining(timeUntilNext));
         setProgress(progressPercentage);
         updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
-      } else if (now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
+      } else if (schedule[0] && now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
         // Before first period of the day
         const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
         const timeUntilStart = firstPeriodStart - now;
@@ -104,7 +106,7 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleNonSchoolDay = (now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
-    if (nextDay) {
+    if (nextDay && weekSchedule[nextDay] && weekSchedule[nextDay][0]) {
       const nextDaySchedule = weekSchedule[nextDay];
       const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
       const nextSchoolDay = new Date(now);
@@ -129,7 +131,7 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleAfterSchool = (now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
-    if (nextDay) {
+    if (nextDay && weekSchedule[nextDay] && weekSchedule[nextDay][0]) {
       const nextDaySchedule = weekSchedule[nextDay];
       const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
       const tomorrow = new Date(now);
@@ -187,11 +189,12 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   const parseTime = (timeString) => {
+    if (!timeString) return null;
     const [time, modifier] = timeString.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
-    if (modifier.toLowerCase() === 'pm' && hours !== 12) {
+    if (modifier && modifier.toLowerCase() === 'pm' && hours !== 12) {
       hours += 12;
-    } else if (modifier.toLowerCase() === 'am' && hours === 12) {
+    } else if (modifier && modifier.toLowerCase() === 'am' && hours === 12) {
       hours = 0;
     }
     const now = new Date();

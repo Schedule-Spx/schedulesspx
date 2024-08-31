@@ -15,6 +15,7 @@ const Schedule = ({ weekSchedule }) => {
   }, []);
 
   const formatTime = (timeString) => {
+    if (!timeString) return '';
     if (timeString.includes('AM') || timeString.includes('PM')) {
       return timeString;
     }
@@ -37,6 +38,7 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   const isActivePeriod = (start, end) => {
+    if (!start || !end) return false;
     const now = currentTime;
     const startTime = parseTime(start);
     const endTime = parseTime(end);
@@ -44,6 +46,7 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   const parseTime = (timeString) => {
+    if (!timeString) return null;
     const [time, modifier] = timeString.split(' ');
     let [hours, minutes] = time.split(':');
     if (modifier === 'PM' && hours !== '12') {
@@ -66,8 +69,21 @@ const Schedule = ({ weekSchedule }) => {
           ) : daySchedule.length > 0 ? (
             <div className="space-y-2">
               {daySchedule.map((period, index) => {
-                const [name, time] = period.split(' - ');
-                const [start, end] = time.split('-');
+                if (!period) return null; // Skip if period is undefined
+                let name, start, end;
+                if (typeof period === 'string') {
+                  const parts = period.split(' - ');
+                  name = parts[0];
+                  if (parts[1]) {
+                    [start, end] = parts[1].split('-');
+                  }
+                } else {
+                  // Handle case where period might be an object
+                  name = period.name;
+                  start = period.start;
+                  end = period.end;
+                }
+                if (!name || !start || !end) return null; // Skip if essential data is missing
                 const active = isActivePeriod(start.trim(), end.trim());
                 return (
                   <div 
