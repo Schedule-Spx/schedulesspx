@@ -19,8 +19,16 @@ const DayHeader = () => {
   const timeString = currentDateTime.toLocaleTimeString();
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
-      <div className="p-5 flex flex-col items-center justify-center">
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
+      {/* Gradient Overlay */}
+      <div 
+        className="absolute inset-0 rounded-lg"
+        style={{
+          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+          zIndex: 0
+        }}
+      ></div>
+      <div className="p-5 flex flex-col items-center justify-center relative z-10">
         <div className={`text-2xl font-bold ${currentTheme.text} mb-2`}>{dayName}</div>
         <div className={`text-xl ${currentTheme.text} mb-2`}>{dateString}</div>
         <div className={`${currentTheme.accent} ${currentTheme.text} text-lg px-4 py-2 rounded`}>

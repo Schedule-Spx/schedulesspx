@@ -3,22 +3,34 @@
   display: flex;
   flex-direction: column;
   height: 100vh; /* Ensure App takes full viewport height */
+  overflow: hidden; /* Disable scrolling within the App */
+  position: relative; /* To position the overlay correctly */
 }
 
-.App-main {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto; /* Two rows for main content and ads */
-  gap: 1rem;
-  flex-grow: 1; /* Make the grid take the remaining space */
-  padding: 1rem;
+html, body {
+  overflow: hidden; /* Disable scrolling globally */
 }
 
-.App-ads {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
-  padding: 1rem;
+.content-wrapper {
+  position: relative;
+  z-index: 1; /* Ensure this content is above the gradient */
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Allow interactions with content below the overlay */
+  background: linear-gradient(to bottom left, rgba(0, 0, 0, 0.5), transparent); /* Half transparent, half black gradient */
+  z-index: -1; /* Ensure it's behind all other content */
+  background-size: 200% 200%; /* Higher resolution for smoother gradient */
+}
+
+.App-main, .App-header, .App-footer {
+  position: relative;
+  z-index: 1; /* Ensure content stays above the gradient */
 }
 
 .glass-tile,
@@ -28,9 +40,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1; /* Ensure they stay above the gradient */
 }
 
 .period-progress {
   grid-column: span 3; /* Make the period progress span across all columns */
   width: 100%; /* Ensure it spans the full width */
+  position: relative;
+  z-index: 1; /* Ensure it stays above the gradient */
+}
+
+/* Slide-up animation for global elements */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 1s ease-out forwards;
 }

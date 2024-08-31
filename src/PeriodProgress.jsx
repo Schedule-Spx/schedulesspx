@@ -1,4 +1,3 @@
-// src/PeriodProgress.jsx
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 
@@ -13,10 +12,6 @@ const PeriodProgress = ({ weekSchedule }) => {
       const now = new Date();
       const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
       const currentTime = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      console.log('Current day:', currentDay);
-      console.log('Current time:', currentTime);
-      console.log('Week schedule:', weekSchedule);
 
       const todaySchedule = weekSchedule[currentDay];
 
@@ -35,15 +30,15 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleSchoolDay = (schedule, now, currentDay) => {
     const currentPeriodInfo = schedule.find(period => {
-      const [, time] = period.split(' - ');
-      const [start, end] = time.split('-');
+      const parts = period.split(' - ');
+      if (parts.length !== 2) return false;
+      const [start, end] = parts[1].split('-');
       const startTime = parseTime(start.trim());
       const endTime = parseTime(end.trim());
-      return now >= startTime && now < endTime;
+      return startTime && endTime && now >= startTime && now < endTime;
     });
 
     if (currentPeriodInfo) {
-      // Inside a period
       const [name, time] = currentPeriodInfo.split(' - ');
       const [start, end] = time.split('-');
       const startTime = parseTime(start.trim());
@@ -58,24 +53,22 @@ const PeriodProgress = ({ weekSchedule }) => {
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
     } else {
-      // Between periods or before/after school
       const nextPeriod = schedule.find(period => {
-        const [, time] = period.split(' - ');
-        const startTime = parseTime(time.split('-')[0].trim());
-        return now < startTime;
+        const parts = period.split(' - ');
+        if (parts.length !== 2) return false;
+        const startTime = parseTime(parts[1].split('-')[0].trim());
+        return startTime && now < startTime;
       });
 
       if (nextPeriod) {
-        // Next period exists (between periods)
         const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
         const nextPeriodStart = parseTime(nextPeriodTime.split('-')[0].trim());
         const timeUntilNext = nextPeriodStart - now;
 
-        // Find the previous period end time
         const currentPeriodIndex = schedule.indexOf(nextPeriod) - 1;
         const previousPeriodEnd = currentPeriodIndex >= 0 
           ? parseTime(schedule[currentPeriodIndex].split(' - ')[1].split('-')[1].trim())
-          : parseTime(schedule[0].split(' - ')[1].split('-')[0].trim()); // Use first period start if it's before school
+          : parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
 
         const totalDuration = nextPeriodStart - previousPeriodEnd;
         const progressPercentage = ((totalDuration - timeUntilNext) / totalDuration) * 100;
@@ -84,11 +77,10 @@ const PeriodProgress = ({ weekSchedule }) => {
         setTimeRemaining(formatTimeRemaining(timeUntilNext));
         setProgress(progressPercentage);
         updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
-      } else if (now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
-        // Before first period of the day
+      } else if (schedule[0] && now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
         const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
         const timeUntilStart = firstPeriodStart - now;
-        const totalDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        const totalDuration = 24 * 60 * 60 * 1000;
         const progressPercentage = ((totalDuration - timeUntilStart) / totalDuration) * 100;
 
         setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
@@ -96,7 +88,6 @@ const PeriodProgress = ({ weekSchedule }) => {
         setProgress(progressPercentage);
         updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
       } else {
-        // After last period, find next school day
         handleAfterSchool(now, currentDay);
       }
     }
@@ -104,7 +95,7 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleNonSchoolDay = (now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
-    if (nextDay) {
+    if (nextDay && weekSchedule[nextDay] && weekSchedule[nextDay][0]) {
       const nextDaySchedule = weekSchedule[nextDay];
       const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
       const nextSchoolDay = new Date(now);
@@ -112,7 +103,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
       const timeUntilNextSchool = nextSchoolDay - now;
-      const totalDuration = 24 * 60 * 60 * 1000 * getDayDifference(currentDay, nextDay); // Duration until next school day
+      const totalDuration = 24 * 60 * 60 * 1000 * getDayDifference(currentDay, nextDay);
       const progressPercentage = ((totalDuration - timeUntilNextSchool) / totalDuration) * 100;
 
       setCurrentState({ type: 'nonSchoolDay', nextDay });
@@ -129,7 +120,7 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const handleAfterSchool = (now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
-    if (nextDay) {
+    if (nextDay && weekSchedule[nextDay] && weekSchedule[nextDay][0]) {
       const nextDaySchedule = weekSchedule[nextDay];
       const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
       const tomorrow = new Date(now);
@@ -137,7 +128,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       tomorrow.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
       const timeUntilNextSchool = tomorrow - now;
-      const totalDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+      const totalDuration = 24 * 60 * 60 * 1000;
       const progressPercentage = ((totalDuration - timeUntilNextSchool) / totalDuration) * 100;
 
       setCurrentState({ type: 'afterSchool', nextDay });
@@ -187,11 +178,12 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   const parseTime = (timeString) => {
+    if (!timeString) return null;
     const [time, modifier] = timeString.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
-    if (modifier.toLowerCase() === 'pm' && hours !== 12) {
+    if (modifier && modifier.toLowerCase() === 'pm' && hours !== 12) {
       hours += 12;
-    } else if (modifier.toLowerCase() === 'am' && hours === 12) {
+    } else if (modifier && modifier.toLowerCase() === 'am' && hours === 12) {
       hours = 0;
     }
     const now = new Date();
@@ -199,8 +191,16 @@ const PeriodProgress = ({ weekSchedule }) => {
   };
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
-      <div className="p-5">
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
+      {/* Gradient Overlay */}
+      <div 
+        className="absolute inset-0 rounded-lg"
+        style={{
+          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+          zIndex: 0
+        }}
+      ></div>
+      <div className="p-5 relative z-10">
         {currentState ? (
           <div className="flex flex-col items-center">
             <p className={`text-xl font-bold ${currentTheme.text} text-center mb-4`}>
