@@ -23,13 +23,13 @@ const About = () => {
 
   return (
     <div
-      className="about-container"
+      className="about-container relative"
       style={{
         backgroundPosition: `center ${scrollY * 0.5}px`,
       }}
     >
       {/* Section 0: Fullscreen Title with Scroll Prompt */}
-      <section className="about-section about-section-0">
+      <section className="about-section about-section-0 relative z-20">
         <motion.h1
           initial={{ opacity: 0, y: 500 }}
           animate={{ opacity: 1, y: -100 }}
@@ -50,7 +50,7 @@ const About = () => {
       </section>
 
       {/* Section 1 */}
-      <section className="about-section">
+      <section className="about-section relative z-20">
         <div className="about-content">
           <motion.div
             className="about-text"
@@ -66,8 +66,8 @@ const About = () => {
           </motion.div>
           <motion.div
             className="about-image-placeholder"
-            initial={{ opacity: 0, x: -100, rotate: -10, }}
-            whileInView={{ opacity: 1, x: 0, rotate: 15, }}
+            initial={{ opacity: 0, x: -100, rotate: -10 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 15 }}
             transition={{ duration: 2, delay: 0.5 }}
             viewport={{ once: true }}
           >
@@ -77,8 +77,8 @@ const About = () => {
       </section>
 
       {/* Section 2 */}
-      <section className="about-section">
-        <div className="about-content about-content-reverse">
+      <section className="about-section about-content-reverse relative z-20">
+        <div className="about-content">
           <motion.div
             className="about-text"
             initial={{ opacity: 0 }}
@@ -93,8 +93,8 @@ const About = () => {
           </motion.div>
           <motion.div
             className="about-image-placeholder"
-            initial={{ opacity: 0, x: -100, rotate: 10, }}
-            whileInView={{ opacity: 1, x: 0, rotate: -5, }}
+            initial={{ opacity: 0, x: -100, rotate: 10 }}
+            whileInView={{ opacity: 1, x: 0, rotate: -5 }}
             transition={{ duration: 2, delay: 0.5 }}
             viewport={{ once: true }}
           >
@@ -104,7 +104,7 @@ const About = () => {
       </section>
 
       {/* Section 3 */}
-      <section className="about-section">
+      <section className="about-section relative z-20">
         <div className="about-content">
           <motion.div
             className="about-text"
@@ -120,8 +120,8 @@ const About = () => {
           </motion.div>
           <motion.div
             className="about-image-placeholder"
-            initial={{ opacity: 0, x: -100, rotate: -10, }}
-            whileInView={{ opacity: 1, x: 0, rotate: 5, }}
+            initial={{ opacity: 0, x: -100, rotate: -10 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 5 }}
             transition={{ duration: 2, delay: 0.5 }}
             viewport={{ once: true }}
           >
@@ -131,8 +131,8 @@ const About = () => {
       </section>
 
       {/* Section 4 */}
-      <section className="about-section">
-        <div className="about-content about-content-reverse">
+      <section className="about-section about-content-reverse relative z-20">
+        <div className="about-content">
           <motion.div
             className="about-text"
             initial={{ opacity: 0 }}
@@ -147,8 +147,8 @@ const About = () => {
           </motion.div>
           <motion.div
             className="about-image-placeholder"
-            initial={{ opacity: 0, x: -100, rotate: 10, }}
-            whileInView={{ opacity: 1, x: 0, rotate: -5, }}
+            initial={{ opacity: 0, x: -100, rotate: 10 }}
+            whileInView={{ opacity: 1, x: 0, rotate: -5 }}
             transition={{ duration: 2, delay: 0.5 }}
             viewport={{ once: true }}
           >
