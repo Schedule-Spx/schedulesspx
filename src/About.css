@@ -1,0 +1,113 @@
+/* About.css */
+.about-container {
+    width: 100%;
+    overflow-x: hidden;
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(to bottom right, #1e3a8a, #000000);
+    background-attachment: fixed;
+    background-size: 200%;
+  }
+  
+  .about-section {
+    min-height: 100vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5rem 2rem;
+  }
+  
+  .about-section-0 {
+    text-align: center;
+    position: relative;
+  }
+  
+  .about-main-title {
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    padding-top: 4rem;
+  }
+  
+  .scroll-prompt {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: white;
+    animation: bounce 2s infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0) translateX(-50%);
+    }
+    40% {
+      transform: translateY(-10px) translateX(-50%);
+    }
+    60% {
+      transform: translateY(-5px) translateX(-50%);
+    }
+  }
+  
+  .about-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .about-content-reverse {
+    flex-direction: row-reverse;
+  }
+  
+  .about-text {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  .about-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  .about-body {
+    font-size: 1.5rem;
+    line-height: 1.8;
+  }
+  
+  .about-image-placeholder {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  .about-image-placeholder img {
+    width: 100%;
+    border-radius: 20px;
+  }
+  
+  .glow-link {
+    color: #fbbf24;
+    text-shadow: 0px 0px 8px rgba(251, 191, 36, 0.75);
+    transition: text-shadow 0.3s ease-in-out;
+  }
+  
+  .glow-link:hover {
+    text-shadow: 0px 0px 12px rgba(251, 191, 36, 1);
+  }
+  
+  /* Hide the scrollbar while keeping the page scrollable */
+  body {
+    overflow-y: scroll;
+  }
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
