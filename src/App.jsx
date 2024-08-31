@@ -18,7 +18,7 @@ import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
 
 function ThemedApp() {
-  const { currentTheme, changeTheme } = useTheme();
+  const { currentTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -111,71 +111,74 @@ function ThemedApp() {
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
-      <NavBar user={user} setUser={updateUser} />
-      {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
-        <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
-      )}
-      <Routes>
-        <Route 
-          path="/admin" 
-          element={
-            <div className="flex flex-col">
-              <Admin 
-                user={user} 
-                weekSchedule={weekSchedule} 
-                setWeekSchedule={setWeekSchedule} 
-                fetchSchedule={fetchSchedule} 
-              />
-            </div>
-          } 
-        />
-        <Route 
-          path="/account" 
-          element={
-            <div className="flex flex-col h-[calc(100vh-64px)]">
-              <Account 
-                user={user} 
-                weekSchedule={weekSchedule}
-              />
-            </div>
-          } 
-        />
-        <Route path="/about" element={<About />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsAndConditions />} />
-        <Route
-          path="/"
-          element={
-            <main className="p-4 flex flex-col space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
-                    <DayHeader />
-                  </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
-                    <QuickLinks />
-                  </div>
-                </div>
-                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{height: scheduleHeight}}>
-                  <Schedule weekSchedule={weekSchedule} />
-                </div>
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: googleCalendarHeight}}>
-                    <GoogleCalendar />
-                  </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
-                    <GoogleSuiteLinks />
-                  </div>
-                </div>
+      {location.pathname === '/' && <div className="gradient-overlay"></div>} {/* Gradient overlay only on homepage */}
+      <div className="content-wrapper"> {/* Wrapper for all content */}
+        <NavBar user={user} setUser={updateUser} />
+        {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
+          <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
+        )}
+        <Routes>
+          <Route 
+            path="/admin" 
+            element={
+              <div className="flex flex-col">
+                <Admin 
+                  user={user} 
+                  weekSchedule={weekSchedule} 
+                  setWeekSchedule={setWeekSchedule} 
+                  fetchSchedule={fetchSchedule} 
+                />
               </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '155px'}}>
-                <PeriodProgress weekSchedule={weekSchedule} />
+            } 
+          />
+          <Route 
+            path="/account" 
+            element={
+              <div className="flex flex-col h-[calc(100vh-64px)]">
+                <Account 
+                  user={user} 
+                  weekSchedule={weekSchedule}
+                />
               </div>
-              <div className="h-16"></div> {/* Extra space at the bottom */}
-            </main>
-          }
-        />
-      </Routes>
+            } 
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route
+            path="/"
+            element={
+              <main className="p-4 flex flex-col space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
+                      <DayHeader />
+                    </div>
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                      <QuickLinks />
+                    </div>
+                  </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{height: scheduleHeight}}>
+                    <Schedule weekSchedule={weekSchedule} />
+                  </div>
+                  <div className="flex flex-col space-y-4">
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: googleCalendarHeight}}>
+                      <GoogleCalendar />
+                    </div>
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
+                      <GoogleSuiteLinks />
+                    </div>
+                  </div>
+                </div>
+                <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '155px'}}>
+                  <PeriodProgress weekSchedule={weekSchedule} />
+                </div>
+                <div className="h-16"></div> {/* Extra space at the bottom */}
+              </main>
+            }
+          />
+        </Routes>
+      </div>
     </div>
   );
 }
