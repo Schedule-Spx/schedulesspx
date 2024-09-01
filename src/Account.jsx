@@ -17,8 +17,11 @@ const Account = ({ user, weekSchedule }) => {
     changeTheme(themeName);
   };
 
-  const ThemePreview = ({ theme }) => (
-    <div className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent}`}>
+  const ThemePreview = ({ themeName, theme }) => (
+    <div 
+      className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105`}
+      onClick={() => handleThemeChange(themeName)}
+    >
       <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
         <div className={`w-1/2 ${theme.accent}`}></div>
@@ -51,7 +54,7 @@ const Account = ({ user, weekSchedule }) => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
             {Object.entries(themes).map(([themeName, theme]) => (
               <div key={themeName} className="flex flex-col items-center">
-                <ThemePreview theme={theme} />
+                <ThemePreview themeName={themeName} theme={theme} />
                 <button
                   onClick={() => handleThemeChange(themeName)}
                   className={`mt-2 ${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full drop-shadow-md ${currentTheme.name === themeName ? `ring-2 ${currentTheme.border}` : ''}`}
