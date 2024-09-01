@@ -85,6 +85,24 @@
     z-index: 2; /* Ensure buttons are above the background image */
 }
 
+.fine-print {
+    font-size: 0.75rem;
+    color: #c0c0c0;
+    margin-top: 1rem;
+    text-align: center;
+    z-index: 2; /* Ensure fine print is above the background image */
+}
+
+.highlight-link {
+    color: #fbbf24;
+    text-shadow: 0px 0px 8px rgba(251, 191, 36, 0.75);
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+.highlight-link:hover {
+    text-shadow: 0px 0px 12px rgba(251, 191, 36, 1);
+}
+
 .landing-buttons button {
     margin: 1rem;
     padding: 1rem 2rem;

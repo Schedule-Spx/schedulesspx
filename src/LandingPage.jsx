@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Added Link for routing
 import GoogleLogin from './components/GoogleLogin'; // Adjust the import path if necessary
 import './LandingPage.css';
-import BackgroundImage from './assets/splashscreengraphic.png'; // Updated with your actual image file name
 
 const LandingPage = ({ user, setUser }) => {
   const navigate = useNavigate();
@@ -56,7 +55,7 @@ const LandingPage = ({ user, setUser }) => {
         transition={{ delay: 1, duration: 1.5 }}
         className="landing-body"
       >
-        Please sign in to use, or scroll down to learn more.
+        Please sign in to use, or <Link to="/about" className="highlight-link">Click Here</Link> to learn more.
       </motion.p>
       <motion.div
         className="landing-buttons"
@@ -65,6 +64,9 @@ const LandingPage = ({ user, setUser }) => {
         transition={{ delay: 1.5, duration: 1.5 }}
       >
         <GoogleLogin onLoginSuccess={handleLoginSuccess} />
+        <p className="fine-print">
+          By Signing in, you agree to the <Link to="/terms" className="highlight-link">Terms</Link> and the <Link to="/privacy" className="highlight-link">Privacy Policy</Link>
+        </p>
       </motion.div>
     </div>
   );
