@@ -16,6 +16,7 @@
     z-index: 1000;
     pointer-events: all;
     transform: translate(-50%, -50%); /* Ensure it's centered */
+    transform-origin: center center; /* Anchor point set to the center */
 }
 
 /* Add scale-in animation for the first tutorial window */
