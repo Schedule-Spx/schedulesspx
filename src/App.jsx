@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
@@ -16,15 +16,14 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import LandingPage from './LandingPage';
-import TutorialModal from './components/TutorialModal'; // Import the TutorialModal
+import TutorialModal from './components/TutorialModal';
 
 function ThemedApp() {
-  const { currentTheme, changeTheme } = useTheme();
+  const { currentTheme } = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
-  const [showTutorial, setShowTutorial] = useState(false); // State to show tutorial
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const scheduleHeight = '400px';
   const googleCalendarHeight = '300px';
@@ -46,7 +45,7 @@ function ThemedApp() {
 
     const tutorialShown = localStorage.getItem('tutorialShown');
     if (!tutorialShown && location.pathname === '/main') {
-      setShowTutorial(true); // Show tutorial if it hasn't been shown
+      setShowTutorial(true);
     }
 
     fetchSchedule();
@@ -98,7 +97,7 @@ function ThemedApp() {
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
-      {showTutorial && <TutorialModal closeTutorial={closeTutorial} />} {/* Show tutorial if applicable */}
+      {showTutorial && <TutorialModal closeTutorial={closeTutorial} />} 
       {location.pathname === '/' ? (
         <LandingPage user={user} setUser={updateUser} />
       ) : (
@@ -161,7 +160,7 @@ function ThemedApp() {
                     <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
                       <PeriodProgress weekSchedule={weekSchedule} />
                     </div>
-                    <div className="h-16"></div> {/* Extra space at the bottom */}
+                    <div className="h-16"></div>
                   </main>
                 ) : (
                   <div className="flex flex-col items-center justify-center min-h-screen text-center">
