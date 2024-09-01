@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme, themes } from './ThemeContext';
 import { ChromePicker } from 'react-color';
@@ -12,6 +12,15 @@ const Account = ({ user, weekSchedule }) => {
   const [showAccentPicker, setShowAccentPicker] = useState(false);
   const [showTextPicker, setShowTextPicker] = useState(false);
 
+  useEffect(() => {
+    // Update custom theme colors when currentTheme changes
+    if (currentTheme.name === 'Custom') {
+      setCustomMain(currentTheme.main);
+      setCustomAccent(currentTheme.accent);
+      setCustomText(currentTheme.text);
+    }
+  }, [currentTheme]);
+
   if (!user) {
     return (
       <div className="container mx-auto mt-8 p-4 bg-[#001F3F] text-white">
@@ -21,8 +30,9 @@ const Account = ({ user, weekSchedule }) => {
   }
 
   const handleThemeChange = async (themeName) => {
-    changeTheme(themeName.toLowerCase());
-    await saveUserTheme(user.email, themes[themeName.toLowerCase()]);
+    const theme = themes[themeName.toLowerCase()];
+    changeTheme(theme);
+    await saveUserTheme(user.email, theme);
   };
 
   const handleCustomTheme = async () => {
@@ -94,7 +104,7 @@ const Account = ({ user, weekSchedule }) => {
                 <ThemePreview theme={theme} />
                 <button
                   onClick={() => handleThemeChange(themeName)}
-                  className="mt-2 bg-[#001F3F] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full"
+                  className={`mt-2 bg-[#001F3F] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full ${currentTheme.name === theme.name ? 'ring-2 ring-[#B98827]' : ''}`}
                 >
                   {theme.name}
                 </button>
@@ -164,7 +174,7 @@ const Account = ({ user, weekSchedule }) => {
             </div>
             <button
               onClick={handleCustomTheme}
-              className="mt-4 bg-[#B98827] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto"
+              className={`mt-4 bg-[#B98827] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto ${currentTheme.name === 'Custom' ? 'ring-2 ring-white' : ''}`}
             >
               Apply Custom Theme
             </button>
