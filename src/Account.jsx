@@ -54,7 +54,7 @@ const Account = ({ user, weekSchedule }) => {
                 <ThemePreview theme={theme} />
                 <button
                   onClick={() => handleThemeChange(themeName)}
-                  className={`mt-2 ${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded opacity-50 hover:opacity-80 transition-opacity duration-200 w-full drop-shadow-md ${currentTheme.name === themeName ? `ring-2 ${currentTheme.border}` : ''}`}
+                  className={`mt-2 ${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full drop-shadow-md ${currentTheme.name === themeName ? `ring-2 ${currentTheme.border}` : ''}`}
                 >
                   {theme.name}
                 </button>
@@ -70,14 +70,12 @@ const Account = ({ user, weekSchedule }) => {
             <Link 
               to="/privacy" 
               className={`${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200 drop-shadow-md`}
-              style={{ opacity: 0.5 }}
             >
               Privacy Policy
             </Link>
             <Link 
               to="/terms" 
               className={`${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200 drop-shadow-md`}
-              style={{ opacity: 0.5 }}
             >
               Terms of Service
             </Link>
