@@ -1,4 +1,5 @@
 /* src/App.css */
+
 .App {
   display: flex;
   flex-direction: column;
@@ -56,7 +57,7 @@ html, body {
   z-index: 2; /* Ensure Google Calendar content stays above the gradient */
 }
 
-/* Slide-up animation for global elements with cubic ease curve */
+/* Slide-up animation for global elements with cubic ease-out */
 @keyframes slideUp {
   from {
     transform: translateY(100%);
@@ -69,7 +70,7 @@ html, body {
 }
 
 .slide-up {
-  animation: slideUp 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  animation: slideUp 0.5s cubic-bezier(0.87, 0, 0.13, 1) forwards;
 }
 
 /* Slide-down animation */
@@ -85,10 +86,10 @@ html, body {
 }
 
 .slide-down {
-  animation: slideDown 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  animation: slideDown 1s cubic-bezier(0.87, 0, 0.13, 1) forwards;
 }
 
-/* Slide-in animations */
+/* Slide-in-from-left animation */
 @keyframes slideInFromLeft {
   from {
     transform: translateX(-100%);
@@ -100,6 +101,12 @@ html, body {
   }
 }
 
+.slide-in-left {
+  animation: slideInFromLeft 2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+  opacity: 1; /* Ensure it's visible after the animation */
+}
+
+/* Slide-in-from-right animation */
 @keyframes slideInFromRight {
   from {
     transform: translateX(100%);
@@ -111,12 +118,7 @@ html, body {
   }
 }
 
-.slide-in-left {
-  animation: slideInFromLeft 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
-  opacity: 1; /* Ensure it's visible after the animation */
-}
-
 .slide-in-right {
-  animation: slideInFromRight 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  animation: slideInFromRight 2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
   opacity: 1; /* Ensure it's visible after the animation */
 }
