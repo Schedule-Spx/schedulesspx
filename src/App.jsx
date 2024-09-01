@@ -110,8 +110,8 @@ function ThemedApp() {
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
-      {location.pathname === '/' && <div className="gradient-overlay" />}
-      <NavBar user={user} setUser={updateUser} />
+      {/* Render NavBar only if not on the landing page */}
+      {location.pathname !== '/' && <NavBar user={user} setUser={updateUser} />}
       {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
         <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
       )}
