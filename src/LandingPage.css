@@ -12,15 +12,16 @@
 
 .background-image-container {
     position: absolute;
-    top: -100px; /* Adjusted based on user input */
-    left: -100px; /* Adjusted based on user input */
+    top: -100px;
+    left: -100px;
     width: 200%; /* Original width to accommodate the loop */
     height: 200%; /* Original height to accommodate the loop */
     background-image: url('./assets/splashscreengraphic.png'); /* Using the provided file path */
     background-size: cover;
     background-repeat: repeat-x; /* Repeat the background only horizontally */
-    animation: loopBackground 100s linear infinite; /* Slow, infinite loop */
+    animation: loopBackground 100s linear infinite alternate, fadeInBackground 2s ease-in-out forwards; /* Mirroring and fade-in effect */
     z-index: 1; /* Ensure the background is behind the text */
+    opacity: 0; /* Start with opacity 0 for fade-in */
 }
 
 @keyframes loopBackground {
@@ -28,7 +29,13 @@
         transform: translateX(0) translateY(0);
     }
     100% {
-        transform: translateX(-50%) translateY(-50%); /* Move diagonally */
+        transform: translateX(-50%) translateY(-50%); /* Move diagonally and mirror */
+    }
+}
+
+@keyframes fadeInBackground {
+    to {
+        opacity: 1;
     }
 }
 
