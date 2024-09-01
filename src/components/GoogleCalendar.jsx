@@ -74,14 +74,15 @@ const GoogleCalendar = () => {
   return (
     <div 
       className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}
-      style={{ marginBottom: '2px', paddingBottom: '6px' }} // Adjusted bottom margin and padding for border visibility
+      style={{ marginBottom: '0px', paddingBottom: '0px', borderBottomWidth: '4px' }} // Adjusted bottom padding and border width
     >
       {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
         style={{
           background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
-          zIndex: 0
+          zIndex: 0,
+          borderBottomWidth: '4px'
         }}
       ></div>
       <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
