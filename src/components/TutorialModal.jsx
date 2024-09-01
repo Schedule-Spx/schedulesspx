@@ -12,8 +12,24 @@ const TutorialModal = ({ closeTutorial }) => {
     closeTutorial();
   };
 
+  // Define position variables for each step
+  const positions = [
+    { top: '10%', left: '50%', transform: 'translateX(-50%)' },
+    { top: '20%', left: '20%', transform: 'none' },
+    { top: '30%', left: '70%', transform: 'translateX(-50%)' },
+    { top: '40%', left: '50%', transform: 'translateX(-50%)' },
+    { top: '50%', left: '30%', transform: 'translateX(-50%)' },
+  ];
+
   return (
-    <div className="tutorial-modal">
+    <div
+      className="tutorial-modal"
+      style={{
+        top: positions[step - 1].top,
+        left: positions[step - 1].left,
+        transform: positions[step - 1].transform,
+      }}
+    >
       {step === 1 && (
         <div className="tutorial-content">
           <h2>Hi! I'm the Time Lion</h2>
