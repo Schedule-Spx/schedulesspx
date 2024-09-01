@@ -34,32 +34,16 @@ html, body {
 }
 
 .navbar {
-  opacity: 0.01; /* Set NavBar to be nearly invisible initially */
   position: relative;
-  z-index: 10; /* Ensure NavBar stays above everything else */
-  transition: opacity 1s ease-in-out 2s; /* Delay before fade-in */
-}
-
-.navbar-hidden {
-  opacity: 1; /* Fake the animation by making it visible */
+  z-index: 1000; /* Ensure NavBar stays on top of everything */
 }
 
 .glass-tile,
-.ad-widget {
-  min-height: 100px; /* Ensure minimum height */
-  height: 100%; /* Make tiles take full height of their grid cell */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1; /* Ensure they stay above the gradient */
-}
-
-.period-progress {
-  grid-column: span 3; /* Make the period progress span across all columns */
-  width: 100%; /* Ensure it spans the full width */
-  position: relative;
-  z-index: 1; /* Ensure it stays above the gradient */
+.ad-widget,
+.period-progress,
+.slide-up,
+.slide-down {
+  z-index: 10; /* Keep other widgets lower than the NavBar */
 }
 
 /* Slide-up animation for global elements with cubic ease curve */

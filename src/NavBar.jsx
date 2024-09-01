@@ -22,21 +22,39 @@ const NavBar = ({ user, setUser }) => {
   const isAdmin = user && adminEmails.includes(user.email.toLowerCase());
 
   return (
-    <nav className={`${currentTheme.main} ${currentTheme.text} py-3 px-6 flex justify-between items-center shadow-md`}>
+    <nav
+      className={`${currentTheme.main} ${currentTheme.text} py-3 px-6 flex justify-between items-center shadow-md`}
+      style={{
+        zIndex: 1000, // Ensure the NavBar is on top of all other elements
+        position: 'relative', // Keep it positioned relative to the rest of the layout
+      }}
+    >
       <div className="flex items-center space-x-6">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Schedule-SPX Logo" className="h-10 w-auto mr-3" />
-          <span className={`text-2xl font-bold hover:opacity-80 transition-opacity duration-200`}>Schedule-SPX</span>
+          <span className={`text-2xl font-bold hover:opacity-80 transition-opacity duration-200`}>
+            Schedule-SPX
+          </span>
         </Link>
-        <Link to="/about" className={`text-sm font-medium hover:opacity-80 transition-opacity duration-200`}>About</Link>
+        <Link
+          to="/about"
+          className={`text-sm font-medium hover:opacity-80 transition-opacity duration-200`}
+        >
+          About
+        </Link>
       </div>
       <div className="flex items-center space-x-4">
         {user ? (
           <>
-            <Link to="/account" className={`text-sm font-medium hover:opacity-80 transition-opacity duration-200`}>{user.name}</Link>
+            <Link
+              to="/account"
+              className={`text-sm font-medium hover:opacity-80 transition-opacity duration-200`}
+            >
+              {user.name}
+            </Link>
             {isAdmin && (
-              <Link 
-                to="/admin" 
+              <Link
+                to="/admin"
                 className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
               >
                 Admin Console
