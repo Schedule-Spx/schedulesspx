@@ -74,7 +74,7 @@ const GoogleCalendar = () => {
   return (
     <div 
       className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}
-      style={{ paddingBottom: '2px', paddingTop: '2px' }}  // Added padding for the top and bottom border consistency
+      style={{ marginBottom: '2px', paddingBottom: '6px' }} // Adjusted bottom margin and padding for border visibility
     >
       {/* Gradient Overlay */}
       <div 
