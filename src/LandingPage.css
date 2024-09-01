@@ -11,14 +11,14 @@
 
 .background-image-container {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -100;
+    left: -100;
     width: 200%; /* Original width to accommodate the loop */
     height: 200%; /* Original height to accommodate the loop */
     background-image: url('./assets/splashscreengraphic.png'); /* Using the provided file path */
     background-size: cover;
     background-repeat: repeat-x; /* Repeat the background only horizontally */
-    animation: loopBackground 120s linear infinite; /* Slow, infinite loop */
+    animation: loopBackground 100s linear infinite; /* Slow, infinite loop */
 }
 
 @keyframes loopBackground {
