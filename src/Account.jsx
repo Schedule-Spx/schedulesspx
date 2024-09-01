@@ -9,13 +9,17 @@ const Account = ({ user, weekSchedule }) => {
   const [filteredThemes, setFilteredThemes] = useState('all');
 
   const themeCategories = {
-    'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
-    'Holiday Themes': ['Christmas', 'Halloween', 'Valentine\'s Day', 'St. Patrick\'s Day', 'Easter', 'Independence Day', 'Thanksgiving'],
+    'General Themes': ['Default', 'Dark', 'Light', 'Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
+    'Holiday Themes': ['Christmas', 'Halloween', 'Valentine\'s Day', 'St. Patrick\'s Day', 'Easter', 'Independence', 'Thanksgiving'],
     'Saint Themes': ['St. Pius X', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],
   };
 
   const handleThemeChange = (themeName) => {
-    changeTheme(themeName);
+    if (themes[themeName.toLowerCase()]) {
+      changeTheme(themeName.toLowerCase());
+    } else {
+      console.error(`Attempted to change to undefined theme: ${themeName}`);
+    }
   };
 
   const handleFilterChange = (filter) => {
@@ -25,7 +29,7 @@ const Account = ({ user, weekSchedule }) => {
   const renderThemes = () => {
     const themesToRender = filteredThemes === 'all' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
     return themesToRender.map((themeName) => {
-      const theme = themes[themeName];
+      const theme = themes[themeName.toLowerCase()];
       if (!theme) {
         console.error(`Theme not found: ${themeName}`);
         return null;
@@ -76,85 +80,63 @@ const Account = ({ user, weekSchedule }) => {
           <h1 className="text-2xl font-bold mb-6 text-center drop-shadow-md">Account Information</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="mb-4">
-              <label className="block text-sm font-bold mb-2 drop-shadow-md">Name</label>
-              <p className={`${currentTheme.main} p-2 rounded drop-shadow-md`}>{user.name}</p>
+              <label className="block text-sm font-bold mb-2">Name</label>
+              <p className={`p-2 rounded ${currentTheme.main}`}>{user.name}</p>
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-bold mb-2 drop-shadow-md">Email</label>
-              <p className={`${currentTheme.main} p-2 rounded drop-shadow-md`}>{user.email}</p>
+              <label className="block text-sm font-bold mb-2">Email</label>
+              <p className={`p-2 rounded ${currentTheme.main}`}>{user.email}</p>
             </div>
           </div>
         </div>
-
-        {/* Theme Customization Widget */}
+        
+        {/* Theme Customization section */}
         <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
-          {/* Featured Themes */}
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-bold mb-4 drop-shadow-md">Featured Themes</h2>
-            <div className="flex justify-center space-x-4">
-              <ThemePreview themeName="Default" theme={themes.Default} />
-              <ThemePreview themeName="Dark" theme={themes.Dark} />
-              <ThemePreview themeName="Light" theme={themes.Light} />
-            </div>
+          <h2 className="text-xl font-bold mb-4 text-center">Theme Customization</h2>
+          <div className="flex justify-center mb-4">
+            <button
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              onClick={() => handleFilterChange('all')}
+            >
+              Show All
+            </button>
+            <button
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              onClick={() => handleFilterChange('General Themes')}
+            >
+              General Themes
+            </button>
+            <button
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              onClick={() => handleFilterChange('Holiday Themes')}
+            >
+              Holiday Themes
+            </button>
+            <button
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              onClick={() => handleFilterChange('Saint Themes')}
+            >
+              Saint Themes
+            </button>
           </div>
-
-          {/* Theme Filters */}
-          <div className="text-center mb-4">
-            <h2 className="text-xl font-bold mb-4 drop-shadow-md">Theme Customization</h2>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => handleFilterChange('all')}
-                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-              >
-                Show All
-              </button>
-              <button
-                onClick={() => handleFilterChange('General Themes')}
-                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-              >
-                General Themes
-              </button>
-              <button
-                onClick={() => handleFilterChange('Holiday Themes')}
-                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-              >
-                Holiday Themes
-              </button>
-              <button
-                onClick={() => handleFilterChange('Saint Themes')}
-                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-              >
-                Saint Themes
-              </button>
-            </div>
-          </div>
-
-          {/* Carousel of Themes */}
-          <div className="theme-carousel">
-            <TransitionGroup className="carousel-items">
-              {renderThemes()}
-            </TransitionGroup>
-            {/* Carousel Navigation Arrows */}
-            <div className="carousel-controls">
-              <button className="carousel-prev">&lt;</button>
-              <button className="carousel-next">&gt;</button>
-            </div>
-          </div>
+          <TransitionGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {renderThemes()}
+          </TransitionGroup>
         </div>
 
         {/* Legal Information section */}
         <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6`}>
-          <h2 className="text-xl font-bold mb-4 drop-shadow-md">Legal Information</h2>
+          <h2 className="text-xl font-bold mb-4 text-center">Legal Information</h2>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <Link 
               to="/privacy" 
-              className={`${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200 drop-shadow-md`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
             >
               Privacy Policy
             </Link>
             <Link 
               to="/terms" 
-              className={`${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200 drop-shadow-md`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
             >
               Terms of Service
             </Link>
