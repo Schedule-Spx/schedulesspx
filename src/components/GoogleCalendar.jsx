@@ -77,13 +77,16 @@ const GoogleCalendar = () => {
         }}
       ></div>
       <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4 text-center`}>Upcoming Events</h2>
         {Object.entries(events).map(([date, dayEvents]) => (
           <div key={date} className="mb-4">
             <h3 className={`text-md font-semibold ${currentTheme.text} mb-2 text-center`} style={{ fontSize: '0.85rem', color: currentTheme.text + '80' }}>{formatDate(date)}</h3>
             <ul className="space-y-2">
               {dayEvents.map((event) => (
-                <li key={event.id} className={`${currentTheme.accent} p-2 rounded shadow`}>
+                <li 
+                  key={event.id} 
+                  className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-shadow duration-200`} 
+                  onClick={() => window.open(event.htmlLink, '_blank')}
+                >
                   <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
                   {event.start.dateTime && (
                     <div className={`text-sm ${currentTheme.text} opacity-80`}>
