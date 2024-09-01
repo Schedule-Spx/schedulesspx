@@ -9,7 +9,7 @@ const Account = ({ user, weekSchedule }) => {
   const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
 
   const themeCategories = {
-    'Featured Themes': ['Default', 'Dark', 'Light'],
+    'Featured Themes': ['Default', 'Dark', 'Light', 'Labor Day'],  // Added "Labor Day" to the featured themes
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
     'Holiday Themes': ['Christmas', 'Halloween', 'Valentine\'s Day', 'St. Patrick\'s Day', 'Easter', 'Independence', 'Thanksgiving'],
     'Saint Themes': ['St. Pius X', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],

@@ -353,6 +353,15 @@ export const themes = {
     text: 'text-white',
     border: 'border-yellow-400'
   }
+
+  laborDay: {
+    name: 'Labor Day',
+    main: 'bg-blue-700',    // A dark blue background
+    accent: 'bg-red-600',   // A red accent
+    text: 'text-white',     // White text
+    border: 'border-red-600', // Red border
+  },
+  
 };
 
 export const ThemeProvider = ({ children }) => {
