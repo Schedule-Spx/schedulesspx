@@ -1,24 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import './carousel.css'; // Import your CSS for carousel transitions
 
 const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
+  const [filteredThemes, setFilteredThemes] = useState('all');
 
-  if (!user) {
-    return (
-      <div className={`container mx-auto mt-8 p-4 ${currentTheme.main} ${currentTheme.text}`}>
-        <p className="text-center text-xl drop-shadow-md">Please log in to view your account information.</p>
-      </div>
-    );
-  }
+  const themeCategories = {
+    'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
+    'Holiday Themes': ['Christmas', 'Halloween', 'Valentine\'s Day', 'St. Patrick\'s Day', 'Easter', 'Independence Day', 'Thanksgiving'],
+    'Saint Themes': ['St. Pius X', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],
+  };
 
   const handleThemeChange = (themeName) => {
     changeTheme(themeName);
   };
 
+  const handleFilterChange = (filter) => {
+    setFilteredThemes(filter);
+  };
+
+  const renderThemes = () => {
+    const themesToRender = filteredThemes === 'all' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
+    return themesToRender.map((themeName, index) => (
+      <CSSTransition key={themeName} timeout={500} classNames="fade">
+        <ThemePreview key={themeName} themeName={themeName} theme={themes[themeName]} />
+      </CSSTransition>
+    ));
+  };
+
   const ThemePreview = ({ themeName, theme }) => (
-    <div 
+    <div
       className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative flex items-center justify-center`}
       onClick={() => handleThemeChange(themeName)}
     >
@@ -32,6 +46,14 @@ const Account = ({ user, weekSchedule }) => {
       </div>
     </div>
   );
+
+  if (!user) {
+    return (
+      <div className={`container mx-auto mt-8 p-4 ${currentTheme.main} ${currentTheme.text}`}>
+        <p className="text-center text-xl drop-shadow-md">Please log in to view your account information.</p>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text} p-4`} style={{ overflowY: 'auto', height: 'calc(100vh - 64px)' }}>
@@ -50,16 +72,57 @@ const Account = ({ user, weekSchedule }) => {
             </div>
           </div>
         </div>
-        
-        {/* Theme Customization section */}
-        <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
+
+        {/* Featured Themes */}
+        <div className="text-center mb-8">
+          <h2 className="text-xl font-bold mb-4 drop-shadow-md">Featured Themes</h2>
+          <div className="flex justify-center space-x-4">
+            <ThemePreview themeName="Default" theme={themes.Default} />
+            <ThemePreview themeName="Dark" theme={themes.Dark} />
+            <ThemePreview themeName="Light" theme={themes.Light} />
+          </div>
+        </div>
+
+        {/* Theme Filters */}
+        <div className="text-center mb-4">
           <h2 className="text-xl font-bold mb-4 drop-shadow-md">Theme Customization</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
-            {Object.entries(themes).map(([themeName, theme]) => (
-              <div key={themeName} className="flex flex-col items-center">
-                <ThemePreview themeName={themeName} theme={theme} />
-              </div>
-            ))}
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={() => handleFilterChange('all')}
+              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+            >
+              Show All
+            </button>
+            <button
+              onClick={() => handleFilterChange('General Themes')}
+              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+            >
+              General Themes
+            </button>
+            <button
+              onClick={() => handleFilterChange('Holiday Themes')}
+              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+            >
+              Holiday Themes
+            </button>
+            <button
+              onClick={() => handleFilterChange('Saint Themes')}
+              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+            >
+              Saint Themes
+            </button>
+          </div>
+        </div>
+
+        {/* Carousel of Themes */}
+        <div className="theme-carousel">
+          <TransitionGroup className="carousel-items">
+            {renderThemes()}
+          </TransitionGroup>
+          {/* Carousel Navigation Arrows */}
+          <div className="carousel-controls">
+            <button className="carousel-prev">&lt;</button>
+            <button className="carousel-next">&gt;</button>
           </div>
         </div>
 
