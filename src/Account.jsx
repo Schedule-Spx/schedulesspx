@@ -12,7 +12,7 @@ const Account = ({ user, weekSchedule }) => {
     'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
     'Holiday Themes': ['Christmas', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
-    'Saint Themes': ['StPiusX', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],
+    'People Themes': ['StJoseph', 'StPeter', 'StPaul', 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', 'StCatherine', 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
   };
 
   useEffect(() => {
@@ -20,9 +20,8 @@ const Account = ({ user, weekSchedule }) => {
   }, []);
 
   const handleThemeChange = (themeName) => {
-    const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
-    if (themes[normalizedThemeName]) {
-      changeTheme(normalizedThemeName);
+    if (themes[themeName.toLowerCase()]) {
+      changeTheme(themeName.toLowerCase());
     } else {
       console.error(`Attempted to change to undefined theme: ${themeName}`);
     }
@@ -35,8 +34,7 @@ const Account = ({ user, weekSchedule }) => {
   const renderThemes = () => {
     const themesToRender = filteredThemes === 'Show All' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
     return themesToRender.map((themeName) => {
-      const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
-      const theme = themes[normalizedThemeName];
+      const theme = themes[themeName.toLowerCase()];
       if (!theme) {
         console.error(`Theme not found: ${themeName}`);
         return null;
@@ -55,7 +53,7 @@ const Account = ({ user, weekSchedule }) => {
       return null;
     }
 
-    const isSelected = currentTheme.name.replace(/\s+/g, '').toLowerCase() === themeName.replace(/\s+/g, '').toLowerCase();
+    const isSelected = currentTheme.name.toLowerCase().replace(/\s+/g, '') === themeName.toLowerCase();
 
     return (
       <div
@@ -124,9 +122,9 @@ const Account = ({ user, weekSchedule }) => {
             </button>
             <button
               className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
-              onClick={() => handleFilterChange('Saint Themes')}
+              onClick={() => handleFilterChange('People Themes')}
             >
-              Saint Themes
+              People Themes
             </button>
             <button
               className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
