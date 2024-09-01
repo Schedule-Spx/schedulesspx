@@ -30,7 +30,6 @@ const GoogleCalendar = () => {
         // Group events by date, adjusting for timezone
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
-          // Adjust date to local timezone
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
           const dateString = localDate.toDateString();
           
@@ -63,17 +62,9 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  const filteredEvents = Object.entries(events).reduce((filtered, [date, dayEvents]) => {
-    const filteredDayEvents = dayEvents.filter(event => event.summary !== '8:00 am Start');
-    if (filteredDayEvents.length > 0) {
-      filtered[date] = filteredDayEvents;
-    }
-    return filtered;
-  }, {});
-
   if (loading) return <div className={`p-4 ${currentTheme.text} text-center`}>Loading events...</div>;
   if (error) return <div className={`p-4 ${currentTheme.text} text-center`}>Error: {error}</div>;
-  if (Object.keys(filteredEvents).length === 0) return <div className={`p-4 ${currentTheme.text} text-center`}>No upcoming events</div>;
+  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center`}>No upcoming events</div>;
 
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}>
@@ -87,9 +78,9 @@ const GoogleCalendar = () => {
       ></div>
       <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
         <h2 className={`text-xl font-bold ${currentTheme.text} mb-4 text-center`}>Upcoming Events</h2>
-        {Object.entries(filteredEvents).map(([date, dayEvents]) => (
+        {Object.entries(events).map(([date, dayEvents]) => (
           <div key={date} className="mb-4">
-            <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2 text-center`}>{formatDate(date)}</h3>
+            <h3 className={`text-md font-semibold ${currentTheme.text} mb-2 text-center`} style={{ fontSize: '0.85rem', color: currentTheme.text + '80' }}>{formatDate(date)}</h3>
             <ul className="space-y-2">
               {dayEvents.map((event) => (
                 <li key={event.id} className={`${currentTheme.accent} p-2 rounded shadow`}>
