@@ -5,9 +5,9 @@ import { ChromePicker } from 'react-color';
 
 const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, setCustomTheme } = useTheme();
-  const [customMain, setCustomMain] = useState('#001F3F');  // Dark blue
-  const [customAccent, setCustomAccent] = useState('#B98827');  // Gold
-  const [customText, setCustomText] = useState('#FFFFFF');  // White
+  const [customMain, setCustomMain] = useState('#001F3F');
+  const [customAccent, setCustomAccent] = useState('#B98827');
+  const [customText, setCustomText] = useState('#FFFFFF');
   const [showMainPicker, setShowMainPicker] = useState(false);
   const [showAccentPicker, setShowAccentPicker] = useState(false);
   const [showTextPicker, setShowTextPicker] = useState(false);
@@ -54,8 +54,20 @@ const Account = ({ user, weekSchedule }) => {
     }
   };
 
+  const ThemePreview = ({ theme }) => (
+    <div className="w-full h-24 rounded-lg overflow-hidden shadow-md">
+      <div className="h-1/2" style={{ backgroundColor: theme.main }}></div>
+      <div className="h-1/2 flex">
+        <div className="w-1/2" style={{ backgroundColor: theme.accent }}></div>
+        <div className="w-1/2 flex items-center justify-center" style={{ backgroundColor: theme.main, color: theme.text }}>
+          <span className="text-xs">Text</span>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-[#001F3F] text-white p-4">
+    <div className="min-h-screen bg-[#001F3F] text-white p-4 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
         <div className="bg-[#002855] border border-[#B98827] rounded-lg shadow-lg p-6 mb-8">
           <h1 className="text-2xl font-bold mb-6 text-center">Account Information</h1>
@@ -75,14 +87,15 @@ const Account = ({ user, weekSchedule }) => {
           <h2 className="text-xl font-bold mb-4">Theme Customization</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
             {Object.entries(themes).map(([themeName, theme]) => (
-              <button
-                key={themeName}
-                onClick={() => handleThemeChange(themeName)}
-                className="bg-[#001F3F] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 flex flex-col items-center justify-center h-24"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#B98827] mb-2"></div>
-                {theme.name}
-              </button>
+              <div key={themeName} className="flex flex-col items-center">
+                <ThemePreview theme={theme} />
+                <button
+                  onClick={() => handleThemeChange(themeName)}
+                  className="mt-2 bg-[#001F3F] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full"
+                >
+                  {theme.name}
+                </button>
+              </div>
             ))}
           </div>
           <div className="mt-6">
@@ -143,9 +156,12 @@ const Account = ({ user, weekSchedule }) => {
                 </div>
               </div>
             </div>
+            <div className="mt-4">
+              <ThemePreview theme={{ main: customMain, accent: customAccent, text: customText }} />
+            </div>
             <button
               onClick={handleCustomTheme}
-              className="bg-[#B98827] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto"
+              className="mt-4 bg-[#B98827] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto"
             >
               Apply Custom Theme
             </button>
