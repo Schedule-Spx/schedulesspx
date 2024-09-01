@@ -37,11 +37,11 @@ html, body {
   opacity: 0.01; /* Set NavBar to be nearly invisible initially */
   position: relative;
   z-index: 10; /* Ensure NavBar stays above everything else */
-  transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out 2s; /* Delay before fade-in */
 }
 
-.navbar-initial {
-  opacity: 1; /* Fade in the NavBar */
+.navbar-hidden {
+  opacity: 1; /* Fake the animation by making it visible */
 }
 
 .glass-tile,
@@ -66,11 +66,9 @@ html, body {
 @keyframes slideUp {
   from {
     transform: translateY(100%);
-    opacity: 0;
   }
   to {
     transform: translateY(0);
-    opacity: 1;
   }
 }
 
@@ -82,40 +80,17 @@ html, body {
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
-    opacity: 0;
   }
   to {
     transform: translateY(0);
-    opacity: 1;
   }
 }
 
 .slide-down-appear, .slide-down-enter {
-  opacity: 0;
   transform: translateY(-100%);
 }
 
 .slide-down-appear-active, .slide-down-enter-active {
-  opacity: 1;
   transform: translateY(0);
-  transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1), transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-
-/* Fade-in animation for NavBar */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in-enter {
-  opacity: 0;
-}
-
-.fade-in-enter-active {
-  opacity: 1;
-  transition: opacity 1s ease-in-out;
+  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
