@@ -1,0 +1,58 @@
+.vignette-overlay {
+    position: absolute;
+    background: radial-gradient(circle, transparent, black);
+    border-radius: 50%;
+    pointer-events: none; /* Ensure it doesn't block user interaction */
+    z-index: 999; /* Above everything else */
+    display: none; /* Hidden by default */
+}
+
+.vignette-overlay.active {
+    display: block; /* Show only when active */
+}
+
+.tutorial-modal {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: all;
+    transform: translate(-50%, -50%); /* Ensure it's centered */
+    transform-origin: center center; /* Anchor point set to the center */
+}
+
+/* Add scale-in animation for the first tutorial window */
+@keyframes scaleIn {
+  0% {
+    transform: scale(0) translate(-50%, -50%);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.8s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+.tutorial-content {
+    background: linear-gradient(to bottom right, #1e3a8a, #000000); /* Dark blue gradient background */
+    padding: 2rem 2.2rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #fbbf24; /* Golden border */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); /* Drop shadow */
+    color: white; /* Text color */
+}
+
+.tutorial-content button {
+    margin: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: #fbbf24; /* Golden button background */
+    color: #1e3a8a; /* Dark blue text color for the button */
+    transition: background 0.3s ease;
+}
