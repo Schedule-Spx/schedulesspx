@@ -76,7 +76,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   return (
     <div className="flex-grow flex flex-col h-full">
-      <div className={`${currentTheme.secondary} ${currentTheme.border} p-6 rounded-lg shadow-lg overflow-y-auto flex-grow`}>
+      <div className={`${currentTheme.secondary} ${currentTheme.border} p-6 rounded-lg shadow-lg overflow-y-auto flex-grow`} style={{ height: '100vh', overflow: 'auto' }}>
         <h2 className={`text-2xl font-bold mb-4 ${currentTheme.text}`}>Admin Console</h2>
         <div className="mb-4">
           <label className={`block mb-2 ${currentTheme.text}`}>Select Day:</label>
