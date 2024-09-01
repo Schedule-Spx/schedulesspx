@@ -18,7 +18,7 @@ const Account = ({ user, weekSchedule }) => {
   };
 
   const ThemePreview = ({ theme }) => (
-    <div className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent}`}>
+    <div className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${currentTheme.accent}`}>
       <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
         <div className={`w-1/2 ${theme.accent}`}></div>
