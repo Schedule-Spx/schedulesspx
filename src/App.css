@@ -1,19 +1,18 @@
-/* src/App.css */
 .App {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Ensure App takes full viewport height */
-  overflow: hidden; /* Disable scrolling within the App */
-  position: relative; /* To position the overlay correctly */
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 html, body {
-  overflow: hidden; /* Disable scrolling globally */
+  overflow: hidden;
 }
 
 .content-wrapper {
   position: relative;
-  z-index: 1; /* Ensure this content is above the gradient */
+  z-index: 1;
 }
 
 .gradient-overlay {
@@ -22,59 +21,68 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Allow interactions with content below the overlay */
-  background: linear-gradient(to bottom left, rgba(0, 0, 0, 0.5), transparent); /* Half transparent, half black gradient */
-  z-index: -1; /* Ensure it's behind all other content */
-  background-size: 200% 200%; /* Higher resolution for smoother gradient */
+  pointer-events: none;
+  background: linear-gradient(to bottom left, rgba(0, 0, 0, 0.5), transparent);
+  z-index: 0;
+  background-size: 200% 200%;
 }
 
 .App-main, .App-header, .App-footer {
   position: relative;
-  z-index: 1; /* Ensure content stays above the gradient */
-}
-
-.navbar {
-  position: relative;
-  z-index: 1000; /* Ensure NavBar stays on top of everything */
+  z-index: 1;
 }
 
 .glass-tile,
-.ad-widget,
+.ad-widget {
+  min-height: 100px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
 .period-progress,
-.slide-up,
-.slide-down {
-  z-index: 10; /* Keep other widgets lower than the NavBar */
+.GoogleCalendar {
+  grid-column: span 3;
+  width: 100%;
+  position: relative;
+  z-index: 2; /* Ensure it stays above the gradient */
+}
+
+.GoogleCalendar {
+  z-index: 2; /* Ensure Google Calendar content stays above the gradient */
 }
 
 /* Slide-up animation for global elements with cubic ease curve */
 @keyframes slideUp {
   from {
     transform: translateY(100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .slide-up {
-  animation: slideUp 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards; /* Adjusted to cubic ease curve */
+  animation: slideUp 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
 }
 
 /* Slide-down animation */
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
-.slide-down-appear, .slide-down-enter {
-  transform: translateY(-100%);
-}
-
-.slide-down-appear-active, .slide-down-enter-active {
-  transform: translateY(0);
-  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+.slide-down {
+  animation: slideDown 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
 }

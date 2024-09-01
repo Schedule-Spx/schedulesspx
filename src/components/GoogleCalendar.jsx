@@ -26,13 +26,13 @@ const GoogleCalendar = () => {
             },
           }
         );
-        
+
         // Group events by date, adjusting for timezone
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
           const dateString = localDate.toDateString();
-          
+
           if (!acc[dateString]) {
             acc[dateString] = [];
           }
@@ -73,7 +73,7 @@ const GoogleCalendar = () => {
         className="absolute inset-0 rounded-lg"
         style={{
           background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
-          zIndex: 0
+          zIndex: 1 // Adjusted zIndex so that the gradient stays below content
         }}
       ></div>
       <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
