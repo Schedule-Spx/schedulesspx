@@ -14,7 +14,7 @@ const Account = ({ user, weekSchedule }) => {
 
   if (!user) {
     return (
-      <div className="container mx-auto mt-8 p-4 bg-stpius-blue text-stpius-white">
+      <div className="container mx-auto mt-8 p-4 bg-stpius-blue text-white">
         <p className="text-center text-xl">Please log in to view your account information.</p>
       </div>
     );
@@ -36,35 +36,33 @@ const Account = ({ user, weekSchedule }) => {
   };
 
   const ThemePreview = ({ theme }) => (
-    <div className="w-full h-24 rounded-lg overflow-hidden shadow-md">
+    <div className={`w-full h-24 rounded-lg overflow-hidden shadow-md ${theme.border}`}>
       <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
         <div className={`w-1/2 ${theme.accent}`}></div>
-        <div className={`w-1/2 flex items-center justify-center ${theme.main} ${theme.text}`}>
-          <span className="text-xs">Text</span>
-        </div>
+        <div className={`w-1/2 ${theme.main} ${theme.text}`}></div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-stpius-blue text-stpius-white p-4 overflow-y-auto">
+    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text} p-4 overflow-y-auto`}>
       <div className="max-w-4xl mx-auto">
-        <div className="bg-gray-900 border border-stpius-gold rounded-lg shadow-lg p-6 mb-8">
+        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h1 className="text-2xl font-bold mb-6 text-center">Account Information</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2">Name</label>
-              <p className="bg-stpius-blue p-2 rounded">{user.name}</p>
+              <p className={`${currentTheme.main} p-2 rounded`}>{user.name}</p>
             </div>
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2">Email</label>
-              <p className="bg-stpius-blue p-2 rounded">{user.email}</p>
+              <p className={`${currentTheme.main} p-2 rounded`}>{user.email}</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-gray-900 border border-stpius-gold rounded-lg shadow-lg p-6 mb-8">
+        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h2 className="text-xl font-bold mb-4">Theme Customization</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
             {Object.entries(themes).map(([themeName, theme]) => (
@@ -72,7 +70,7 @@ const Account = ({ user, weekSchedule }) => {
                 <ThemePreview theme={theme} />
                 <button
                   onClick={() => handleThemeChange(themeName)}
-                  className="mt-2 bg-stpius-blue text-stpius-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full"
+                  className={`mt-2 ${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full`}
                 >
                   {theme.name}
                 </button>
@@ -138,29 +136,29 @@ const Account = ({ user, weekSchedule }) => {
               </div>
             </div>
             <div className="mt-4">
-              <ThemePreview theme={{ main: `bg-[${customMain}]`, accent: `bg-[${customAccent}]`, text: `text-[${customText}]` }} />
+              <ThemePreview theme={{ main: `bg-[${customMain}]`, accent: `bg-[${customAccent}]`, text: `text-[${customText}]`, border: `border-[${customAccent}]` }} />
             </div>
             <button
               onClick={handleCustomTheme}
-              className="mt-4 bg-stpius-gold text-stpius-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto"
+              className={`mt-4 ${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto`}
             >
               Apply Custom Theme
             </button>
           </div>
         </div>
 
-        <div className="bg-gray-900 border border-stpius-gold rounded-lg shadow-lg p-6">
+        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-lg p-6`}>
           <h2 className="text-xl font-bold mb-4">Legal Information</h2>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <Link 
               to="/privacy" 
-              className="bg-stpius-blue text-stpius-white font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200"
+              className={`${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
             >
               Privacy Policy
             </Link>
             <Link 
               to="/terms" 
-              className="bg-stpius-blue text-stpius-white font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200"
+              className={`${currentTheme.main} ${currentTheme.text} font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
             >
               Terms of Service
             </Link>
