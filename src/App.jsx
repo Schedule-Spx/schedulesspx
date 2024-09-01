@@ -177,19 +177,19 @@ function ThemedApp() {
 
 function AppContent() {
   return (
-    <ThemeProvider>
-      <ThemedApp />
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ThemeProvider>
+        <Router>
+          <ThemedApp />
+        </Router>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <Router>
-        <AppContent />
-      </Router>
-    </GoogleOAuthProvider>
+    <AppContent />
   );
 }
 

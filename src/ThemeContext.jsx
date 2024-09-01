@@ -357,6 +357,7 @@ export const themes = {
 
 export const ThemeProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(themes.default);
+  const [key, setKey] = useState(0); // To force re-render
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -399,6 +400,7 @@ export const ThemeProvider = ({ children }) => {
 
     // Update the body background with a gradient
     document.body.style.background = `linear-gradient(to bottom left, ${mainColor}, ${darkerColor})`;
+    setKey(key + 1); // Force re-render when theme changes
   }, [currentTheme]);
 
   const changeTheme = (themeName) => {
@@ -410,7 +412,9 @@ export const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={{ currentTheme, changeTheme, themes }}>
-      {children}
+      <div key={key}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 };
