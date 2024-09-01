@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './carousel.css'; // Import your CSS for carousel transitions
+import './carousel.css';  // Importing the carousel CSS for animations
 
 const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
