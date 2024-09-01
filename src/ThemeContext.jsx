@@ -1,4 +1,4 @@
-// ThemeContext.js
+// ThemeContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext();
@@ -126,7 +126,70 @@ export const themes = {
   }
 };
 
-// ... rest of the ThemeContext.js file remains the same
+export const ThemeProvider = ({ children }) => {
+  const [currentTheme, setCurrentTheme] = useState(themes.default);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      try {
+        const parsedTheme = JSON.parse(savedTheme);
+        setCurrentTheme(parsedTheme);
+      } catch (error) {
+        const fallbackTheme = themes[savedTheme.toLowerCase()] || themes.default;
+        setCurrentTheme(fallbackTheme);
+      }
+    }
+  }, []);
+
+  const adjustBrightness = (hex, percent) => {
+    const num = parseInt(hex.slice(1), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const G = ((num >> 8) & 0x00FF) + amt;
+    const B = (num & 0x0000FF) + amt;
+    return `#${(
+      0x1000000 +
+      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+      (B < 255 ? (B < 1 ? 0 : B) : 255)
+    )
+      .toString(16)
+      .slice(1)}`;
+  };
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    // Assume main color is defined as a CSS variable based on the current theme
+    const mainColor = getComputedStyle(root)
+      .getPropertyValue(`--${currentTheme.main.slice(3)}`)
+      .trim();
+
+    const darkerColor = adjustBrightness(mainColor, -20); // Darken by 20%
+
+    // Update the body background with a gradient
+    document.body.style.background = `linear-gradient(to bottom left, ${mainColor}, ${darkerColor})`;
+  }, [currentTheme]);
+
+  const changeTheme = (themeName) => {
+    const normalizedThemeName = themeName.toLowerCase();
+    const newTheme = themes[normalizedThemeName] || themes.default;
+    setCurrentTheme(newTheme);
+    localStorage.setItem('theme', JSON.stringify(newTheme));
+  };
+
+  const setCustomTheme = (customTheme) => {
+    setCurrentTheme(customTheme);
+    localStorage.setItem('theme', JSON.stringify(customTheme));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ currentTheme, changeTheme, setCustomTheme, themes }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
