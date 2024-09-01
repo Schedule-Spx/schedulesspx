@@ -9,7 +9,7 @@ const Account = ({ user, weekSchedule }) => {
   const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
 
   const themeCategories = {
-    'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],  // Removed spaces from theme names
+    'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
     'Holiday Themes': ['Christmas', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
     'Saint Themes': ['StPiusX', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],
@@ -52,6 +52,9 @@ const Account = ({ user, weekSchedule }) => {
       console.error(`Attempted to render undefined theme: ${themeName}`);
       return null;
     }
+
+    const isSelected = currentTheme.name.toLowerCase() === themeName.toLowerCase();
+
     return (
       <div
         className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative flex items-center justify-center`}
@@ -62,11 +65,7 @@ const Account = ({ user, weekSchedule }) => {
           <div className={`w-1/2 ${theme.accent}`}></div>
           <div className={`w-1/2 ${theme.main}`}></div>
         </div>
-        <div
-          className={`absolute px-2 py-1 text-center font-bold bg-opacity-70 bg-black rounded ${
-            currentTheme.name.toLowerCase() === themeName.toLowerCase() ? 'text-green-500' : 'text-white'
-          }`}
-        >
+        <div className={`absolute px-2 py-1 text-center font-bold bg-opacity-70 rounded ${isSelected ? 'bg-green-500' : 'bg-black'} text-white`}>
           {theme.name}
         </div>
       </div>
