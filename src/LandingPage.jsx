@@ -47,7 +47,7 @@ const LandingPage = ({ user, setUser }) => {
         transition={{ delay: 0.5, duration: 1.5 }}
         className="landing-subtitle"
       >
-        The All-in-One Student Dashboard
+        The All-in-One Student Dashboard.
       </motion.h2>
       <motion.p
         initial={{ opacity: 0, y: 60 }}
