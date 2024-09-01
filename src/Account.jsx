@@ -20,8 +20,9 @@ const Account = ({ user, weekSchedule }) => {
   }, []);
 
   const handleThemeChange = (themeName) => {
-    if (themes[themeName.toLowerCase()]) {
-      changeTheme(themeName.toLowerCase());
+    const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
+    if (themes[normalizedThemeName]) {
+      changeTheme(normalizedThemeName);
     } else {
       console.error(`Attempted to change to undefined theme: ${themeName}`);
     }
@@ -34,7 +35,8 @@ const Account = ({ user, weekSchedule }) => {
   const renderThemes = () => {
     const themesToRender = filteredThemes === 'Show All' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
     return themesToRender.map((themeName) => {
-      const theme = themes[themeName.toLowerCase()];
+      const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
+      const theme = themes[normalizedThemeName];
       if (!theme) {
         console.error(`Theme not found: ${themeName}`);
         return null;
@@ -53,7 +55,7 @@ const Account = ({ user, weekSchedule }) => {
       return null;
     }
 
-    const isSelected = currentTheme.name.toLowerCase() === themeName.toLowerCase();
+    const isSelected = currentTheme.name.replace(/\s+/g, '').toLowerCase() === themeName.replace(/\s+/g, '').toLowerCase();
 
     return (
       <div

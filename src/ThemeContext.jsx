@@ -290,7 +290,7 @@ export const ThemeProvider = ({ children }) => {
   }, [currentTheme]);
 
   const changeTheme = (themeName) => {
-    const normalizedThemeName = themeName.toLowerCase();
+    const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
     const newTheme = themes[normalizedThemeName] || themes.default;
     setCurrentTheme(newTheme);
     localStorage.setItem('theme', JSON.stringify(newTheme));
@@ -310,4 +310,3 @@ export const useTheme = () => {
   }
   return context;
 };
-//hi
