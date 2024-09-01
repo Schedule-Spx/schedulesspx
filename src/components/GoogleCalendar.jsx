@@ -67,7 +67,10 @@ const GoogleCalendar = () => {
   if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center`}>No upcoming events</div>;
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}>
+    <div 
+      className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}
+      style={{ marginTop: '3px' }}  // Lowered border by 3px
+    >
       {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
@@ -84,7 +87,7 @@ const GoogleCalendar = () => {
               {dayEvents.map((event) => (
                 <li 
                   key={event.id} 
-                  className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-shadow duration-200`} 
+                  className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`} // Added scale effect on hover
                   onClick={() => window.open(event.htmlLink, '_blank')}
                 >
                   <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
