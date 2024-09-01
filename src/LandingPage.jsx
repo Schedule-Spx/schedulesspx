@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GoogleLogin from './components/GoogleLogin'; // Adjust the import path if necessary
-import './LandingPage.css'; // Ensure your styles are imported
+import './LandingPage.css';
 
 const LandingPage = ({ user, setUser }) => {
   const navigate = useNavigate();
@@ -20,7 +20,10 @@ const LandingPage = ({ user, setUser }) => {
   return (
     <div className="landing-page">
       <h1 className="landing-title">Welcome to ScheduleSPX</h1>
-      <GoogleLogin onLoginSuccess={handleLoginSuccess} />
+      <div className="landing-buttons">
+        <GoogleLogin onLoginSuccess={handleLoginSuccess} />
+        <button onClick={() => navigate('/about')}>Learn More</button>
+      </div>
     </div>
   );
 };
