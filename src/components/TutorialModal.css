@@ -19,7 +19,7 @@
   
   .tutorial-content {
     background: linear-gradient(to bottom right, #1e3a8a, #000000); /* Dark blue gradient background */
-    padding: 2rem;
+    padding: 2rem 2.2rem;
     border-radius: 10px;
     text-align: center;
     border: 2px solid #fbbf24; /* Golden border */

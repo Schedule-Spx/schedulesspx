@@ -17,7 +17,7 @@ const TutorialModal = ({ closeTutorial }) => {
     { top: '40%', left: '50%', transform: 'translateX(-50%)', scale: 1, vignette: { radius: '2000px', opacity: 1, positionX: '50%', positionY: '40%' } },
     { top: '50%', left: '50%', transform: 'none', scale: 1.2, vignette: { radius: '3000px', opacity: 1, positionX: '50%', positionY: '10%' } },
     { top: '64%', left: '20%', transform: 'translateX(-50%)', scale: 0.75, vignette: { radius: '3000px', opacity: 1, positionX: '20%', positionY: '54%' } },
-    { top: '70%', left: '80%', transform: 'translateX(-50%)', scale: 0.8, vignette: { radius: '3000px', opacity: 1, positionX: '80%', positionY: '60%' } },
+    { top: '70%', left: '80%', transform: 'translateX(-40%)', scale: 0.8, vignette: { radius: '3000px', opacity: 1, positionX: '80%', positionY: '60%' } },
     { top: '6%', left: '85%', transform: 'translateX(-50%)', scale: 0.7, vignette: { radius: '4000px', opacity: 1, positionX: '85%', positionY: '6%' } },
   ];
 
@@ -75,7 +75,8 @@ const TutorialModal = ({ closeTutorial }) => {
         {step === 4 && (
           <div className="tutorial-content">
             <h2>Document Creator</h2>
-            <p>Here's the document creator. Click one of the icons to create a new document in a new tab!</p>
+            <p>Here's the document creator.</p> 
+            <p>Click one of the icons to create a new document in a new tab!</p>
             <button onClick={handleNext}>Next</button>
           </div>
         )}
