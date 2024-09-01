@@ -5,7 +5,9 @@ import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
+import GoogleCalendar from './components/GoogleCalendar'; // Import added
 import PeriodProgress from './PeriodProgress';
+import Schedule from './Schedule';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
 import NavBar from './NavBar';
 import Admin from './Admin';
@@ -14,7 +16,6 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import Schedule from './Schedule';
 import { CSSTransition } from 'react-transition-group';
 
 function ThemedApp() {
@@ -167,8 +168,7 @@ function ThemedApp() {
                 </CSSTransition>
                 <div className="flex flex-col space-y-4">
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: googleCalendarHeight }}>
-                    {/* Uncomment this when ready to implement Google Calendar */}
-                    {/* <GoogleCalendar /> */}
+                    <GoogleCalendar />
                   </div>
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
                     <GoogleSuiteLinks />
