@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import GoogleLogin from './components/GoogleLogin'; // Adjust the import path if necessary
 import './LandingPage.css';
+import BackgroundImage from './assets/your-image-filename.png'; // Update with your actual image file name
 
 const LandingPage = ({ user, setUser }) => {
   const navigate = useNavigate();
@@ -31,12 +32,8 @@ const LandingPage = ({ user, setUser }) => {
   };
 
   return (
-    <div
-      className="landing-page"
-      style={{
-        backgroundPosition: `center ${scrollY * 0.5}px`,
-      }}
-    >
+    <div className="landing-page">
+      <div className="background-image-container"></div> {/* Background image container */}
       <motion.h1
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
