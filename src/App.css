@@ -1,19 +1,18 @@
-/* src/App.css */
 .App {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Ensure App takes full viewport height */
-  overflow: hidden; /* Disable scrolling within the App */
-  position: relative; /* To position the overlay correctly */
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 html, body {
-  overflow: hidden; /* Disable scrolling globally */
+  overflow: hidden;
 }
 
 .content-wrapper {
   position: relative;
-  z-index: 1; /* Ensure this content is above the gradient */
+  z-index: 1;
 }
 
 .gradient-overlay {
@@ -22,36 +21,41 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Allow interactions with content below the overlay */
-  background: linear-gradient(to bottom left, rgba(0, 0, 0, 0.5), transparent); /* Half transparent, half black gradient */
-  z-index: -1; /* Ensure it's behind all other content */
-  background-size: 200% 200%; /* Higher resolution for smoother gradient */
+  pointer-events: none;
+  background: linear-gradient(to bottom left, rgba(0, 0, 0, 0.5), transparent);
+  z-index: 0;
+  background-size: 200% 200%;
 }
 
 .App-main, .App-header, .App-footer {
   position: relative;
-  z-index: 1; /* Ensure content stays above the gradient */
+  z-index: 1;
 }
 
 .glass-tile,
 .ad-widget {
-  min-height: 100px; /* Ensure minimum height */
-  height: 100%; /* Make tiles take full height of their grid cell */
+  min-height: 100px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 1; /* Ensure they stay above the gradient */
+  z-index: 1;
 }
 
-.period-progress {
-  grid-column: span 3; /* Make the period progress span across all columns */
-  width: 100%; /* Ensure it spans the full width */
+.period-progress,
+.GoogleCalendar {
+  grid-column: span 3;
+  width: 100%;
   position: relative;
-  z-index: 1; /* Ensure it stays above the gradient */
+  z-index: 2; /* Ensure it stays above the gradient */
 }
 
-/* Slide-up animation for global elements with cubic ease curve */
+.GoogleCalendar {
+  z-index: 2; /* Ensure Google Calendar content stays above the gradient */
+}
+
+/* Slide-up animation for global elements with cubic ease-out */
 @keyframes slideUp {
   from {
     transform: translateY(100%);
@@ -64,7 +68,7 @@ html, body {
 }
 
 .slide-up {
-  animation: slideUp 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards; /* Adjusted to cubic ease curve */
+  animation: slideUp 0.5s cubic-bezier(0.87, 0, 0.13, 1) forwards;
 }
 
 /* Slide-down animation */
@@ -79,24 +83,57 @@ html, body {
   }
 }
 
-.slide-down-appear, .slide-down-enter {
-  opacity: 0;
-  transform: translateY(-100%);
+.slide-down {
+  animation: slideDown 1s cubic-bezier(0.87, 0, 0.13, 1) forwards;
 }
 
-.slide-down-appear-active, .slide-down-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1), transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+/* Slide-in-from-left animation */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-.slide-down-exit {
-  opacity: 1;
-  transform: translateY(0);
+.slide-in-left {
+  animation: slideInFromLeft 2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+  opacity: 1; /* Ensure it's visible after the animation */
 }
 
-.slide-down-exit-active {
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1), transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+/* Slide-in-from-right animation */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInFromRight 2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+  opacity: 1; /* Ensure it's visible after the animation */
+}
+
+/* Blur overlay for unauthenticated users on /main */
+.main-blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 10;
 }

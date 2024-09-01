@@ -19,7 +19,7 @@ const DayHeader = () => {
   const timeString = currentDateTime.toLocaleTimeString();
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
+    <div className={`rounded-lg shadow-md w-full border-2 ${currentTheme.border} ${currentTheme.main} relative`}>
       {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
