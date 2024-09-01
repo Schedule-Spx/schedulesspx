@@ -24,28 +24,41 @@ const Account = ({ user, weekSchedule }) => {
 
   const renderThemes = () => {
     const themesToRender = filteredThemes === 'all' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
-    return themesToRender.map((themeName, index) => (
-      <CSSTransition key={themeName} timeout={500} classNames="fade">
-        <ThemePreview key={themeName} themeName={themeName} theme={themes[themeName]} />
-      </CSSTransition>
-    ));
+    return themesToRender.map((themeName, index) => {
+      const theme = themes[themeName];
+      if (!theme) {
+        console.error(`Theme not found: ${themeName}`);
+        return null;
+      }
+      return (
+        <CSSTransition key={themeName} timeout={500} classNames="fade">
+          <ThemePreview key={themeName} themeName={themeName} theme={theme} />
+        </CSSTransition>
+      );
+    });
   };
 
-  const ThemePreview = ({ themeName, theme }) => (
-    <div
-      className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative flex items-center justify-center`}
-      onClick={() => handleThemeChange(themeName)}
-    >
-      <div className={`absolute inset-x-0 top-0 h-1/2 ${theme.main}`}></div>
-      <div className="absolute inset-x-0 bottom-0 h-1/2 flex">
-        <div className={`w-1/2 ${theme.accent}`}></div>
-        <div className={`w-1/2 ${theme.main}`}></div>
+  const ThemePreview = ({ themeName, theme }) => {
+    if (!theme) {
+      console.error(`Attempted to render undefined theme: ${themeName}`);
+      return null;
+    }
+    return (
+      <div
+        className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative flex items-center justify-center`}
+        onClick={() => handleThemeChange(themeName)}
+      >
+        <div className={`absolute inset-x-0 top-0 h-1/2 ${theme.main}`}></div>
+        <div className="absolute inset-x-0 bottom-0 h-1/2 flex">
+          <div className={`w-1/2 ${theme.accent}`}></div>
+          <div className={`w-1/2 ${theme.main}`}></div>
+        </div>
+        <div className="absolute px-2 py-1 text-white text-center font-bold bg-opacity-70 bg-black rounded">
+          {theme.name}
+        </div>
       </div>
-      <div className="absolute px-2 py-1 text-white text-center font-bold bg-opacity-70 bg-black rounded">
-        {theme.name}
-      </div>
-    </div>
-  );
+    );
+  };
 
   if (!user) {
     return (
