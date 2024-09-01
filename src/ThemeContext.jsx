@@ -353,16 +353,13 @@ export const themes = {
     text: 'text-white',
     border: 'border-yellow-400'
   },
-
-  laborDay: {
+  laborday: {
     name: 'Labor Day',
     main: 'bg-blue-700',
     accent: 'bg-red-600',
     text: 'text-white',
-    border: 'border-red-600', // Make sure there's a comma here
+    border: 'border-red-600',
   },
-  
-  
 };
 
 export const ThemeProvider = ({ children }) => {
