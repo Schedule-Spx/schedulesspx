@@ -54,15 +54,20 @@ const Account = ({ user, weekSchedule }) => {
     }
   };
 
-  const ThemePreview = ({ theme }) => (
-    <div className="w-full h-24 rounded-lg overflow-hidden shadow-md">
-      <div className={`h-1/2 ${theme.main}`}></div>
-      <div className="h-1/2 flex">
-        <div className={`w-1/2 ${theme.accent}`}></div>
-        <div className={`w-1/2 ${theme.main}`}></div>
+  const ThemePreview = ({ theme }) => {
+    const mainColor = theme.main.startsWith('bg-') ? `var(--${theme.main.slice(3)})` : theme.main;
+    const accentColor = theme.accent.startsWith('bg-') ? `var(--${theme.accent.slice(3)})` : theme.accent;
+    
+    return (
+      <div className="w-full h-24 rounded-lg overflow-hidden shadow-md">
+        <div style={{ height: '50%', backgroundColor: mainColor }}></div>
+        <div style={{ height: '50%', display: 'flex' }}>
+          <div style={{ width: '50%', backgroundColor: accentColor }}></div>
+          <div style={{ width: '50%', backgroundColor: mainColor }}></div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#001F3F] text-white p-4" style={{ overflowY: 'auto', height: 'calc(100vh - 64px)' }}>
@@ -155,7 +160,7 @@ const Account = ({ user, weekSchedule }) => {
               </div>
             </div>
             <div className="mt-4">
-              <ThemePreview theme={{ main: `bg-[${customMain}]`, accent: `bg-[${customAccent}]`, text: `text-[${customText}]` }} />
+              <ThemePreview theme={{ main: customMain, accent: customAccent, text: customText }} />
             </div>
             <button
               onClick={handleCustomTheme}
