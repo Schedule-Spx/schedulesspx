@@ -38,34 +38,34 @@ const LandingPage = ({ user, setUser }) => {
       }}
     >
       <motion.h1
-        initial={{ opacity: 0, y: 500 }}
-        animate={{ opacity: 1, y: -100 }}
-        transition={{ duration: 2 }}
+        initial={{ opacity: 0, y: 100 }} // Adjusted initial position
+        animate={{ opacity: 1, y: 0 }} // End position is closer to the initial
+        transition={{ duration: 1.5 }}
         className="landing-title"
       >
         Welcome to Schedule SPX
       </motion.h1>
       <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
+        initial={{ opacity: 0, y: 80 }} // Adjusted initial position
+        animate={{ opacity: 1, y: 0 }} // End position is closer to the initial
+        transition={{ delay: 0.5, duration: 1.5 }}
         className="landing-subtitle"
       >
         Built by Kagen Jensen and David Camick
       </motion.h2>
       <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
+        initial={{ opacity: 0, y: 60 }} // Adjusted initial position
+        animate={{ opacity: 1, y: 0 }} // End position is closer to the initial
+        transition={{ delay: 1, duration: 1.5 }}
         className="landing-body"
       >
         Please sign in to use, or scroll down to learn more.
       </motion.p>
       <motion.div
         className="landing-buttons"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
+        initial={{ opacity: 0, y: 50 }} // Adjusted initial position
+        animate={{ opacity: 1, y: 0 }} // End position is closer to the initial
+        transition={{ delay: 1.5, duration: 1.5 }}
       >
         <GoogleLogin onLoginSuccess={handleLoginSuccess} />
       </motion.div>
