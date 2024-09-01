@@ -63,7 +63,11 @@ const Account = ({ user, weekSchedule }) => {
           <div className={`w-1/2 ${theme.accent}`}></div>
           <div className={`w-1/2 ${theme.main}`}></div>
         </div>
-        <div className={`absolute px-2 py-1 text-center font-bold bg-opacity-70 bg-black rounded ${currentTheme.name === themeName.toLowerCase() ? 'text-green-500' : 'text-white'}`}>
+        <div
+          className={`absolute px-2 py-1 text-center font-bold bg-opacity-70 bg-black rounded ${
+            currentTheme.name.toLowerCase() === themeName.toLowerCase() ? 'text-green-500' : 'text-white'
+          }`}
+        >
           {theme.name}
         </div>
       </div>
