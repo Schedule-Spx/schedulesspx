@@ -18,7 +18,7 @@ const Account = ({ user, weekSchedule }) => {
   };
 
   const ThemePreview = ({ theme }) => (
-    <div className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${currentTheme.accent}`}>
+    <div className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent}`}>
       <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
         <div className={`w-1/2 ${theme.accent}`}></div>
@@ -55,7 +55,6 @@ const Account = ({ user, weekSchedule }) => {
                 <button
                   onClick={() => handleThemeChange(themeName)}
                   className={`mt-2 ${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded opacity-50 hover:opacity-80 transition-opacity duration-200 w-full drop-shadow-md ${currentTheme.name === themeName ? `ring-2 ${currentTheme.border}` : ''}`}
-                  style={{ opacity: 1 }} // Keeping text opacity at 100%
                 >
                   {theme.name}
                 </button>
