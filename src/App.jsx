@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
-import GoogleCalendar from './components/GoogleCalendar'; // Import added
+import GoogleCalendar from './components/GoogleCalendar'; 
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
