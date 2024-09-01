@@ -11,22 +11,22 @@
 
 .background-image-container {
     position: absolute;
-    top: 0;
+    top: -50%; /* Move the image higher to keep the bottom out of view */
     left: 0;
-    width: 200%; /* Double the width to accommodate the loop */
-    height: 200%; /* Double the height to accommodate the loop */
-    background-image: url('./assets/splashscreengraphic.png'); /* Updated with your actual image file name */
+    width: 800%; /* Scale up by 200% */
+    height: 200%; /* Scale up by 200% */
+    background-image: url('./assets/splashscreengraphic.png');
     background-size: cover;
-    background-repeat: repeat; /* Repeat the background */
+    background-repeat: repeat-x; /* Repeat the background only horizontally */
     animation: loopBackground 120s linear infinite; /* Slow, infinite loop */
 }
 
 @keyframes loopBackground {
     0% {
-        transform: translateX(0) translateY(0);
+        transform: translateX(0);
     }
     100% {
-        transform: translateX(-50%) translateY(-50%); /* Move across the screen */
+        transform: translateX(-50%); /* Move sideways */
     }
 }
 
