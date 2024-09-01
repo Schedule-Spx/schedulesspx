@@ -56,10 +56,10 @@ const Account = ({ user, weekSchedule }) => {
 
   const ThemePreview = ({ theme }) => (
     <div className="w-full h-24 rounded-lg overflow-hidden shadow-md">
-      <div className="h-1/2" style={{ backgroundColor: theme.main }}></div>
+      <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
-        <div className="w-1/2" style={{ backgroundColor: theme.accent }}></div>
-        <div className="w-1/2" style={{ backgroundColor: theme.main }}></div>
+        <div className={`w-1/2 ${theme.accent}`}></div>
+        <div className={`w-1/2 ${theme.main}`}></div>
       </div>
     </div>
   );
@@ -155,7 +155,7 @@ const Account = ({ user, weekSchedule }) => {
               </div>
             </div>
             <div className="mt-4">
-              <ThemePreview theme={{ main: customMain, accent: customAccent, text: customText }} />
+              <ThemePreview theme={{ main: `bg-[${customMain}]`, accent: `bg-[${customAccent}]`, text: `text-[${customText}]` }} />
             </div>
             <button
               onClick={handleCustomTheme}
