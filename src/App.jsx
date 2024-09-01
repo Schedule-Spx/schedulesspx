@@ -15,8 +15,8 @@ import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
-import AgreementPopup from './components/AgreementPopup';
 import LandingPage from './LandingPage';
+import TutorialModal from './components/TutorialModal'; // Import the TutorialModal
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -24,8 +24,7 @@ function ThemedApp() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
-  const [showAgreement, setShowAgreement] = useState(false);
-  const [hasViewedDocs, setHasViewedDocs] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false); // State to show tutorial
 
   const scheduleHeight = '400px';
   const googleCalendarHeight = '300px';
@@ -42,19 +41,13 @@ function ThemedApp() {
       localStorage.removeItem('sessionExpiry');
     }
 
-    const hasAgreed = localStorage.getItem('agreedToTerms');
-    if (!hasAgreed) {
-      setShowAgreement(true);
+    const tutorialShown = localStorage.getItem('tutorialShown');
+    if (!tutorialShown && location.pathname === '/main') {
+      setShowTutorial(true); // Show tutorial if it hasn't been shown
     }
 
     fetchSchedule();
-  }, []);
-
-  useEffect(() => {
-    if (location.pathname === '/privacy' || location.pathname === '/terms') {
-      setHasViewedDocs(true);
-    }
-  }, [location]);
+  }, [location.pathname]);
 
   const fetchUserTheme = async (email) => {
     try {
@@ -95,29 +88,19 @@ function ThemedApp() {
     }
   };
 
-  const handleAgree = () => {
-    localStorage.setItem('agreedToTerms', 'true');
-    setShowAgreement(false);
-    if (hasViewedDocs) {
-      navigate('/');
-    }
-  };
-
-  const handleViewDocs = (path) => {
-    setHasViewedDocs(true);
-    navigate(path);
+  const closeTutorial = () => {
+    setShowTutorial(false);
+    localStorage.setItem('tutorialShown', 'true');
   };
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
+      {showTutorial && <TutorialModal closeTutorial={closeTutorial} />} {/* Show tutorial if applicable */}
       {location.pathname === '/' ? (
         <LandingPage user={user} setUser={updateUser} />
       ) : (
         <>
           <NavBar user={user} setUser={updateUser} />
-          {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
-            <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
-          )}
           <Routes>
             <Route 
               path="/admin" 
