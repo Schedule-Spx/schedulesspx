@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,22 +12,27 @@
 }
 
 .tutorial-content {
-    background: white;
+    background: linear-gradient(to bottom right, #1e3a8a, #000000); /* Dark blue gradient background */
     padding: 2rem;
     border-radius: 10px;
     text-align: center;
     max-width: 500px;
     width: 90%;
+    border: 2px solid #fbbf24; /* Golden border */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); /* Drop shadow */
+    color: white; /* Text color */
 }
 
 .tutorial-content h2 {
     margin-bottom: 1rem;
     font-size: 1.75rem;
+    color: #fbbf24; /* Golden text color for the heading */
 }
 
 .tutorial-content p {
     margin-bottom: 2rem;
     font-size: 1.25rem;
+    color: white; /* White text color for the paragraph */
 }
 
 .tutorial-content button {
@@ -37,11 +42,11 @@
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background: #1e3a8a;
-    color: white;
+    background: #fbbf24; /* Golden button background */
+    color: #1e3a8a; /* Dark blue text color for the button */
     transition: background 0.3s ease;
 }
 
 .tutorial-content button:hover {
-    background: #3b5998;
+    background: #ffd700; /* Lighter golden color on hover */
 }
