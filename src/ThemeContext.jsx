@@ -365,8 +365,8 @@ export const ThemeProvider = ({ children }) => {
         const parsedTheme = JSON.parse(savedTheme);
         setCurrentTheme(parsedTheme);
       } catch (error) {
-        console.error('Error parsing theme from localStorage:', error);
-        setCurrentTheme(themes.default);
+        const fallbackTheme = themes[savedTheme.toLowerCase()] || themes.default;
+        setCurrentTheme(fallbackTheme);
       }
     }
   }, []);
@@ -388,15 +388,16 @@ export const ThemeProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('Setting body background based on current theme:', currentTheme);
     const root = document.documentElement;
 
+    // Assume main color is defined as a CSS variable based on the current theme
     const mainColor = getComputedStyle(root)
       .getPropertyValue(`--${currentTheme.main.slice(3)}`)
       .trim();
 
-    const darkerColor = adjustBrightness(mainColor, -20);
+    const darkerColor = adjustBrightness(mainColor, -20); // Darken by 20%
 
+    // Update the body background with a gradient
     document.body.style.background = `linear-gradient(to bottom left, ${mainColor}, ${darkerColor})`;
   }, [currentTheme]);
 
