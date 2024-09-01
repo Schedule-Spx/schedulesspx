@@ -1,42 +1,33 @@
-.tutorial-modal {
+.vignette-overlay {
+    position: absolute;
+    background: radial-gradient(circle, transparent, black);
+    border-radius: 50%;
+    pointer-events: none; /* Ensure it doesn't block user interaction */
+    z-index: 999; /* Above everything else */
+    display: none; /* Hidden by default */
+  }
+  
+  .vignette-overlay.active {
+    display: block; /* Show only when active */
+  }
+  
+  .tutorial-modal {
     position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000;
-    pointer-events: none; /* Allow interactions with elements behind the modal */
-}
-
-.tutorial-content {
+    pointer-events: all;
+  }
+  
+  .tutorial-content {
     background: linear-gradient(to bottom right, #1e3a8a, #000000); /* Dark blue gradient background */
     padding: 2rem;
     border-radius: 10px;
     text-align: center;
-    width: 100%;
     border: 2px solid #fbbf24; /* Golden border */
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); /* Drop shadow */
     color: white; /* Text color */
-    pointer-events: all; /* Enable interactions with the tutorial modal itself */
-}
-
-.tutorial-content h2 {
-    margin-bottom: 1rem;
-    font-size: 1.75rem;
-    color: #fbbf24; /* Golden text color for the heading */
-}
-
-.tutorial-content p {
-    margin-bottom: 2rem;
-    font-size: 1.25rem;
-    color: white; /* White text color for the paragraph */
-}
-
-.tutorial-content button {
+  }
+  
+  .tutorial-content button {
     margin: 0.5rem;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -46,8 +37,5 @@
     background: #fbbf24; /* Golden button background */
     color: #1e3a8a; /* Dark blue text color for the button */
     transition: background 0.3s ease;
-}
-
-.tutorial-content button:hover {
-    background: #ffd700; /* Lighter golden color on hover */
-}
+  }
+  
