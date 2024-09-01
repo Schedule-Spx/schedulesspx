@@ -136,14 +136,14 @@ export const themes = {
     text: 'text-white',
     border: 'border-black'
   },
-  valentines: {
+  valentinesday: {
     name: "Valentine's Day",
     main: 'bg-pink-500',
     accent: 'bg-red-400',
     text: 'text-white',
     border: 'border-pink-300'
   },
-  stpatricks: {
+  stpatricksday: {
     name: "St. Patrick's Day",
     main: 'bg-green-600',
     accent: 'bg-yellow-400',
@@ -157,7 +157,7 @@ export const themes = {
     text: 'text-gray-800',
     border: 'border-pink-300'
   },
-  independence: {
+  independenceday: {
     name: 'Independence Day',
     main: 'bg-blue-700',
     accent: 'bg-red-600',
@@ -171,75 +171,19 @@ export const themes = {
     text: 'text-white',
     border: 'border-brown-400'
   },
+  laborday: {
+    name: 'Labor Day',
+    main: 'bg-blue-500',
+    accent: 'bg-red-500',
+    text: 'text-white',
+    border: 'border-white'
+  },
   stpiusx: {
     name: 'St. Pius X',
     main: 'bg-[#001F3F]', // Navy Blue
     accent: 'bg-[#B98827]', // Gold
     text: 'text-white',
     border: 'border-[#B98827]'
-  },
-  vatican: {
-    name: 'Vatican',
-    main: 'bg-yellow-300',
-    accent: 'bg-white',
-    text: 'text-gray-900',
-    border: 'border-yellow-400'
-  },
-  papal: {
-    name: 'Papal',
-    main: 'bg-white',
-    accent: 'bg-yellow-400',
-    text: 'text-gray-900',
-    border: 'border-yellow-500'
-  },
-  franciscan: {
-    name: 'Franciscan',
-    main: 'bg-brown-600',
-    accent: 'bg-gray-300',
-    text: 'text-white',
-    border: 'border-brown-400'
-  },
-  jesuit: {
-    name: 'Jesuit',
-    main: 'bg-black',
-    accent: 'bg-gray-700',
-    text: 'text-white',
-    border: 'border-gray-600'
-  },
-  benedictine: {
-    name: 'Benedictine',
-    main: 'bg-black',
-    accent: 'bg-red-700',
-    text: 'text-white',
-    border: 'border-red-600'
-  },
-  carmelite: {
-    name: 'Carmelite',
-    main: 'bg-brown-800',
-    accent: 'bg-white',
-    text: 'text-white',
-    border: 'border-brown-600'
-  },
-  dominican: {
-    name: 'Dominican',
-    main: 'bg-white',
-    accent: 'bg-black',
-    text: 'text-gray-900',
-    border: 'border-gray-400'
-  },
-  augustinian: {
-    name: 'Augustinian',
-    main: 'bg-black',
-    accent: 'bg-white',
-    text: 'text-white',
-    border: 'border-gray-300'
-  },
-  marian: {
-    name: 'Marian',
-    main: 'bg-blue-700',
-    accent: 'bg-white',
-    text: 'text-white',
-    border: 'border-blue-300'
   },
   popefrancis: {
     name: 'Pope Francis',
@@ -248,7 +192,7 @@ export const themes = {
     text: 'text-gray-900',
     border: 'border-yellow-500'
   },
-  popejohnpaul2: {
+  popejohnpaulii: {
     name: 'Pope John Paul II',
     main: 'bg-red-600',
     accent: 'bg-white',
@@ -269,68 +213,12 @@ export const themes = {
     text: 'text-white',
     border: 'border-yellow-500'
   },
-  popepius10: {
+  poepiusx: {
     name: 'Pope Pius X',
     main: 'bg-white',
     accent: 'bg-red-600',
     text: 'text-gray-900',
     border: 'border-red-500'
-  },
-  catholicchurch: {
-    name: 'Catholic Church',
-    main: 'bg-purple-700',
-    accent: 'bg-yellow-400',
-    text: 'text-white',
-    border: 'border-yellow-500'
-  },
-  holyspirit: {
-    name: 'Holy Spirit',
-    main: 'bg-red-500',
-    accent: 'bg-yellow-300',
-    text: 'text-white',
-    border: 'border-yellow-400'
-  },
-  eucharist: {
-    name: 'Eucharist',
-    main: 'bg-white',
-    accent: 'bg-yellow-500',
-    text: 'text-gray-900',
-    border: 'border-yellow-600'
-  },
-  rosary: {
-    name: 'Rosary',
-    main: 'bg-blue-600',
-    accent: 'bg-pink-300',
-    text: 'text-white',
-    border: 'border-pink-400'
-  },
-  advent: {
-    name: 'Advent',
-    main: 'bg-purple-600',
-    accent: 'bg-pink-400',
-    text: 'text-white',
-    border: 'border-pink-500'
-  },
-  lent: {
-    name: 'Lent',
-    main: 'bg-purple-800',
-    accent: 'bg-gray-400',
-    text: 'text-white',
-    border: 'border-gray-500'
-  },
-  holyweek: {
-    name: 'Holy Week',
-    main: 'bg-red-800',
-    accent: 'bg-purple-600',
-    text: 'text-white',
-    border: 'border-purple-500'
-  },
-  pentecost: {
-    name: 'Pentecost',
-    main: 'bg-red-600',
-    accent: 'bg-yellow-400',
-    text: 'text-white',
-    border: 'border-yellow-500'
   },
   allsaints: {
     name: 'All Saints',
@@ -352,14 +240,7 @@ export const themes = {
     accent: 'bg-yellow-300',
     text: 'text-white',
     border: 'border-yellow-400'
-  },
-  laborday: {
-    name: 'Labor Day',
-    main: 'bg-blue-700',
-    accent: 'bg-red-600',
-    text: 'text-white',
-    border: 'border-red-600',
-  },
+  }
 };
 
 export const ThemeProvider = ({ children }) => {
