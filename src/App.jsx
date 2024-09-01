@@ -27,7 +27,7 @@ function ThemedApp() {
   const [hasViewedDocs, setHasViewedDocs] = useState(false);
 
   const scheduleHeight = '400px';
-  const googleCalendarHeight = '150px';
+  const googleCalendarHeight = '300px';
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
