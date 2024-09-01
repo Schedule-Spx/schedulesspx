@@ -19,13 +19,16 @@ const Account = ({ user, weekSchedule }) => {
 
   const ThemePreview = ({ themeName, theme }) => (
     <div 
-      className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105`}
+      className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative`}
       onClick={() => handleThemeChange(themeName)}
     >
       <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
         <div className={`w-1/2 ${theme.accent}`}></div>
         <div className={`w-1/2 ${theme.main}`}></div>
+      </div>
+      <div className="absolute inset-x-0 bottom-0 bg-opacity-70 bg-black text-white text-center font-bold py-1">
+        {theme.name}
       </div>
     </div>
   );
@@ -55,12 +58,6 @@ const Account = ({ user, weekSchedule }) => {
             {Object.entries(themes).map(([themeName, theme]) => (
               <div key={themeName} className="flex flex-col items-center">
                 <ThemePreview themeName={themeName} theme={theme} />
-                <button
-                  onClick={() => handleThemeChange(themeName)}
-                  className={`mt-2 ${currentTheme.accent} ${currentTheme.text} font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full drop-shadow-md ${currentTheme.name === themeName ? `ring-2 ${currentTheme.border}` : ''}`}
-                >
-                  {theme.name}
-                </button>
               </div>
             ))}
           </div>
