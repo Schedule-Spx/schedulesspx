@@ -19,15 +19,15 @@ const Account = ({ user, weekSchedule }) => {
 
   const ThemePreview = ({ themeName, theme }) => (
     <div 
-      className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative`}
+      className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative flex items-center justify-center`}
       onClick={() => handleThemeChange(themeName)}
     >
-      <div className={`h-1/2 ${theme.main}`}></div>
-      <div className="h-1/2 flex">
-        <div className={`w-1/2 ${theme.accent}`}></div>
-        <div className={`w-1/2 ${theme.main}`}></div>
+      <div className={`absolute inset-0 h-1/2 ${theme.main} top-0`}></div>
+      <div className="absolute inset-0 h-1/2 flex">
+        <div className={`w-1/2 ${theme.accent} bottom-0`}></div>
+        <div className={`w-1/2 ${theme.main} bottom-0`}></div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 bg-opacity-70 bg-black text-white text-center font-bold py-1">
+      <div className="absolute inset-x-0 text-white text-center font-bold py-1 bg-opacity-70 bg-black">
         {theme.name}
       </div>
     </div>
