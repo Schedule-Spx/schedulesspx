@@ -16,7 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import LandingPage from './LandingPage'; // Import LandingPage
+import LandingPage from './LandingPage'; // Import the LandingPage component
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -63,10 +63,15 @@ function ThemedApp() {
         const data = await response.json();
         if (data.theme && data.theme.name) {
           changeTheme(data.theme.name.toLowerCase());
+        } else {
+          // Fallback to default theme if theme or theme name is not defined
+          changeTheme('default');
         }
       }
     } catch (error) {
       console.error('Error fetching user theme:', error);
+      // Fallback to default theme in case of an error
+      changeTheme('default');
     }
   };
 
@@ -110,43 +115,16 @@ function ThemedApp() {
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
-      {location.pathname === '/' && <div className="gradient-overlay" />}
-      {location.pathname !== '/' && <NavBar user={user} setUser={updateUser} />}
-      {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
-        <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
-      )}
       <Routes>
-        <Route 
-          path="/admin" 
-          element={
-            <div className="flex flex-col">
-              <Admin 
-                user={user} 
-                weekSchedule={weekSchedule} 
-                setWeekSchedule={setWeekSchedule} 
-                fetchSchedule={fetchSchedule} 
-              />
-            </div>
-          } 
-        />
-        <Route 
-          path="/account" 
-          element={
-            <div className="flex flex-col h-[calc(100vh-64px)]">
-              <Account 
-                user={user} 
-                weekSchedule={weekSchedule}
-              />
-            </div>
-          } 
-        />
-        <Route path="/about" element={<About />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsAndConditions />} />
         <Route
-          path="/main"
+          path="/"
+          element={<LandingPage user={user} updateUser={updateUser} />} // Landing Page Route
+        />
+        <Route 
+          path="/main" 
           element={
-            user ? (
+            <>
+              <NavBar user={user} setUser={updateUser} />
               <main className="p-4 flex flex-col space-y-4 content-wrapper">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="flex flex-col space-y-4">
@@ -174,21 +152,36 @@ function ThemedApp() {
                 </div>
                 <div className="h-16"></div> {/* Extra space at the bottom */}
               </main>
-            ) : (
-              <div className="main-blur-overlay">
-                <p>
-                  You must <a href="/" className="login-link">log in with Google</a> to view this page.
-                </p>
-              </div>
-            )
+            </>
           }
         />
-        <Route
-          path="/"
+        <Route 
+          path="/admin" 
           element={
-            <LandingPage onLoginSuccess={updateUser} />
-          }
+            <div className="flex flex-col">
+              <Admin 
+                user={user} 
+                weekSchedule={weekSchedule} 
+                setWeekSchedule={setWeekSchedule} 
+                fetchSchedule={fetchSchedule} 
+              />
+            </div>
+          } 
         />
+        <Route 
+          path="/account" 
+          element={
+            <div className="flex flex-col h-[calc(100vh-64px)]">
+              <Account 
+                user={user} 
+                weekSchedule={weekSchedule}
+              />
+            </div>
+          } 
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
       </Routes>
     </div>
   );
