@@ -62,39 +62,40 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  if (loading) return <div className={`p-4 ${currentTheme.text} text-center`}>Loading events...</div>;
-  if (error) return <div className={`p-4 ${currentTheme.text} text-center`}>Error: {error}</div>;
-  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center`}>No upcoming events</div>;
-
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}>
-      {/* Gradient Overlay */}
-      <div 
-        className="absolute inset-0 rounded-lg"
-        style={{
-          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
-          zIndex: 0
-        }}
-      ></div>
-      <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4 text-center`}>Upcoming Events</h2>
-        {Object.entries(events).map(([date, dayEvents]) => (
-          <div key={date} className="mb-4">
-            <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2 text-center`}>{formatDate(date)}</h3>
-            <ul className="space-y-2">
-              {dayEvents.map((event) => (
-                <li key={event.id} className={`${currentTheme.accent} p-2 rounded shadow`}>
-                  <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
-                  {event.start.dateTime && (
-                    <div className={`text-sm ${currentTheme.text} opacity-80`}>
-                      {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
+      <div className="p-4 flex flex-col h-full">
+        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
+        <div className="overflow-y-auto flex-grow">
+          {loading ? (
+            <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
+          ) : error ? (
+            <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
+          ) : Object.keys(events).length === 0 ? (
+            <div className={currentTheme.text}>No upcoming events</div>
+          ) : (
+            Object.entries(events).map(([date, dayEvents]) => (
+              <div key={date} className="mb-4">
+                <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2`}>{formatDate(date)}</h3>
+                <ul className="space-y-2">
+                  {dayEvents.map((event) => (
+                    <li 
+                      key={event.id} 
+                      className={`${currentTheme.accent} p-2 rounded shadow transition-all duration-300 ease-in-out`}
+                    >
+                      <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
+                      {event.start.dateTime && (
+                        <div className={`text-sm ${currentTheme.text} opacity-80`}>
+                          {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
