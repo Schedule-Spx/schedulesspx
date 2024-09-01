@@ -14,7 +14,7 @@ const TutorialModal = ({ closeTutorial }) => {
 
   // Define position, scale, and vignette settings for each step using your manually set properties
   const steps = [
-    { top: '40%', left: '50%', transform: 'translateX(-50%)', scale: 1, vignette: { radius: '2000px', opacity: 1, positionX: '50%', positionY: '40%' } },
+    { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', scale: 1, vignette: { radius: '2000px', opacity: 1, positionX: '50%', positionY: '40%' } },
     { top: '50%', left: '50%', transform: 'none', scale: 1.2, vignette: { radius: '3000px', opacity: 1, positionX: '50%', positionY: '10%' } },
     { top: '64%', left: '20%', transform: 'translateX(-50%)', scale: 0.75, vignette: { radius: '3000px', opacity: 1, positionX: '20%', positionY: '54%' } },
     { top: '70%', left: '80%', transform: 'translateX(-40%)', scale: 0.8, vignette: { radius: '3000px', opacity: 1, positionX: '80%', positionY: '60%' } },
@@ -41,7 +41,7 @@ const TutorialModal = ({ closeTutorial }) => {
       ))}
 
       <div
-        className={`tutorial-modal ${step === 1 ? 'scale-in' : ''}`} // Apply the scale-in animation only for step 1
+        className={`tutorial-modal ${step === 1 ? 'scale-in' : ''}`}
         style={{
           top: currentStep.top,
           left: currentStep.left,
