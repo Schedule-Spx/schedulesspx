@@ -16,7 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import LandingPage from './LandingPage'; // Import the LandingPage component
+import LandingPage from './LandingPage'; // New LandingPage import
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -63,15 +63,10 @@ function ThemedApp() {
         const data = await response.json();
         if (data.theme && data.theme.name) {
           changeTheme(data.theme.name.toLowerCase());
-        } else {
-          // Fallback to default theme if theme or theme name is not defined
-          changeTheme('default');
         }
       }
     } catch (error) {
       console.error('Error fetching user theme:', error);
-      // Fallback to default theme in case of an error
-      changeTheme('default');
     }
   };
 
@@ -113,46 +108,60 @@ function ThemedApp() {
     navigate(path);
   };
 
+  useEffect(() => {
+    if (user && location.pathname === '/') {
+      navigate('/main');
+    }
+  }, [user, location, navigate]);
+
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
+      {location.pathname === '/' && <div className="gradient-overlay" />}
+      {location.pathname !== '/' && <NavBar user={user} setUser={updateUser} />}
+      {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
+        <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
+      )}
       <Routes>
-        <Route
-          path="/"
-          element={<LandingPage user={user} updateUser={updateUser} />} // Landing Page Route
+        <Route 
+          path="/" 
+          element={
+            user ? (
+              navigate('/main')
+            ) : (
+              <LandingPage setUser={updateUser} />
+            )
+          }
         />
         <Route 
           path="/main" 
           element={
-            <>
-              <NavBar user={user} setUser={updateUser} />
-              <main className="p-4 flex flex-col space-y-4 content-wrapper">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex flex-col space-y-4">
-                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
-                      <DayHeader />
-                    </div>
-                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
-                      <QuickLinks />
-                    </div>
+            <main className="p-4 flex flex-col space-y-4 content-wrapper">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
+                    <DayHeader />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
-                    <Schedule weekSchedule={weekSchedule} />
-                  </div>
-                  <div className="flex flex-col space-y-4">
-                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
-                      <GoogleCalendar />
-                    </div>
-                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
-                      <GoogleSuiteLinks />
-                    </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
+                    <QuickLinks />
                   </div>
                 </div>
-                <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
-                  <PeriodProgress weekSchedule={weekSchedule} />
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
+                  <Schedule weekSchedule={weekSchedule} />
                 </div>
-                <div className="h-16"></div> {/* Extra space at the bottom */}
-              </main>
-            </>
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
+                    <GoogleCalendar />
+                  </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
+                    <GoogleSuiteLinks />
+                  </div>
+                </div>
+              </div>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
+                <PeriodProgress weekSchedule={weekSchedule} />
+              </div>
+              <div className="h-16"></div> {/* Extra space at the bottom */}
+            </main>
           }
         />
         <Route 
