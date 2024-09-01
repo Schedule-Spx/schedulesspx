@@ -12,25 +12,25 @@ const TutorialModal = ({ closeTutorial }) => {
     closeTutorial();
   };
 
-  // Define position variables for each step, including a default position
-  const positions = [
-    { top: '10%', left: '50%', transform: 'translateX(-50%)' },
-    { top: '50%', left: '33%', transform: 'none' },
-    { top: '64%', left: '20%', transform: 'translateX(-50%)' },
-    { top: '20%', left: '80%', transform: 'translateX(-50%)' },
-    { top: '5%', left: '60%', transform: 'translateX(-50%)' },
+  // Define position and scale variables for each step
+  const steps = [
+    { top: '00%', left: '50%', transform: 'translateX(-50%)', scale: 1 },
+    { top: '50%', left: '50%', transform: 'none', scale: 1.2 },
+    { top: '64%', left: '20%', transform: 'translateX(-50%)', scale: 0.75 },
+    { top: '70%', left: '80%', transform: 'translateX(-50%)', scale: 0.8 },
+    { top: '6%', left: '85%', transform: 'translateX(-50%)', scale: 0.7 },
   ];
 
-  // Use a default position if the step exceeds the defined positions
-  const currentPosition = positions[step - 1] || { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+  // Use a default step if the step exceeds the defined steps
+  const currentStep = steps[step - 1] || { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', scale: 1 };
 
   return (
     <div
       className="tutorial-modal"
       style={{
-        top: currentPosition.top,
-        left: currentPosition.left,
-        transform: currentPosition.transform,
+        top: currentStep.top,
+        left: currentStep.left,
+        transform: `${currentStep.transform} scale(${currentStep.scale})`,
       }}
     >
       {step === 1 && (
