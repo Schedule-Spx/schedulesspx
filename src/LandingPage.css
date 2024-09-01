@@ -11,10 +11,10 @@
 
 .background-image-container {
     position: absolute;
-    top: -50%; /* Move the image higher to keep the bottom out of view */
+    top: -20%; /* Slightly higher initial position */
     left: 0;
-    width: 800%; /* Scale up by 200% */
-    height: 200%; /* Scale up by 200% */
+    width: 300%; /* Slightly scaled-down width */
+    height: 150%; /* Slightly scaled-down height */
     background-image: url('./assets/splashscreengraphic.png');
     background-size: cover;
     background-repeat: repeat-x; /* Repeat the background only horizontally */
