@@ -30,6 +30,9 @@ function ThemedApp() {
   const googleCalendarHeight = '300px';
 
   useEffect(() => {
+    console.log('Current Theme:', currentTheme); // Debug log
+    console.log('Current Path:', location.pathname); // Debug log
+
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
     if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
