@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
-import GoogleCalendar from './components/GoogleCalendar'; 
+import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
@@ -16,7 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import LandingPage from './LandingPage'; // Import LandingPage component
+import LandingPage from './LandingPage';
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();

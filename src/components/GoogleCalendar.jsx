@@ -27,7 +27,6 @@ const GoogleCalendar = () => {
           }
         );
         
-        // Group events by date, adjusting for timezone
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
@@ -67,6 +66,8 @@ const GoogleCalendar = () => {
     return events.filter(event => event.summary !== '8:00 am Start');
   };
 
+  console.log('Current Theme:', currentTheme); // Debugging line
+
   if (loading) return <div className={`p-4 ${currentTheme.text} text-center`}>Loading events...</div>;
   if (error) return <div className={`p-4 ${currentTheme.text} text-center`}>Error: {error}</div>;
   if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center`}>No upcoming events</div>;
@@ -74,7 +75,7 @@ const GoogleCalendar = () => {
   return (
     <div 
       className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}
-      style={{ marginBottom: '0px', paddingBottom: '0px', borderBottomWidth: '4px' }} // Adjusted bottom padding and border width
+      style={{ marginBottom: '0px', paddingBottom: '0px', borderBottomWidth: '4px' }}
     >
       {/* Gradient Overlay */}
       <div 
@@ -87,7 +88,7 @@ const GoogleCalendar = () => {
       ></div>
       <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
         {Object.entries(events).map(([date, dayEvents]) => {
-          const filteredEvents = filterEvents(dayEvents); // Filter the events
+          const filteredEvents = filterEvents(dayEvents);
           return (
             <div key={date} className="mb-4">
               {filteredEvents.length > 0 && (
@@ -97,7 +98,7 @@ const GoogleCalendar = () => {
                     {filteredEvents.map((event) => (
                       <li 
                         key={event.id} 
-                        className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`} // Added scale effect on hover
+                        className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
                         onClick={() => window.open(event.htmlLink, '_blank')}
                       >
                         <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>

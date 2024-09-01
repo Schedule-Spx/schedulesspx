@@ -1,3 +1,4 @@
+// ThemeContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext();
@@ -38,7 +39,90 @@ export const themes = {
     text: 'text-white',
     border: 'border-blue-500'
   },
-  // Holiday themes
+  sunset: {
+    name: 'Sunset',
+    main: 'bg-orange-600',
+    accent: 'bg-yellow-400',
+    text: 'text-white',
+    border: 'border-red-400'
+  },
+  lavender: {
+    name: 'Lavender',
+    main: 'bg-purple-400',
+    accent: 'bg-purple-200',
+    text: 'text-gray-800',
+    border: 'border-purple-300'
+  },
+  mint: {
+    name: 'Mint',
+    main: 'bg-green-400',
+    accent: 'bg-green-200',
+    text: 'text-gray-800',
+    border: 'border-green-300'
+  },
+  cherry: {
+    name: 'Cherry',
+    main: 'bg-red-600',
+    accent: 'bg-pink-300',
+    text: 'text-white',
+    border: 'border-red-400'
+  },
+  coffee: {
+    name: 'Coffee',
+    main: 'bg-yellow-900',
+    accent: 'bg-yellow-600',
+    text: 'text-white',
+    border: 'border-yellow-700'
+  },
+  skyblue: {
+    name: 'Sky Blue',
+    main: 'bg-blue-400',
+    accent: 'bg-blue-200',
+    text: 'text-gray-800',
+    border: 'border-blue-300'
+  },
+  coral: {
+    name: 'Coral',
+    main: 'bg-red-400',
+    accent: 'bg-orange-300',
+    text: 'text-white',
+    border: 'border-red-300'
+  },
+  emerald: {
+    name: 'Emerald',
+    main: 'bg-green-600',
+    accent: 'bg-green-400',
+    text: 'text-white',
+    border: 'border-green-500'
+  },
+  amethyst: {
+    name: 'Amethyst',
+    main: 'bg-purple-600',
+    accent: 'bg-purple-400',
+    text: 'text-white',
+    border: 'border-purple-500'
+  },
+  golden: {
+    name: 'Golden',
+    main: 'bg-yellow-600',
+    accent: 'bg-yellow-400',
+    text: 'text-gray-900',
+    border: 'border-yellow-500'
+  },
+  silver: {
+    name: 'Silver',
+    main: 'bg-gray-300',
+    accent: 'bg-gray-200',
+    text: 'text-gray-800',
+    border: 'border-gray-400'
+  },
+  bronze: {
+    name: 'Bronze',
+    main: 'bg-yellow-800',
+    accent: 'bg-yellow-700',
+    text: 'text-white',
+    border: 'border-yellow-600'
+  },
   christmas: {
     name: 'Christmas',
     main: 'bg-red-700',
@@ -87,6 +171,188 @@ export const themes = {
     accent: 'bg-yellow-600',
     text: 'text-white',
     border: 'border-brown-400'
+  },
+  stpiusx: {
+    name: 'St. Pius X',
+    main: 'bg-[#001F3F]', // Navy Blue
+    accent: 'bg-[#B98827]', // Gold
+    text: 'text-white',
+    border: 'border-[#B98827]'
+  },
+  vatican: {
+    name: 'Vatican',
+    main: 'bg-yellow-300',
+    accent: 'bg-white',
+    text: 'text-gray-900',
+    border: 'border-yellow-400'
+  },
+  papal: {
+    name: 'Papal',
+    main: 'bg-white',
+    accent: 'bg-yellow-400',
+    text: 'text-gray-900',
+    border: 'border-yellow-500'
+  },
+  franciscan: {
+    name: 'Franciscan',
+    main: 'bg-brown-600',
+    accent: 'bg-gray-300',
+    text: 'text-white',
+    border: 'border-brown-400'
+  },
+  jesuit: {
+    name: 'Jesuit',
+    main: 'bg-black',
+    accent: 'bg-gray-700',
+    text: 'text-white',
+    border: 'border-gray-600'
+  },
+  benedictine: {
+    name: 'Benedictine',
+    main: 'bg-black',
+    accent: 'bg-red-700',
+    text: 'text-white',
+    border: 'border-red-600'
+  },
+  carmelite: {
+    name: 'Carmelite',
+    main: 'bg-brown-800',
+    accent: 'bg-white',
+    text: 'text-white',
+    border: 'border-brown-600'
+  },
+  dominican: {
+    name: 'Dominican',
+    main: 'bg-white',
+    accent: 'bg-black',
+    text: 'text-gray-900',
+    border: 'border-gray-400'
+  },
+  augustinian: {
+    name: 'Augustinian',
+    main: 'bg-black',
+    accent: 'bg-white',
+    text: 'text-white',
+    border: 'border-gray-300'
+  },
+  marian: {
+    name: 'Marian',
+    main: 'bg-blue-700',
+    accent: 'bg-white',
+    text: 'text-white',
+    border: 'border-blue-300'
+  },
+  popefrancis: {
+    name: 'Pope Francis',
+    main: 'bg-white',
+    accent: 'bg-yellow-400',
+    text: 'text-gray-900',
+    border: 'border-yellow-500'
+  },
+  popejohnpaul2: {
+    name: 'Pope John Paul II',
+    main: 'bg-red-600',
+    accent: 'bg-white',
+    text: 'text-white',
+    border: 'border-yellow-400'
+  },
+  popebenedictxvi: {
+    name: 'Pope Benedict XVI',
+    main: 'bg-red-700',
+    accent: 'bg-yellow-400',
+    text: 'text-white',
+    border: 'border-yellow-500'
+  },
+  popeleoxiii: {
+    name: 'Pope Leo XIII',
+    main: 'bg-blue-800',
+    accent: 'bg-yellow-400',
+    text: 'text-white',
+    border: 'border-yellow-500'
+  },
+  popepius10: {
+    name: 'Pope Pius X',
+    main: 'bg-white',
+    accent: 'bg-red-600',
+    text: 'text-gray-900',
+    border: 'border-red-500'
+  },
+  catholicchurch: {
+    name: 'Catholic Church',
+    main: 'bg-purple-700',
+    accent: 'bg-yellow-400',
+    text: 'text-white',
+    border: 'border-yellow-500'
+  },
+  holyspirit: {
+    name: 'Holy Spirit',
+    main: 'bg-red-500',
+    accent: 'bg-yellow-300',
+    text: 'text-white',
+    border: 'border-yellow-400'
+  },
+  eucharist: {
+    name: 'Eucharist',
+    main: 'bg-white',
+    accent: 'bg-yellow-500',
+    text: 'text-gray-900',
+    border: 'border-yellow-600'
+  },
+  rosary: {
+    name: 'Rosary',
+    main: 'bg-blue-600',
+    accent: 'bg-pink-300',
+    text: 'text-white',
+    border: 'border-pink-400'
+  },
+  advent: {
+    name: 'Advent',
+    main: 'bg-purple-600',
+    accent: 'bg-pink-400',
+    text: 'text-white',
+    border: 'border-pink-500'
+  },
+  lent: {
+    name: 'Lent',
+    main: 'bg-purple-800',
+    accent: 'bg-gray-400',
+    text: 'text-white',
+    border: 'border-gray-500'
+  },
+  holyweek: {
+    name: 'Holy Week',
+    main: 'bg-red-800',
+    accent: 'bg-purple-600',
+    text: 'text-white',
+    border: 'border-purple-500'
+  },
+  pentecost: {
+    name: 'Pentecost',
+    main: 'bg-red-600',
+    accent: 'bg-yellow-400',
+    text: 'text-white',
+    border: 'border-yellow-500'
+  },
+  allsaints: {
+    name: 'All Saints',
+    main: 'bg-yellow-300',
+    accent: 'bg-white',
+    text: 'text-gray-900',
+    border: 'border-yellow-400'
+  },
+  immaculateconception: {
+    name: 'Immaculate Conception',
+    main: 'bg-blue-500',
+    accent: 'bg-white',
+    text: 'text-white',
+    border: 'border-blue-300'
+  },
+  sacredheart: {
+    name: 'Sacred Heart',
+    main: 'bg-red-700',
+    accent: 'bg-yellow-300',
+    text: 'text-white',
+    border: 'border-yellow-400'
   }
 };
 
@@ -127,7 +393,7 @@ export const ThemeProvider = ({ children }) => {
 
     // Assume main color is defined as a CSS variable based on the current theme
     const mainColor = getComputedStyle(root)
-      .getPropertyValue(`--${currentTheme.main}`)
+      .getPropertyValue(`--${currentTheme.main.slice(3)}`)
       .trim();
 
     const darkerColor = adjustBrightness(mainColor, -20); // Darken by 20%
@@ -143,13 +409,8 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('theme', JSON.stringify(newTheme));
   };
 
-  const setCustomTheme = (customTheme) => {
-    setCurrentTheme(customTheme);
-    localStorage.setItem('theme', JSON.stringify(customTheme));
-  };
-
   return (
-    <ThemeContext.Provider value={{ currentTheme, changeTheme, setCustomTheme }}>
+    <ThemeContext.Provider value={{ currentTheme, changeTheme, themes }}>
       {children}
     </ThemeContext.Provider>
   );
