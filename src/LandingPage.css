@@ -1,0 +1,46 @@
+.landing-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(to right, #3a7bd5, #3a6073); /* Blue gradient */
+  }
+  
+  .landing-page-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .landing-page-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .google-sign-in-button {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .learn-more-button {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+  }
+  
+  .learn-more-button:hover {
+    background-color: #f0f0f0;
+  }
+  

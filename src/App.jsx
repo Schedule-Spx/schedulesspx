@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
-import GoogleCalendar from './components/GoogleCalendar'; 
+import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
@@ -16,6 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
+import LandingPage from './LandingPage';  // Import the new LandingPage component
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -106,6 +107,10 @@ function ThemedApp() {
     setHasViewedDocs(true);
     navigate(path);
   };
+
+  if (!user) {
+    return <LandingPage setUser={setUser} />;
+  }
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
