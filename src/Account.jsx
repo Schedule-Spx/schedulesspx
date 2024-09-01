@@ -9,21 +9,19 @@ const Account = ({ user, weekSchedule }) => {
   const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
 
   const themeCategories = {
-    'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],  // Updated "Labor Day" to "LaborDay"
+    'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],  // Removed spaces from theme names
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
     'Holiday Themes': ['Christmas', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
     'Saint Themes': ['StPiusX', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],
   };
 
   useEffect(() => {
-    // Set Featured Themes as default
     setFilteredThemes('Featured Themes');
   }, []);
 
   const handleThemeChange = (themeName) => {
-    const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
-    if (themes[normalizedThemeName]) {
-      changeTheme(normalizedThemeName);
+    if (themes[themeName.toLowerCase()]) {
+      changeTheme(themeName.toLowerCase());
     } else {
       console.error(`Attempted to change to undefined theme: ${themeName}`);
     }
@@ -36,8 +34,7 @@ const Account = ({ user, weekSchedule }) => {
   const renderThemes = () => {
     const themesToRender = filteredThemes === 'Show All' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
     return themesToRender.map((themeName) => {
-      const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
-      const theme = themes[normalizedThemeName];
+      const theme = themes[themeName.toLowerCase()];
       if (!theme) {
         console.error(`Theme not found: ${themeName}`);
         return null;
@@ -55,7 +52,6 @@ const Account = ({ user, weekSchedule }) => {
       console.error(`Attempted to render undefined theme: ${themeName}`);
       return null;
     }
-    const normalizedThemeName = themeName.replace(/\s+/g, '').toLowerCase();
     return (
       <div
         className={`w-full h-24 rounded-lg overflow-hidden shadow-md border-2 ${theme.accent} cursor-pointer transition-transform duration-200 hover:scale-105 relative flex items-center justify-center`}
@@ -68,7 +64,7 @@ const Account = ({ user, weekSchedule }) => {
         </div>
         <div
           className={`absolute px-2 py-1 text-center font-bold bg-opacity-70 bg-black rounded ${
-            currentTheme.name.toLowerCase() === normalizedThemeName ? 'text-green-500' : 'text-white'
+            currentTheme.name.toLowerCase() === themeName.toLowerCase() ? 'text-green-500' : 'text-white'
           }`}
         >
           {theme.name}
