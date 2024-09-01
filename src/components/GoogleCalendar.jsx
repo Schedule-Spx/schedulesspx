@@ -27,7 +27,6 @@ const GoogleCalendar = () => {
           }
         );
         
-        // Group events by date, adjusting for timezone
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
@@ -62,30 +61,32 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
+  console.log('Current Theme:', currentTheme); // Debugging line
+
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} flex flex-col h-full`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full border-2 border-gray-200 dark:border-gray-700 flex flex-col h-full`}>
       <div className="p-4 flex flex-col h-full">
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-4`}>Upcoming Events</h2>
+        <h2 className={`text-xl font-bold text-gray-800 dark:text-white mb-4`}>Upcoming Events</h2>
         <div className="overflow-y-auto flex-grow">
           {loading ? (
-            <div className={`${currentTheme.text} animate-pulse`}>Loading events...</div>
+            <div className={`text-gray-800 dark:text-white animate-pulse`}>Loading events...</div>
           ) : error ? (
-            <div className={`${currentTheme.text} text-red-500`}>Error: {error}</div>
+            <div className={`text-red-500`}>Error: {error}</div>
           ) : Object.keys(events).length === 0 ? (
-            <div className={currentTheme.text}>No upcoming events</div>
+            <div className={`text-gray-800 dark:text-white`}>No upcoming events</div>
           ) : (
             Object.entries(events).map(([date, dayEvents]) => (
               <div key={date} className="mb-4">
-                <h3 className={`text-lg font-semibold ${currentTheme.text} mb-2`}>{formatDate(date)}</h3>
+                <h3 className={`text-lg font-semibold text-gray-800 dark:text-white mb-2`}>{formatDate(date)}</h3>
                 <ul className="space-y-2">
                   {dayEvents.map((event) => (
                     <li 
                       key={event.id} 
-                      className={`${currentTheme.accent} p-2 rounded shadow transition-all duration-300 ease-in-out`}
+                      className={`bg-gray-100 dark:bg-gray-700 p-2 rounded shadow transition-all duration-300 ease-in-out`}
                     >
-                      <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
+                      <div className={`font-semibold text-gray-800 dark:text-white`}>{event.summary}</div>
                       {event.start.dateTime && (
-                        <div className={`text-sm ${currentTheme.text} opacity-80`}>
+                        <div className={`text-sm text-gray-600 dark:text-gray-300`}>
                           {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
                         </div>
                       )}
