@@ -352,15 +352,16 @@ export const themes = {
     accent: 'bg-yellow-300',
     text: 'text-white',
     border: 'border-yellow-400'
-  }
+  },
 
   laborDay: {
     name: 'Labor Day',
-    main: 'bg-blue-700',    // A dark blue background
-    accent: 'bg-red-600',   // A red accent
-    text: 'text-white',     // White text
-    border: 'border-red-600', // Red border
+    main: 'bg-blue-700',
+    accent: 'bg-red-600',
+    text: 'text-white',
+    border: 'border-red-600', // Make sure there's a comma here
   },
+  
   
 };
 
