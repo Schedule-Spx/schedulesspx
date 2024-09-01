@@ -113,7 +113,7 @@ function ThemedApp() {
       <Routes>
         <Route 
           path="/" 
-          element={<LandingPage />} 
+          element={<LandingPage user={user} setUser={updateUser} />} 
         />
         <Route 
           path="/admin" 
