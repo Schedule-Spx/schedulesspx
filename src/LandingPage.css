@@ -4,24 +4,27 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Blueish-black gradient */
+    background: linear-gradient(to bottom right, #1e3a8a, #000000); /* Darkened blueish-black gradient */
+    background-attachment: fixed;
+    background-size: 200%;
     text-align: center;
     overflow: hidden; /* Prevent content overflow */
 }
 
 .landing-title {
-    font-size: 4.5rem;
+    font-size: 4rem; /* Decreased heading size */
+    font-weight: 700;
     color: white;
-    margin-bottom: 1rem;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    margin-bottom: 3rem; /* Increased margin for better spacing */
+    text-shadow: none; /* Removed glow */
     animation: fadeIn 2s ease-in-out;
 }
 
 .landing-subtitle {
-    font-size: 2rem;
-    color: white;
-    margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 1.75rem;
+    color: #c0c0c0; /* Darkened color */
+    margin-bottom: 2.5rem; /* Increased margin for better spacing */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Darker shadow */
     animation: fadeIn 2s ease-in-out;
     animation-delay: 0.5s;
     opacity: 0;
@@ -30,9 +33,9 @@
 
 .landing-body {
     font-size: 1.5rem;
-    color: white;
-    margin-bottom: 3rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    color: #c0c0c0; /* Darkened color */
+    margin-bottom: 3.5rem; /* Increased margin for better spacing */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Darker shadow */
     animation: fadeIn 2s ease-in-out;
     animation-delay: 1s;
     opacity: 0;
@@ -43,6 +46,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    animation: fadeIn 2s ease-in-out;
+    animation-delay: 1.5s; /* Animate the sign-in button */
+    opacity: 0;
+    animation-fill-mode: forwards;
 }
 
 .landing-buttons button {
