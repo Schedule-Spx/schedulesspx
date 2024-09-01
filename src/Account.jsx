@@ -1,25 +1,10 @@
 // Account.jsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
-import { ChromePicker } from 'react-color';
 
 const Account = ({ user, weekSchedule }) => {
-  const { currentTheme, changeTheme, setCustomTheme, themes } = useTheme();
-  const [customMain, setCustomMain] = useState('#001F3F');
-  const [customAccent, setCustomAccent] = useState('#B98827');
-  const [customText, setCustomText] = useState('#FFFFFF');
-  const [showMainPicker, setShowMainPicker] = useState(false);
-  const [showAccentPicker, setShowAccentPicker] = useState(false);
-  const [showTextPicker, setShowTextPicker] = useState(false);
-
-  useEffect(() => {
-    if (currentTheme.name === 'Custom') {
-      setCustomMain(currentTheme.main);
-      setCustomAccent(currentTheme.accent);
-      setCustomText(currentTheme.text);
-    }
-  }, [currentTheme]);
+  const { currentTheme, changeTheme, themes } = useTheme();
 
   if (!user) {
     return (
@@ -31,17 +16,6 @@ const Account = ({ user, weekSchedule }) => {
 
   const handleThemeChange = (themeName) => {
     changeTheme(themeName);
-  };
-
-  const handleCustomTheme = () => {
-    const customTheme = {
-      name: 'Custom',
-      main: customMain,
-      accent: customAccent,
-      text: customText,
-      border: customAccent
-    };
-    setCustomTheme(customTheme);
   };
 
   const ThemePreview = ({ theme }) => (
@@ -87,24 +61,6 @@ const Account = ({ user, weekSchedule }) => {
                 </button>
               </div>
             ))}
-          </div>
-          
-          {/* Custom Theme section */}
-          <div className="mt-6">
-            <h3 className="text-lg font-bold mb-4">Custom Theme</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-              {/* Color pickers */}
-              {/* ... (color picker code remains the same) */}
-            </div>
-            <div className="mt-4">
-              <ThemePreview theme={{ main: `bg-[${customMain}]`, accent: `bg-[${customAccent}]`, text: `text-[${customText}]` }} />
-            </div>
-            <button
-              onClick={handleCustomTheme}
-              className={`mt-4 bg-[#B98827] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto ${currentTheme.name === 'Custom' ? 'ring-2 ring-white' : ''}`}
-            >
-              Apply Custom Theme
-            </button>
           </div>
         </div>
 
