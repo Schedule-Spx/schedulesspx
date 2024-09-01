@@ -14,15 +14,14 @@ const Account = ({ user, weekSchedule }) => {
 
   if (!user) {
     return (
-      <div className="container mx-auto mt-8 p-4 bg-[#001F3F] text-white">
+      <div className="container mx-auto mt-8 p-4 bg-stpius-blue text-stpius-white">
         <p className="text-center text-xl">Please log in to view your account information.</p>
       </div>
     );
   }
 
   const handleThemeChange = async (themeName) => {
-    changeTheme(themeName.toLowerCase());
-    await saveUserTheme(user.email, themes[themeName.toLowerCase()]);
+    changeTheme(themeName);
   };
 
   const handleCustomTheme = async () => {
@@ -34,32 +33,14 @@ const Account = ({ user, weekSchedule }) => {
       border: customAccent
     };
     setCustomTheme(customTheme);
-    await saveUserTheme(user.email, customTheme);
-  };
-
-  const saveUserTheme = async (email, theme) => {
-    try {
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/user-theme', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, theme }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to save theme');
-      }
-    } catch (error) {
-      console.error('Error saving theme:', error);
-    }
   };
 
   const ThemePreview = ({ theme }) => (
     <div className="w-full h-24 rounded-lg overflow-hidden shadow-md">
-      <div className="h-1/2" style={{ backgroundColor: theme.main }}></div>
+      <div className={`h-1/2 ${theme.main}`}></div>
       <div className="h-1/2 flex">
-        <div className="w-1/2" style={{ backgroundColor: theme.accent }}></div>
-        <div className="w-1/2 flex items-center justify-center" style={{ backgroundColor: theme.main, color: theme.text }}>
+        <div className={`w-1/2 ${theme.accent}`}></div>
+        <div className={`w-1/2 flex items-center justify-center ${theme.main} ${theme.text}`}>
           <span className="text-xs">Text</span>
         </div>
       </div>
@@ -67,23 +48,23 @@ const Account = ({ user, weekSchedule }) => {
   );
 
   return (
-    <div className="min-h-screen bg-[#001F3F] text-white p-4 overflow-y-auto">
+    <div className="min-h-screen bg-stpius-blue text-stpius-white p-4 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-[#002855] border border-[#B98827] rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-gray-900 border border-stpius-gold rounded-lg shadow-lg p-6 mb-8">
           <h1 className="text-2xl font-bold mb-6 text-center">Account Information</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2">Name</label>
-              <p className="bg-[#001F3F] p-2 rounded">{user.name}</p>
+              <p className="bg-stpius-blue p-2 rounded">{user.name}</p>
             </div>
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2">Email</label>
-              <p className="bg-[#001F3F] p-2 rounded">{user.email}</p>
+              <p className="bg-stpius-blue p-2 rounded">{user.email}</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-[#002855] border border-[#B98827] rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-gray-900 border border-stpius-gold rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-xl font-bold mb-4">Theme Customization</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
             {Object.entries(themes).map(([themeName, theme]) => (
@@ -91,7 +72,7 @@ const Account = ({ user, weekSchedule }) => {
                 <ThemePreview theme={theme} />
                 <button
                   onClick={() => handleThemeChange(themeName)}
-                  className="mt-2 bg-[#001F3F] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full"
+                  className="mt-2 bg-stpius-blue text-stpius-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full"
                 >
                   {theme.name}
                 </button>
@@ -157,29 +138,29 @@ const Account = ({ user, weekSchedule }) => {
               </div>
             </div>
             <div className="mt-4">
-              <ThemePreview theme={{ main: customMain, accent: customAccent, text: customText }} />
+              <ThemePreview theme={{ main: `bg-[${customMain}]`, accent: `bg-[${customAccent}]`, text: `text-[${customText}]` }} />
             </div>
             <button
               onClick={handleCustomTheme}
-              className="mt-4 bg-[#B98827] text-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto"
+              className="mt-4 bg-stpius-gold text-stpius-white font-bold py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200 w-full sm:w-auto"
             >
               Apply Custom Theme
             </button>
           </div>
         </div>
 
-        <div className="bg-[#002855] border border-[#B98827] rounded-lg shadow-lg p-6">
+        <div className="bg-gray-900 border border-stpius-gold rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-bold mb-4">Legal Information</h2>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <Link 
               to="/privacy" 
-              className="bg-[#001F3F] text-white font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200"
+              className="bg-stpius-blue text-stpius-white font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200"
             >
               Privacy Policy
             </Link>
             <Link 
               to="/terms" 
-              className="bg-[#001F3F] text-white font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200"
+              className="bg-stpius-blue text-stpius-white font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200"
             >
               Terms of Service
             </Link>
