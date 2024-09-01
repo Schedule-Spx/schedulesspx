@@ -1,5 +1,6 @@
 // ThemeContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { HexColorPicker } from "react-colorful";
 
 const ThemeContext = createContext();
 
@@ -74,6 +75,55 @@ export const themes = {
     text: 'text-white',
     border: 'border-yellow-700'
   },
+  skyblue: {
+    name: 'Sky Blue',
+    main: 'bg-blue-400',
+    accent: 'bg-blue-200',
+    text: 'text-gray-800',
+    border: 'border-blue-300'
+  },
+  coral: {
+    name: 'Coral',
+    main: 'bg-red-400',
+    accent: 'bg-orange-300',
+    text: 'text-white',
+    border: 'border-red-300'
+  },
+  emerald: {
+    name: 'Emerald',
+    main: 'bg-green-600',
+    accent: 'bg-green-400',
+    text: 'text-white',
+    border: 'border-green-500'
+  },
+  amethyst: {
+    name: 'Amethyst',
+    main: 'bg-purple-600',
+    accent: 'bg-purple-400',
+    text: 'text-white',
+    border: 'border-purple-500'
+  },
+  golden: {
+    name: 'Golden',
+    main: 'bg-yellow-600',
+    accent: 'bg-yellow-400',
+    text: 'text-gray-900',
+    border: 'border-yellow-500'
+  },
+  silver: {
+    name: 'Silver',
+    main: 'bg-gray-300',
+    accent: 'bg-gray-200',
+    text: 'text-gray-800',
+    border: 'border-gray-400'
+  },
+  bronze: {
+    name: 'Bronze',
+    main: 'bg-yellow-800',
+    accent: 'bg-yellow-700',
+    text: 'text-white',
+    border: 'border-yellow-600'
+  },
   // Holiday themes
   christmas: {
     name: 'Christmas',
@@ -128,6 +178,8 @@ export const themes = {
 
 export const ThemeProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(themes.default);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [customColor, setCustomColor] = useState("#000000");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -173,20 +225,45 @@ export const ThemeProvider = ({ children }) => {
   }, [currentTheme]);
 
   const changeTheme = (themeName) => {
-    const normalizedThemeName = themeName.toLowerCase();
-    const newTheme = themes[normalizedThemeName] || themes.default;
-    setCurrentTheme(newTheme);
-    localStorage.setItem('theme', JSON.stringify(newTheme));
+    if (themeName === 'custom') {
+      setShowColorPicker(true);
+    } else {
+      const normalizedThemeName = themeName.toLowerCase();
+      const newTheme = themes[normalizedThemeName] || themes.default;
+      setCurrentTheme(newTheme);
+      localStorage.setItem('theme', JSON.stringify(newTheme));
+    }
   };
 
-  const setCustomTheme = (customTheme) => {
+  const setCustomTheme = (color) => {
+    const customTheme = {
+      name: 'Custom',
+      main: `bg-[${color}]`,
+      accent: `bg-[${adjustBrightness(color, 20)}]`,
+      text: 'text-white',
+      border: `border-[${adjustBrightness(color, 40)}]`
+    };
     setCurrentTheme(customTheme);
     localStorage.setItem('theme', JSON.stringify(customTheme));
+    setShowColorPicker(false);
   };
 
   return (
-    <ThemeContext.Provider value={{ currentTheme, changeTheme, setCustomTheme, themes }}>
+    <ThemeContext.Provider value={{ currentTheme, changeTheme, setCustomTheme, themes, showColorPicker, setShowColorPicker, customColor, setCustomColor }}>
       {children}
+      {showColorPicker && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg">
+            <HexColorPicker color={customColor} onChange={setCustomColor} />
+            <button 
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={() => setCustomTheme(customColor)}
+            >
+              Apply Custom Theme
+            </button>
+          </div>
+        </div>
+      )}
     </ThemeContext.Provider>
   );
 };
