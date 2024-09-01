@@ -1,29 +1,51 @@
-/* src/LandingPage.css */
 .landing-page {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(to right, #0066ff, #00ccff); /* Blue gradient */
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Blueish-black gradient */
     text-align: center;
-  }
-  
-  .landing-title {
-    font-size: 4rem;
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.landing-title {
+    font-size: 4.5rem;
     color: white;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 2s ease-in-out;
+}
+
+.landing-subtitle {
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 1.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     animation: fadeIn 2s ease-in-out;
-  }
-  
-  .landing-buttons {
+    animation-delay: 0.5s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.landing-body {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 3rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 2s ease-in-out;
+    animation-delay: 1s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.landing-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .landing-buttons button {
+}
+
+.landing-buttons button {
     margin: 1rem;
     padding: 1rem 2rem;
     font-size: 1.5rem;
@@ -33,21 +55,20 @@
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .landing-buttons button:hover {
+}
+
+.landing-buttons button:hover {
     transform: translateY(-5px);
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  @keyframes fadeIn {
+}
+
+@keyframes fadeIn {
     from {
-      opacity: 0;
-      transform: translateY(20px);
+        opacity: 0;
+        transform: translateY(20px);
     }
     to {
-      opacity: 1;
-      transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
     }
-  }
-  
+}
