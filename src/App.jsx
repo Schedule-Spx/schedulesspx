@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
-import GoogleCalendar from './components/GoogleCalendar';
+import GoogleCalendar from './components/GoogleCalendar'; 
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
@@ -16,7 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import LandingPage from './LandingPage';  // Import the new LandingPage component
+import LandingPage from './LandingPage';  // Import the LandingPage component
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -40,6 +40,7 @@ function ThemedApp() {
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
+      navigate('/landing'); // Redirect to the landing page if not logged in
     }
 
     const hasAgreed = localStorage.getItem('agreedToTerms');
@@ -48,7 +49,7 @@ function ThemedApp() {
     }
 
     fetchSchedule();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (location.pathname === '/privacy' || location.pathname === '/terms') {
@@ -108,10 +109,6 @@ function ThemedApp() {
     navigate(path);
   };
 
-  if (!user) {
-    return <LandingPage setUser={setUser} />;
-  }
-
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {location.pathname === '/' && <div className="gradient-overlay" />}
@@ -120,6 +117,7 @@ function ThemedApp() {
         <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
       )}
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
         <Route 
           path="/admin" 
           element={
