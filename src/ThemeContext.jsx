@@ -353,13 +353,6 @@ export const themes = {
     accent: 'bg-yellow-300',
     text: 'text-white',
     border: 'border-yellow-400'
-  },
-  divinemercysunday: {
-    name: 'Divine Mercy Sunday',
-    main: 'bg-blue-600',
-    accent: 'bg-red-500',
-    text: 'text-white',
-    border: 'border-red-400'
   }
 };
 
