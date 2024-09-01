@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
@@ -15,20 +15,13 @@ import Account from './Account';
 import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
-import AgreementPopup from './components/AgreementPopup';
-import LandingPage from './LandingPage';  // Import the LandingPage component
+import LandingPage from './LandingPage';
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
-  const [showAgreement, setShowAgreement] = useState(false);
-  const [hasViewedDocs, setHasViewedDocs] = useState(false);
-
-  const scheduleHeight = '400px';
-  const googleCalendarHeight = '300px';
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -40,22 +33,10 @@ function ThemedApp() {
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
-      navigate('/landing'); // Redirect to the landing page if not logged in
-    }
-
-    const hasAgreed = localStorage.getItem('agreedToTerms');
-    if (!hasAgreed) {
-      setShowAgreement(true);
     }
 
     fetchSchedule();
-  }, [navigate]);
-
-  useEffect(() => {
-    if (location.pathname === '/privacy' || location.pathname === '/terms') {
-      setHasViewedDocs(true);
-    }
-  }, [location]);
+  }, []);
 
   const fetchUserTheme = async (email) => {
     try {
@@ -96,87 +77,54 @@ function ThemedApp() {
     }
   };
 
-  const handleAgree = () => {
-    localStorage.setItem('agreedToTerms', 'true');
-    setShowAgreement(false);
-    if (hasViewedDocs) {
-      navigate('/');
-    }
-  };
-
-  const handleViewDocs = (path) => {
-    setHasViewedDocs(true);
-    navigate(path);
-  };
-
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
-      {location.pathname === '/' && <div className="gradient-overlay" />}
-      <NavBar user={user} setUser={updateUser} />
-      {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
-        <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
-      )}
+      {location.pathname !== '/' && <NavBar user={user} setUser={updateUser} />}
       <Routes>
-        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route 
-          path="/admin" 
+          path="/main" 
           element={
-            <div className="flex flex-col">
-              <Admin 
-                user={user} 
-                weekSchedule={weekSchedule} 
-                setWeekSchedule={setWeekSchedule} 
-                fetchSchedule={fetchSchedule} 
-              />
-            </div>
-          } 
+            user ? (
+              <main className="p-4 flex flex-col space-y-4 content-wrapper">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
+                      <DayHeader />
+                    </div>
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
+                      <QuickLinks />
+                    </div>
+                  </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: '400px' }}>
+                    <Schedule weekSchedule={weekSchedule} />
+                  </div>
+                  <div className="flex flex-col space-y-4">
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '300px', animationDuration: '2.5s' }}>
+                      <GoogleCalendar />
+                    </div>
+                    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
+                      <GoogleSuiteLinks />
+                    </div>
+                  </div>
+                </div>
+                <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
+                  <PeriodProgress weekSchedule={weekSchedule} />
+                </div>
+                <div className="h-16"></div> {/* Extra space at the bottom */}
+              </main>
+            ) : (
+              <div className="main-blur-overlay">
+                <p>Please sign in with Google to access this content.</p>
+              </div>
+            )
+          }
         />
-        <Route 
-          path="/account" 
-          element={
-            <div className="flex flex-col h-[calc(100vh-64px)]">
-              <Account 
-                user={user} 
-                weekSchedule={weekSchedule}
-              />
-            </div>
-          } 
-        />
+        <Route path="/admin" element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />} />
+        <Route path="/account" element={<Account user={user} weekSchedule={weekSchedule} />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
-        <Route
-          path="/"
-          element={
-            <main className="p-4 flex flex-col space-y-4 content-wrapper">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
-                    <DayHeader />
-                  </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
-                    <QuickLinks />
-                  </div>
-                </div>
-                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
-                  <Schedule weekSchedule={weekSchedule} />
-                </div>
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
-                    <GoogleCalendar />
-                  </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
-                    <GoogleSuiteLinks />
-                  </div>
-                </div>
-              </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
-                <PeriodProgress weekSchedule={weekSchedule} />
-              </div>
-              <div className="h-16"></div> {/* Extra space at the bottom */}
-            </main>
-          }
-        />
       </Routes>
     </div>
   );

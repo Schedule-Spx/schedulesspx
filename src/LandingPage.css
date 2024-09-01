@@ -1,46 +1,52 @@
 .landing-page-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     height: 100vh;
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(to right, #3a7bd5, #3a6073); /* Blue gradient */
-  }
-  
-  .landing-page-title {
-    font-size: 3rem;
-    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
-    margin-bottom: 20px;
+    text-align: center;
   }
   
-  .landing-page-buttons {
+  .landing-title {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  
+  .landing-buttons {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1rem;
   }
   
-  .google-sign-in-button {
-    padding: 10px 20px;
+  .btn-signin, .btn-learn-more {
     font-size: 1.5rem;
-    cursor: pointer;
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
   }
   
-  .learn-more-button {
-    padding: 10px 20px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: white;
-    color: black;
+  .btn-signin {
+    background-color: #ff6f61;
+    color: white;
   }
   
-  .learn-more-button:hover {
-    background-color: #f0f0f0;
+  .btn-signin:hover {
+    background-color: #ff5a4f;
+    transform: translateY(-2px);
+  }
+  
+  .btn-learn-more {
+    background-color: #ffffff;
+    color: #667eea;
+  }
+  
+  .btn-learn-more:hover {
+    background-color: #f4f4f4;
+    transform: translateY(-2px);
   }
   
