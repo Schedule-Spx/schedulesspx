@@ -1,3 +1,4 @@
+/* src/App.css */
 .App {
   display: flex;
   flex-direction: column;
@@ -85,4 +86,37 @@ html, body {
 
 .slide-down {
   animation: slideDown 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+}
+
+/* Slide-in animations */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-left {
+  animation: slideInFromLeft 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  opacity: 1; /* Ensure it's visible after the animation */
+}
+
+.slide-in-right {
+  animation: slideInFromRight 1s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  opacity: 1; /* Ensure it's visible after the animation */
 }

@@ -15,7 +15,6 @@ import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
 import Schedule from './Schedule';
-import { CSSTransition } from 'react-transition-group';
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -26,6 +25,7 @@ function ThemedApp() {
   const [showAgreement, setShowAgreement] = useState(false);
   const [hasViewedDocs, setHasViewedDocs] = useState(false);
 
+  // Height variables for Schedule and GoogleCalendar
   const scheduleHeight = '400px';
   const googleCalendarHeight = '300px';
 
@@ -110,11 +110,44 @@ function ThemedApp() {
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {location.pathname === '/' && <div className="gradient-overlay" />}
-      <NavBar user={user} setUser={updateUser} className="navbar-hidden" />
+      <NavBar user={user} setUser={updateUser} />
       {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
         <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
       )}
       <Routes>
+        <Route 
+          path="/" 
+          element={
+            <main className="p-4 flex flex-col space-y-4 content-wrapper">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{height: '165px'}}>
+                    <DayHeader />
+                  </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                    <QuickLinks />
+                  </div>
+                </div>
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{height: scheduleHeight}}>
+                  <Schedule weekSchedule={weekSchedule} />
+                </div>
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: googleCalendarHeight}}>
+                    {/* Uncomment this when ready to implement Google Calendar */}
+                    {/* <GoogleCalendar /> */}
+                  </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{height: '165px'}}>
+                    <GoogleSuiteLinks />
+                  </div>
+                </div>
+              </div>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{height: '128px'}}>
+                <PeriodProgress weekSchedule={weekSchedule} />
+              </div>
+              <div className="h-16"></div> {/* Extra space at the bottom */}
+            </main>
+          }
+        />
         <Route 
           path="/admin" 
           element={
@@ -142,47 +175,6 @@ function ThemedApp() {
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
-        <Route
-          path="/"
-          element={
-            <main className="p-4 flex flex-col space-y-4 content-wrapper">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
-                    <DayHeader />
-                  </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
-                    <QuickLinks />
-                  </div>
-                </div>
-                <CSSTransition
-                  in={true}
-                  appear={true}
-                  timeout={1000}
-                  classNames="slide-down"
-                  unmountOnExit
-                >
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{ height: scheduleHeight }}>
-                    <Schedule weekSchedule={weekSchedule} />
-                  </div>
-                </CSSTransition>
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: googleCalendarHeight }}>
-                    {/* Uncomment this when ready to implement Google Calendar */}
-                    {/* <GoogleCalendar /> */}
-                  </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
-                    <GoogleSuiteLinks />
-                  </div>
-                </div>
-              </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
-                <PeriodProgress weekSchedule={weekSchedule} />
-              </div>
-              <div className="h-16"></div> {/* Extra space at the bottom */}
-            </main>
-          }
-        />
       </Routes>
     </div>
   );
