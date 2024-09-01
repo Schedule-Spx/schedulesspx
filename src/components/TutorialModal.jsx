@@ -50,9 +50,9 @@ const TutorialModal = ({ closeTutorial }) => {
       >
         {step === 1 && (
           <div className="tutorial-content">
-            <h2>Hi! I'm the Time Lion</h2>
+            <h2>Welcome to ScheduleSPX 2.0!</h2>
             <p>
-              I'm like a golden lion, but my specialty is time and bell schedules! Super exciting, right? If you already know how to use the site, you can close this, but if you'd like a little tour, press continue!
+              We're super excited you are here! If you already know how to use the site, you can close this, but if you'd like a little tour, press continue!
             </p>
             <button onClick={handleClose}>Close Tutorial</button>
             <button onClick={handleNext}>Continue Tutorial</button>
@@ -89,7 +89,7 @@ const TutorialModal = ({ closeTutorial }) => {
         {step === 6 && (
           <div className="tutorial-content">
             <h2>That's All!</h2>
-            <p>That's all I have for you now. I'll see you next time there's an update! See ya!</p>
+            <p>Thats all for now, please enjoy and we will see you next time there's an update!</p>
             <button onClick={handleClose}>Close</button>
           </div>
         )}
