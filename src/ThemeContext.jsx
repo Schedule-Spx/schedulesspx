@@ -106,6 +106,36 @@ export const ThemeProvider = ({ children }) => {
     }
   }, []);
 
+  const adjustBrightness = (hex, percent) => {
+    const num = parseInt(hex.slice(1), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const G = ((num >> 8) & 0x00FF) + amt;
+    const B = (num & 0x0000FF) + amt;
+    return `#${(
+      0x1000000 +
+      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+      (B < 255 ? (B < 1 ? 0 : B) : 255)
+    )
+      .toString(16)
+      .slice(1)}`;
+  };
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    // Assume main color is defined as a CSS variable based on the current theme
+    const mainColor = getComputedStyle(root)
+      .getPropertyValue(`--${currentTheme.main}`)
+      .trim();
+
+    const darkerColor = adjustBrightness(mainColor, -20); // Darken by 20%
+
+    // Update the body background with a gradient
+    document.body.style.background = `linear-gradient(to bottom left, ${mainColor}, ${darkerColor})`;
+  }, [currentTheme]);
+
   const changeTheme = (themeName) => {
     const normalizedThemeName = themeName.toLowerCase();
     const newTheme = themes[normalizedThemeName] || themes.default;

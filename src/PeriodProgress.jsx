@@ -210,8 +210,16 @@ const PeriodProgress = ({ weekSchedule }) => {
   }, [currentState, currentTheme, progress, timeRemaining]);
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border}`}>
-      <div className="p-5">
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
+      {/* Gradient Overlay */}
+      <div 
+        className="absolute inset-0 rounded-lg"
+        style={{
+          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+          zIndex: 0
+        }}
+      ></div>
+      <div className="p-5 relative z-10">
         {renderContent}
       </div>
     </div>

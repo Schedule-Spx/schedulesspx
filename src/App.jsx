@@ -5,9 +5,7 @@ import { ThemeProvider, useTheme } from './ThemeContext';
 import './App.css';
 import DayHeader from './DayHeader';
 import QuickLinks from './QuickLinks';
-import GoogleCalendar from './components/GoogleCalendar';
 import PeriodProgress from './PeriodProgress';
-import Schedule from './Schedule';
 import GoogleSuiteLinks from './GoogleSuiteLinks';
 import NavBar from './NavBar';
 import Admin from './Admin';
@@ -16,6 +14,8 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
+import Schedule from './Schedule';
+import { CSSTransition } from 'react-transition-group';
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -26,7 +26,6 @@ function ThemedApp() {
   const [showAgreement, setShowAgreement] = useState(false);
   const [hasViewedDocs, setHasViewedDocs] = useState(false);
 
-  // Height variables for Schedule and GoogleCalendar
   const scheduleHeight = '400px';
   const googleCalendarHeight = '300px';
 
@@ -75,7 +74,6 @@ function ThemedApp() {
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule');
       if (!response.ok) throw new Error('Failed to fetch schedule');
       const data = await response.json();
-      console.log('Fetched schedule:', data);
       setWeekSchedule(data);
     } catch (error) {
       console.error('Error fetching schedule:', error);
@@ -111,6 +109,7 @@ function ThemedApp() {
 
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
+      {location.pathname === '/' && <div className="gradient-overlay" />}
       <NavBar user={user} setUser={updateUser} />
       {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
         <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
@@ -146,29 +145,37 @@ function ThemedApp() {
         <Route
           path="/"
           element={
-            <main className="p-4 flex flex-col space-y-4">
+            <main className="p-4 flex flex-col space-y-4 content-wrapper">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
                     <DayHeader />
                   </div>
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
                     <QuickLinks />
                   </div>
                 </div>
-                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{height: scheduleHeight}}>
-                  <Schedule weekSchedule={weekSchedule} />
-                </div>
-                <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: googleCalendarHeight}}>
-                    <GoogleCalendar />
+                <CSSTransition
+                  in={true}
+                  appear={true}
+                  timeout={1000}
+                  classNames="slide-down"
+                >
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{ height: scheduleHeight }}>
+                    <Schedule weekSchedule={weekSchedule} />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '165px'}}>
+                </CSSTransition>
+                <div className="flex flex-col space-y-4">
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: googleCalendarHeight }}>
+                    {/* Uncomment this when ready to implement Google Calendar */}
+                    {/* <GoogleCalendar /> */}
+                  </div>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
                     <GoogleSuiteLinks />
                   </div>
                 </div>
               </div>
-              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{height: '155px'}}>
+              <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
                 <PeriodProgress weekSchedule={weekSchedule} />
               </div>
               <div className="h-16"></div> {/* Extra space at the bottom */}
