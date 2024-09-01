@@ -41,7 +41,7 @@ const TutorialModal = ({ closeTutorial }) => {
       ))}
 
       <div
-        className="tutorial-modal"
+        className={`tutorial-modal ${step === 1 ? 'scale-in' : ''}`} // Apply the scale-in animation only for step 1
         style={{
           top: currentStep.top,
           left: currentStep.left,
@@ -75,7 +75,6 @@ const TutorialModal = ({ closeTutorial }) => {
         {step === 4 && (
           <div className="tutorial-content">
             <h2>Document Creator</h2>
-            <p>Here's the document creator.</p> 
             <p>Click one of the icons to create a new document in a new tab!</p>
             <button onClick={handleNext}>Next</button>
           </div>
