@@ -16,7 +16,7 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import LandingPage from './LandingPage'; // New LandingPage import
+import LandingPage from './LandingPage';
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
