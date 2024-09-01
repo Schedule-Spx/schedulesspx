@@ -34,8 +34,14 @@ html, body {
 }
 
 .navbar {
+  opacity: 0.01; /* Set NavBar to be nearly invisible initially */
   position: relative;
   z-index: 10; /* Ensure NavBar stays above everything else */
+  transition: opacity 1s ease-in-out;
+}
+
+.navbar-initial {
+  opacity: 1; /* Fade in the NavBar */
 }
 
 .glass-tile,
