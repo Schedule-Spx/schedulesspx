@@ -24,7 +24,7 @@ const Account = ({ user, weekSchedule }) => {
 
   const renderThemes = () => {
     const themesToRender = filteredThemes === 'all' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
-    return themesToRender.map((themeName, index) => {
+    return themesToRender.map((themeName) => {
       const theme = themes[themeName];
       if (!theme) {
         console.error(`Theme not found: ${themeName}`);
@@ -86,56 +86,59 @@ const Account = ({ user, weekSchedule }) => {
           </div>
         </div>
 
-        {/* Featured Themes */}
-        <div className="text-center mb-8">
-          <h2 className="text-xl font-bold mb-4 drop-shadow-md">Featured Themes</h2>
-          <div className="flex justify-center space-x-4">
-            <ThemePreview themeName="Default" theme={themes.Default} />
-            <ThemePreview themeName="Dark" theme={themes.Dark} />
-            <ThemePreview themeName="Light" theme={themes.Light} />
+        {/* Theme Customization Widget */}
+        <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
+          {/* Featured Themes */}
+          <div className="text-center mb-8">
+            <h2 className="text-xl font-bold mb-4 drop-shadow-md">Featured Themes</h2>
+            <div className="flex justify-center space-x-4">
+              <ThemePreview themeName="Default" theme={themes.Default} />
+              <ThemePreview themeName="Dark" theme={themes.Dark} />
+              <ThemePreview themeName="Light" theme={themes.Light} />
+            </div>
           </div>
-        </div>
 
-        {/* Theme Filters */}
-        <div className="text-center mb-4">
-          <h2 className="text-xl font-bold mb-4 drop-shadow-md">Theme Customization</h2>
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={() => handleFilterChange('all')}
-              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-            >
-              Show All
-            </button>
-            <button
-              onClick={() => handleFilterChange('General Themes')}
-              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-            >
-              General Themes
-            </button>
-            <button
-              onClick={() => handleFilterChange('Holiday Themes')}
-              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-            >
-              Holiday Themes
-            </button>
-            <button
-              onClick={() => handleFilterChange('Saint Themes')}
-              className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
-            >
-              Saint Themes
-            </button>
+          {/* Theme Filters */}
+          <div className="text-center mb-4">
+            <h2 className="text-xl font-bold mb-4 drop-shadow-md">Theme Customization</h2>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => handleFilterChange('all')}
+                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+              >
+                Show All
+              </button>
+              <button
+                onClick={() => handleFilterChange('General Themes')}
+                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+              >
+                General Themes
+              </button>
+              <button
+                onClick={() => handleFilterChange('Holiday Themes')}
+                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+              >
+                Holiday Themes
+              </button>
+              <button
+                onClick={() => handleFilterChange('Saint Themes')}
+                className={`px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:bg-opacity-80 transition`}
+              >
+                Saint Themes
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Carousel of Themes */}
-        <div className="theme-carousel">
-          <TransitionGroup className="carousel-items">
-            {renderThemes()}
-          </TransitionGroup>
-          {/* Carousel Navigation Arrows */}
-          <div className="carousel-controls">
-            <button className="carousel-prev">&lt;</button>
-            <button className="carousel-next">&gt;</button>
+          {/* Carousel of Themes */}
+          <div className="theme-carousel">
+            <TransitionGroup className="carousel-items">
+              {renderThemes()}
+            </TransitionGroup>
+            {/* Carousel Navigation Arrows */}
+            <div className="carousel-controls">
+              <button className="carousel-prev">&lt;</button>
+              <button className="carousel-next">&gt;</button>
+            </div>
           </div>
         </div>
 
