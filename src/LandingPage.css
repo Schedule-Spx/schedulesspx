@@ -7,18 +7,20 @@
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(to bottom right, #1e3a8a, #000000); /* Background gradient */
+    z-index: 2; /* Ensure the text and content are above the background image */
 }
 
 .background-image-container {
     position: absolute;
-    top: -100;
-    left: -100;
+    top: -100px; /* Adjusted based on user input */
+    left: -100px; /* Adjusted based on user input */
     width: 200%; /* Original width to accommodate the loop */
     height: 200%; /* Original height to accommodate the loop */
     background-image: url('./assets/splashscreengraphic.png'); /* Using the provided file path */
     background-size: cover;
     background-repeat: repeat-x; /* Repeat the background only horizontally */
     animation: loopBackground 100s linear infinite; /* Slow, infinite loop */
+    z-index: 1; /* Ensure the background is behind the text */
 }
 
 @keyframes loopBackground {
@@ -30,36 +32,39 @@
     }
 }
 
-/* Other CSS rules remain the same */
+/* Increased drop shadow for text */
 .landing-title {
     font-size: 4rem;
     font-weight: 700;
     color: white;
     margin-bottom: 3rem;
-    text-shadow: none;
+    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8); /* Increased drop shadow */
     animation: fadeIn 2s ease-in-out;
+    z-index: 2; /* Ensure text is above the background image */
 }
 
 .landing-subtitle {
     font-size: 1.75rem;
     color: #c0c0c0;
     margin-bottom: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); /* Increased drop shadow */
     animation: fadeIn 2s ease-in-out;
     animation-delay: 0.5s;
     opacity: 0;
     animation-fill-mode: forwards;
+    z-index: 2; /* Ensure text is above the background image */
 }
 
 .landing-body {
     font-size: 1.25rem;
     color: #c0c0c0;
     margin-bottom: 3.5rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); /* Increased drop shadow */
     animation: fadeIn 2s ease-in-out;
     animation-delay: 1s;
     opacity: 0;
     animation-fill-mode: forwards;
+    z-index: 2; /* Ensure text is above the background image */
 }
 
 .landing-buttons {
@@ -70,6 +75,7 @@
     animation-delay: 1.5s;
     opacity: 0;
     animation-fill-mode: forwards;
+    z-index: 2; /* Ensure buttons are above the background image */
 }
 
 .landing-buttons button {
@@ -83,6 +89,7 @@
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     animation: bounce 3s ease-in-out infinite;
+    z-index: 2; /* Ensure button is above the background image */
 }
 
 .landing-buttons button:hover {
