@@ -15,10 +15,10 @@ const TutorialModal = ({ closeTutorial }) => {
   // Define position variables for each step, including a default position
   const positions = [
     { top: '10%', left: '50%', transform: 'translateX(-50%)' },
-    { top: '20%', left: '20%', transform: 'none' },
-    { top: '30%', left: '70%', transform: 'translateX(-50%)' },
-    { top: '40%', left: '50%', transform: 'translateX(-50%)' },
-    { top: '50%', left: '30%', transform: 'translateX(-50%)' },
+    { top: '50%', left: '33%', transform: 'none' },
+    { top: '64%', left: '20%', transform: 'translateX(-50%)' },
+    { top: '20%', left: '80%', transform: 'translateX(-50%)' },
+    { top: '5%', left: '60%', transform: 'translateX(-50%)' },
   ];
 
   // Use a default position if the step exceeds the defined positions
