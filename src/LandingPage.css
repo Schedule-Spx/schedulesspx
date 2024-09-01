@@ -15,7 +15,7 @@
     left: 0;
     width: 200%; /* Double the width to accommodate the loop */
     height: 200%; /* Double the height to accommodate the loop */
-    background-image: url('./assets/your-image-filename.png'); /* Update with your actual image file name */
+    background-image: url('./assets/splashscreengraphic.png'); /* Updated with your actual image file name */
     background-size: cover;
     background-repeat: repeat; /* Repeat the background */
     animation: loopBackground 120s linear infinite; /* Slow, infinite loop */

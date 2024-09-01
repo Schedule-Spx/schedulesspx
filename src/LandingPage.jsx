@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import GoogleLogin from './components/GoogleLogin'; // Adjust the import path if necessary
 import './LandingPage.css';
-import BackgroundImage from './assets/your-image-filename.png'; // Update with your actual image file name
+import BackgroundImage from './assets/splashscreengraphic.png'; // Updated with your actual image file name
 
 const LandingPage = ({ user, setUser }) => {
   const navigate = useNavigate();
