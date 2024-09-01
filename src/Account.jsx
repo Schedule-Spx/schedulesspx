@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './carousel.css';  // Importing the carousel CSS for animations
+import './carousel.css';
 
 const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
-  const [filteredThemes, setFilteredThemes] = useState('all');
+  const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
 
   const themeCategories = {
-    'General Themes': ['Default', 'Dark', 'Light', 'Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
+    'Featured Themes': ['Default', 'Dark', 'Light'],
+    'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee'],
     'Holiday Themes': ['Christmas', 'Halloween', 'Valentine\'s Day', 'St. Patrick\'s Day', 'Easter', 'Independence', 'Thanksgiving'],
     'Saint Themes': ['St. Pius X', 'Vatican', 'Papal', 'Franciscan', 'Jesuit', 'Benedictine', 'Carmelite', 'Dominican', 'Augustinian', 'Marian'],
   };
+
+  useEffect(() => {
+    // Set Featured Themes as default
+    setFilteredThemes('Featured Themes');
+  }, []);
 
   const handleThemeChange = (themeName) => {
     if (themes[themeName.toLowerCase()]) {
@@ -27,7 +33,7 @@ const Account = ({ user, weekSchedule }) => {
   };
 
   const renderThemes = () => {
-    const themesToRender = filteredThemes === 'all' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
+    const themesToRender = filteredThemes === 'Show All' ? Object.keys(themes) : themeCategories[filteredThemes] || [];
     return themesToRender.map((themeName) => {
       const theme = themes[themeName.toLowerCase()];
       if (!theme) {
@@ -96,9 +102,9 @@ const Account = ({ user, weekSchedule }) => {
           <div className="flex justify-center mb-4">
             <button
               className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
-              onClick={() => handleFilterChange('all')}
+              onClick={() => handleFilterChange('Featured Themes')}
             >
-              Show All
+              Featured Themes
             </button>
             <button
               className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
@@ -117,6 +123,12 @@ const Account = ({ user, weekSchedule }) => {
               onClick={() => handleFilterChange('Saint Themes')}
             >
               Saint Themes
+            </button>
+            <button
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              onClick={() => handleFilterChange('Show All')}
+            >
+              Show All
             </button>
           </div>
           <TransitionGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
