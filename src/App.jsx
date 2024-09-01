@@ -25,6 +25,7 @@ function ThemedApp() {
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showAgreement, setShowAgreement] = useState(false);
   const [hasViewedDocs, setHasViewedDocs] = useState(false);
+  const [showNavBar, setShowNavBar] = useState(false); // New state for NavBar visibility
 
   const scheduleHeight = '400px';
   const googleCalendarHeight = '300px';
@@ -110,7 +111,14 @@ function ThemedApp() {
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {location.pathname === '/' && <div className="gradient-overlay" />}
-      <NavBar user={user} setUser={updateUser} />
+      <CSSTransition
+        in={showNavBar}
+        timeout={1000}
+        classNames="fade-in"
+        unmountOnExit
+      >
+        <NavBar user={user} setUser={updateUser} />
+      </CSSTransition>
       {showAgreement && location.pathname !== '/privacy' && location.pathname !== '/terms' && (
         <AgreementPopup onAgree={handleAgree} onViewDocs={handleViewDocs} hasViewedDocs={hasViewedDocs} />
       )}
@@ -161,8 +169,7 @@ function ThemedApp() {
                   timeout={1000}
                   classNames="slide-down"
                   unmountOnExit
-                  onEntered={() => console.log("Schedule widget animation completed")}
-                  onEnter={() => console.log("Schedule widget animation started")}
+                  onEntered={() => setShowNavBar(true)} // Show NavBar after Schedule animates
                 >
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{ height: scheduleHeight }}>
                     <Schedule weekSchedule={weekSchedule} />
