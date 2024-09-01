@@ -33,6 +33,12 @@ html, body {
   z-index: 1; /* Ensure content stays above the gradient */
 }
 
+/* Ensure NavBar is always on top */
+.navbar {
+  position: relative;
+  z-index: 10; /* Ensure NavBar stays above everything else */
+}
+
 .glass-tile,
 .ad-widget {
   min-height: 100px; /* Ensure minimum height */
@@ -87,7 +93,7 @@ html, body {
 .slide-down-appear-active, .slide-down-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1), transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s, transform 1s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
 .slide-down-exit {

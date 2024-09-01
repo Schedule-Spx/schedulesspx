@@ -160,6 +160,9 @@ function ThemedApp() {
                   appear={true}
                   timeout={1000}
                   classNames="slide-down"
+                  unmountOnExit
+                  onEntered={() => console.log("Schedule widget animation completed")}
+                  onEnter={() => console.log("Schedule widget animation started")}
                 >
                   <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{ height: scheduleHeight }}>
                     <Schedule weekSchedule={weekSchedule} />
