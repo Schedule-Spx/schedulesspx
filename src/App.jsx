@@ -16,7 +16,6 @@ import About from './About';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import AgreementPopup from './components/AgreementPopup';
-import { CSSTransition } from 'react-transition-group';
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -149,28 +148,21 @@ function ThemedApp() {
             <main className="p-4 flex flex-col space-y-4 content-wrapper">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
                     <DayHeader />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
                     <QuickLinks />
                   </div>
                 </div>
-                <CSSTransition
-                  in={true}
-                  appear={true}
-                  timeout={1000}
-                  classNames="slide-down"
-                >
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col`} style={{ height: scheduleHeight }}>
-                    <Schedule weekSchedule={weekSchedule} />
-                  </div>
-                </CSSTransition>
+                <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
+                  <Schedule weekSchedule={weekSchedule} />
+                </div>
                 <div className="flex flex-col space-y-4">
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: googleCalendarHeight }}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
                     <GoogleCalendar />
                   </div>
-                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden`} style={{ height: '165px' }}>
+                  <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
                     <GoogleSuiteLinks />
                   </div>
                 </div>
