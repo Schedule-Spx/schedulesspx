@@ -121,7 +121,7 @@ html, body {
   opacity: 1; /* Ensure it's visible after the animation */
 }
 
-/* Scale-in animation */
+/* Scale-in animation with center origin */
 @keyframes scaleIn {
   0% {
     transform: scale(0);
@@ -138,6 +138,7 @@ html, body {
 }
 
 .scale-in {
+  transform-origin: center; /* Ensures scaling from the center */
   animation: scaleIn 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
 }
 
