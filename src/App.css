@@ -136,7 +136,6 @@ html, body {
 .slide-in-bottom {
   opacity: 0; /* Start hidden */
   animation: slideInFromBottom 1.5s cubic-bezier(0.25, 0.1, 0.25, 1.0) 2s forwards;
-  height: calc(100% + 20px); /* Extend the Announcement panel by 20px */
 }
 
 /* Blur overlay for unauthenticated users on /main */
