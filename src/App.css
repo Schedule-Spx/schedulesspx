@@ -138,7 +138,7 @@ html, body {
 }
 
 .scale-in {
-  transform-origin: center; /* Ensures scaling from the center */
+  transform-origin: center; /* Ensure scaling happens from the center */
   animation: scaleIn 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
 }
 
