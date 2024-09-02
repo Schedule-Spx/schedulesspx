@@ -151,18 +151,9 @@ function ThemedApp() {
                         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
                           <Schedule weekSchedule={weekSchedule} />
                         </div>
-
-                        {/* Option 3: Absolute Positioning and Centering */}
-                        <div className="announcement-wrapper">
-                          <div className="announcement scale-in">
-                            <Announcement />
-                          </div>
-                        </div>
-
-                        {/* Option 5: Flexbox Centering */}
-                        {/* <div className="flex-container scale-in">
+                        <div className="scale-in">
                           <Announcement />
-                        </div> */}
+                        </div>
                       </div>
                       <div className="flex flex-col space-y-4">
                         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
