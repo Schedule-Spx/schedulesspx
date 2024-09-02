@@ -151,8 +151,10 @@ function ThemedApp() {
                         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
                           <Schedule weekSchedule={weekSchedule} />
                         </div>
-                        <div className="scale-in">
-                          <Announcement />
+                        <div className="announcement-container">
+                          <div className="scale-in">
+                            <Announcement />
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col space-y-4">
