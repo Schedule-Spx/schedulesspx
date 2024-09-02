@@ -26,7 +26,8 @@ function ThemedApp() {
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showTutorial, setShowTutorial] = useState(false);
 
-  const scheduleHeight = '400px';
+  // Adjusted scheduleHeight to make the schedule's bottom edge higher
+  const scheduleHeight = '350px'; // Reduced by 50px
   const googleCalendarHeight = '300px';
 
   useEffect(() => {
