@@ -16,9 +16,9 @@ const Announcement = () => {
             ></div>
             <div className="p-5 relative z-10">
                 <div className="text-center">
-                    <h2 className={`text-xl font-bold ${currentTheme.text}`}>Announcement</h2>
+                    <h2 className={`text-xl font-bold ${currentTheme.text}`}>Welcome to ScheduleSPX 2.0!</h2>
                     <p className={`text-sm ${currentTheme.text} opacity-80`}>
-                        Stay tuned for upcoming events and important updates!
+                        Please let us know what other features you want!
                     </p>
                 </div>
             </div>
