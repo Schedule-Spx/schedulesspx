@@ -138,8 +138,37 @@ html, body {
 }
 
 .scale-in {
-  transform-origin: center; /* Ensure scaling happens from the center */
+  transform-origin: center center; /* Ensure scaling happens from the center */
   animation: scaleIn 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+}
+
+/* Option 3: Absolute Positioning and Centering */
+.announcement-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.announcement {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0); /* Start off centered and scaled down */
+  animation: scaleIn 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+  transform-origin: center center; /* Center origin for scaling */
+}
+
+/* Option 5: Flexbox Centering */
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Full height of container */
+}
+
+.scale-in {
+  animation: scaleIn 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+  transform-origin: center center;
 }
 
 /* Blur overlay for unauthenticated users on /main */
