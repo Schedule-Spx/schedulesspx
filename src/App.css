@@ -121,7 +121,7 @@ html, body {
   opacity: 1; /* Ensure it's visible after the animation */
 }
 
-/* Slide-in-from-bottom animation */
+/* Slide-in-from-bottom animation with delay */
 @keyframes slideInFromBottom {
   from {
     transform: translateY(100%);
@@ -134,7 +134,7 @@ html, body {
 }
 
 .slide-in-bottom {
-  animation: slideInFromBottom 1.5s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+  animation: slideInFromBottom 1.5s cubic-bezier(0.25, 0.1, 0.25, 1.0) 2s forwards;
   opacity: 1;
 }
 
