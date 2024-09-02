@@ -8,7 +8,7 @@ const NavBar = ({ user, setUser }) => {
   const { currentTheme } = useTheme();
   const navigate = useNavigate();
 
-  const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org'];
+  const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org', 'davidpaulcamick@gmail.com'];
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);

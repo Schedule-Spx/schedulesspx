@@ -77,7 +77,23 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   return (
     <div className="flex-grow flex flex-col h-full">
       <div className={`${currentTheme.secondary} ${currentTheme.border} p-6 rounded-lg shadow-lg overflow-y-auto flex-grow`}>
-        <h2 className={`text-2xl font-bold mb-4 ${currentTheme.text}`}>Admin Console</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className={`text-2xl font-bold ${currentTheme.text}`}>Admin Console</h2>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleAddPeriod}
+              className={`${currentTheme.primary} ${currentTheme.text} px-4 py-2 rounded hover:opacity-80`}
+            >
+              Add Period
+            </button>
+            <button
+              onClick={handleBulkInput}
+              className={`${currentTheme.primary} ${currentTheme.text} px-4 py-2 rounded hover:opacity-80`}
+            >
+              Add Bulk Periods
+            </button>
+          </div>
+        </div>
         <div className="mb-4">
           <label className={`block mb-2 ${currentTheme.text}`}>Select Day:</label>
           <select
@@ -127,12 +143,6 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
             onChange={(e) => setNewPeriod(prev => ({ ...prev, end: e.target.value }))}
             className={`w-full p-2 mb-2 border rounded ${currentTheme.primary} ${currentTheme.text} ${currentTheme.border}`}
           />
-          <button
-            onClick={handleAddPeriod}
-            className={`${currentTheme.primary} ${currentTheme.text} px-4 py-2 rounded hover:opacity-80`}
-          >
-            Add Period
-          </button>
         </div>
         <div className="mb-4">
           <h3 className={`text-xl font-semibold mb-2 ${currentTheme.text}`}>Bulk Add Periods</h3>
@@ -143,12 +153,6 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
             className={`w-full p-2 mb-2 border rounded ${currentTheme.primary} ${currentTheme.text} ${currentTheme.border}`}
             rows="10"
           />
-          <button
-            onClick={handleBulkInput}
-            className={`${currentTheme.primary} ${currentTheme.text} px-4 py-2 rounded hover:opacity-80`}
-          >
-            Add Bulk Periods
-          </button>
         </div>
         {saveStatus && (
           <p className={`mt-2 ${saveStatus.includes('Failed') ? 'text-red-500' : 'text-green-500'}`}>
