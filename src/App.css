@@ -121,35 +121,21 @@ html, body {
   opacity: 1; /* Ensure it's visible after the animation */
 }
 
-/* Scale-in animation with center origin */
-@keyframes scaleIn {
-  0% {
-    transform: scale(0);
+/* Slide-in-from-bottom animation */
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
     opacity: 0;
   }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
+  to {
+    transform: translateY(0);
     opacity: 1;
   }
 }
 
-.scale-in {
-  transform-origin: center center; /* Ensure scaling happens from the center */
-  animation: scaleIn 3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
-  position: relative;
-}
-
-.announcement-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; /* Ensure full height of the parent container */
-  width: 100%;  /* Ensure full width of the parent container */
-  overflow: hidden; /* Prevent overflow during the animation */
+.slide-in-bottom {
+  animation: slideInFromBottom 1.5s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+  opacity: 1;
 }
 
 /* Blur overlay for unauthenticated users on /main */
