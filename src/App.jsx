@@ -151,8 +151,8 @@ function ThemedApp() {
                         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
                           <Schedule weekSchedule={weekSchedule} />
                         </div>
-                        {/* Announcement Component */}
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-up`}>
+                        {/* Announcement Component with scale-in animation */}
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden scale-in`}>
                           <Announcement />
                         </div>
                       </div>
