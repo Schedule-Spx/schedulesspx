@@ -17,6 +17,7 @@ import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import LandingPage from './LandingPage';
 import TutorialModal from './components/TutorialModal';
+import Announcement from './Announcement'; // Importing the Announcement component
 
 function ThemedApp() {
   const { currentTheme } = useTheme();
@@ -157,6 +158,8 @@ function ThemedApp() {
                         </div>
                       </div>
                     </div>
+                    {/* Announcement Component */}
+                    <Announcement />
                     <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
                       <PeriodProgress weekSchedule={weekSchedule} />
                     </div>
