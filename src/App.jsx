@@ -159,7 +159,7 @@ function ThemedApp() {
                         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
                           <GoogleCalendar />
                         </div>
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '185px' }}>
                           <GoogleSuiteLinks />
                         </div>
                       </div>
