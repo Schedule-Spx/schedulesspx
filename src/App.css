@@ -137,3 +137,10 @@ html, body {
   backdrop-filter: blur(8px);
   z-index: 10;
 }
+
+/* Ensure the Announcement component doesn't displace other elements */
+.grid .Announcement {
+  grid-column: 2 / span 1; /* Centering the announcement */
+  width: 100%;
+  justify-self: center;
+}
