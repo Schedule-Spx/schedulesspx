@@ -146,8 +146,14 @@ function ThemedApp() {
                           <QuickLinks />
                         </div>
                       </div>
-                      <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
-                        <Schedule weekSchedule={weekSchedule} />
+                      <div className="flex flex-col space-y-4">
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
+                          <Schedule weekSchedule={weekSchedule} />
+                        </div>
+                        {/* Announcement Component */}
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-up`}>
+                          <Announcement />
+                        </div>
                       </div>
                       <div className="flex flex-col space-y-4">
                         <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
@@ -157,12 +163,6 @@ function ThemedApp() {
                           <GoogleSuiteLinks />
                         </div>
                       </div>
-                    </div>
-                    {/* Announcement Component */}
-                    <div className="grid grid-cols-3 gap-4">
-                      <div></div>
-                      <Announcement />
-                      <div></div>
                     </div>
                     <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
                       <PeriodProgress weekSchedule={weekSchedule} />
