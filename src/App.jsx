@@ -158,9 +158,9 @@ function ThemedApp() {
                         </div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4 items-center">
                       <div></div>
-                      <div>
+                      <div className="col-span-1">
                         {/* Announcement Component */}
                         <Announcement />
                       </div>
