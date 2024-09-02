@@ -158,8 +158,14 @@ function ThemedApp() {
                         </div>
                       </div>
                     </div>
-                    {/* Announcement Component */}
-                    <Announcement />
+                    <div className="grid grid-cols-3 gap-4">
+                      <div></div>
+                      <div>
+                        {/* Announcement Component */}
+                        <Announcement />
+                      </div>
+                      <div></div>
+                    </div>
                     <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '128px' }}>
                       <PeriodProgress weekSchedule={weekSchedule} />
                     </div>
