@@ -25,6 +25,7 @@ function ThemedApp() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showTutorial, setShowTutorial] = useState(false);
+  const [scale, setScale] = useState(1);
   const contentRef = useRef(null);
 
   // Original heights
@@ -32,7 +33,7 @@ function ThemedApp() {
     scheduleHeight: 390,
     googleCalendarHeight: 300,
     dayHeaderHeight: 165,
-    quickLinksHeight: 300, // Adjusted to be greater
+    quickLinksHeight: 300,
     googleSuiteLinksHeight: 165,
     periodProgressHeight: 156,
   };
@@ -61,17 +62,16 @@ function ThemedApp() {
 
     const handleResize = () => {
       if (contentRef.current) {
+        const contentWidth = contentRef.current.scrollWidth;
         const contentHeight = contentRef.current.scrollHeight;
+        const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight - 64; // Subtracting NavBar height
-        if (contentHeight > windowHeight) {
-          const scale = windowHeight / contentHeight;
-          contentRef.current.style.transform = `scale(${scale})`;
-          contentRef.current.style.transformOrigin = 'top center';
-          contentRef.current.style.height = `${contentHeight}px`;
-        } else {
-          contentRef.current.style.transform = 'none';
-          contentRef.current.style.height = 'auto';
-        }
+
+        const scaleX = windowWidth / contentWidth;
+        const scaleY = windowHeight / contentHeight;
+        const newScale = Math.min(scaleX, scaleY, 1);
+
+        setScale(newScale);
       }
     };
 
@@ -135,7 +135,16 @@ function ThemedApp() {
       ) : (
         <>
           <NavBar user={user} setUser={updateUser} />
-          <div ref={contentRef} className="flex-grow overflow-auto">
+          <div 
+            ref={contentRef}
+            className="flex-grow overflow-auto"
+            style={{
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+              width: `${100 / scale}%`,
+              height: `${100 / scale}%`,
+            }}
+          >
             <Routes>
               <Route 
                 path="/admin" 
