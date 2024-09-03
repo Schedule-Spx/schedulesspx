@@ -20,16 +20,23 @@ import TutorialModal from './components/TutorialModal';
 import Announcement from './Announcement';
 
 function ThemedApp() {
-  const { currentTheme } = useTheme();
+  const { currentTheme, changeTheme } = useTheme();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showTutorial, setShowTutorial] = useState(false);
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+  const [scale, setScale] = useState(1);
   const contentRef = useRef(null);
+
+  // Original heights
+  const originalHeights = {
+    scheduleHeight: 390,
+    googleCalendarHeight: 300,
+    dayHeaderHeight: 165,
+    quickLinksHeight: 165,
+    googleSuiteLinksHeight: 165,
+    periodProgressHeight: 156,
+  };
 
   useEffect(() => {
     console.log('Current Theme:', currentTheme);
@@ -54,10 +61,12 @@ function ThemedApp() {
     fetchSchedule();
 
     const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+      if (contentRef.current) {
+        const totalOriginalHeight = Object.values(originalHeights).reduce((sum, height) => sum + height, 0);
+        const availableHeight = window.innerHeight - 64; // Subtracting NavBar height
+        const newScale = Math.min(availableHeight / totalOriginalHeight, 1);
+        setScale(newScale);
+      }
     };
 
     window.addEventListener('resize', handleResize);
@@ -112,22 +121,6 @@ function ThemedApp() {
     localStorage.setItem('tutorialShown', 'true');
   };
 
-  const calculateHeights = () => {
-    const navHeight = 64; // Assuming NavBar height is 64px
-    const availableHeight = windowSize.height - navHeight;
-    const scheduleHeight = Math.floor(availableHeight * 0.5);
-    const googleCalendarHeight = Math.floor(availableHeight * 0.3);
-    const otherComponentHeight = Math.floor(availableHeight * 0.2);
-
-    return {
-      scheduleHeight: `${scheduleHeight}px`,
-      googleCalendarHeight: `${googleCalendarHeight}px`,
-      otherComponentHeight: `${otherComponentHeight}px`,
-    };
-  };
-
-  const { scheduleHeight, googleCalendarHeight, otherComponentHeight } = calculateHeights();
-
   return (
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />} 
@@ -136,7 +129,15 @@ function ThemedApp() {
       ) : (
         <>
           <NavBar user={user} setUser={updateUser} />
-          <div ref={contentRef} className="flex-grow overflow-auto">
+          <div 
+            ref={contentRef}
+            className="flex-grow overflow-auto"
+            style={{
+              transform: `scale(${scale})`,
+              transformOrigin: 'top center',
+              height: `${100 / scale}%`,
+            }}
+          >
             <Routes>
               <Route 
                 path="/admin" 
@@ -153,32 +154,32 @@ function ThemedApp() {
                 path="/main"
                 element={
                   user ? (
-                    <main className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
+                    <main className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="flex flex-col space-y-4">
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: otherComponentHeight }}>
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.dayHeaderHeight}px` }}>
                           <DayHeader />
                         </div>
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: otherComponentHeight, animationDuration: '2.5s' }}>
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.quickLinksHeight}px`, animationDuration: '2.5s' }}>
                           <QuickLinks />
                         </div>
                       </div>
                       <div className="flex flex-col space-y-4">
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: `${originalHeights.scheduleHeight}px` }}>
                           <Schedule weekSchedule={weekSchedule} />
                         </div>
-                        <div className="slide-in-bottom" style={{ height: otherComponentHeight }}>
+                        <div className="slide-in-bottom">
                           <Announcement />
                         </div>
                       </div>
                       <div className="flex flex-col space-y-4">
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: `${originalHeights.googleCalendarHeight}px`, animationDuration: '2.5s' }}>
                           <GoogleCalendar />
                         </div>
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: otherComponentHeight }}>
+                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: `${originalHeights.googleSuiteLinksHeight}px` }}>
                           <GoogleSuiteLinks />
                         </div>
                       </div>
-                      <div className={`col-span-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: otherComponentHeight }}>
+                      <div className={`col-span-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: `${originalHeights.periodProgressHeight}px` }}>
                         <PeriodProgress weekSchedule={weekSchedule} />
                       </div>
                     </main>
