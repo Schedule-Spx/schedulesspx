@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, useTheme } from './ThemeContext';
@@ -17,7 +17,7 @@ import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 import LandingPage from './LandingPage';
 import TutorialModal from './components/TutorialModal';
-import Announcement from './Announcement'; // Importing the Announcement component
+import Announcement from './Announcement';
 
 function ThemedApp() {
   const { currentTheme } = useTheme();
@@ -25,14 +25,15 @@ function ThemedApp() {
   const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showTutorial, setShowTutorial] = useState(false);
+  const [scale, setScale] = useState(1);
+  const contentRef = useRef(null);
 
-  // Adjusted scheduleHeight to make the schedule's bottom edge higher
-  const scheduleHeight = '390px'; // Reduced by 50px
+  const scheduleHeight = '390px';
   const googleCalendarHeight = '300px';
 
   useEffect(() => {
-    console.log('Current Theme:', currentTheme); // Debug log
-    console.log('Current Path:', location.pathname); // Debug log
+    console.log('Current Theme:', currentTheme);
+    console.log('Current Path:', location.pathname);
 
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
@@ -51,7 +52,29 @@ function ThemedApp() {
     }
 
     fetchSchedule();
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [location.pathname]);
+
+  const handleResize = () => {
+    if (contentRef.current) {
+      const contentWidth = contentRef.current.offsetWidth;
+      const contentHeight = contentRef.current.offsetHeight;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      const scaleX = windowWidth / contentWidth;
+      const scaleY = windowHeight / contentHeight;
+      const newScale = Math.min(scaleX, scaleY, 1);
+
+      setScale(newScale);
+    }
+  };
 
   const fetchUserTheme = async (email) => {
     try {
@@ -105,79 +128,89 @@ function ThemedApp() {
       ) : (
         <>
           <NavBar user={user} setUser={updateUser} />
-          <Routes>
-            <Route 
-              path="/admin" 
-              element={
-                <div className="flex flex-col">
-                  <Admin 
-                    user={user} 
-                    weekSchedule={weekSchedule} 
-                    setWeekSchedule={setWeekSchedule} 
-                    fetchSchedule={fetchSchedule} 
-                  />
-                </div>
-              } 
-            />
-            <Route 
-              path="/account" 
-              element={
-                <div className="flex flex-col h-[calc(100vh-64px)]">
-                  <Account 
-                    user={user} 
-                    weekSchedule={weekSchedule}
-                  />
-                </div>
-              } 
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<TermsAndConditions />} />
-            <Route
-              path="/main"
-              element={
-                user ? (
-                  <main className="p-4 flex flex-col space-y-4 content-wrapper">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="flex flex-col space-y-4">
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
-                          <DayHeader />
-                        </div>
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
-                          <QuickLinks />
-                        </div>
-                      </div>
-                      <div className="flex flex-col space-y-4">
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
-                          <Schedule weekSchedule={weekSchedule} />
-                        </div>
-                        <div className="slide-in-bottom">
-                          <Announcement />
-                        </div>
-                      </div>
-                      <div className="flex flex-col space-y-4">
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
-                          <GoogleCalendar />
-                        </div>
-                        <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
-                          <GoogleSuiteLinks />
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '156px' }}>
-                      <PeriodProgress weekSchedule={weekSchedule} />
-                    </div>
-                    <div className="h-16"></div>
-                  </main>
-                ) : (
-                  <div className="flex flex-col items-center justify-center min-h-screen text-center">
-                    <h1 className="text-4xl font-bold">You must log in to view this page</h1>
-                    <a href="/" className="mt-4 text-blue-500 underline">Go back to the landing page</a>
+          <div 
+            ref={contentRef}
+            style={{
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+              width: `${100 / scale}%`,
+              height: `${100 / scale}%`,
+            }}
+          >
+            <Routes>
+              <Route 
+                path="/admin" 
+                element={
+                  <div className="flex flex-col">
+                    <Admin 
+                      user={user} 
+                      weekSchedule={weekSchedule} 
+                      setWeekSchedule={setWeekSchedule} 
+                      fetchSchedule={fetchSchedule} 
+                    />
                   </div>
-                )
-              }
-            />
-          </Routes>
+                } 
+              />
+              <Route 
+                path="/account" 
+                element={
+                  <div className="flex flex-col h-[calc(100vh-64px)]">
+                    <Account 
+                      user={user} 
+                      weekSchedule={weekSchedule}
+                    />
+                  </div>
+                } 
+              />
+              <Route path="/about" element={<About />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
+              <Route
+                path="/main"
+                element={
+                  user ? (
+                    <main className="p-4 flex flex-col space-y-4 content-wrapper">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="flex flex-col space-y-4">
+                          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: '165px' }}>
+                            <DayHeader />
+                          </div>
+                          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ animationDuration: '2.5s' }}>
+                            <QuickLinks />
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-4">
+                          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: scheduleHeight }}>
+                            <Schedule weekSchedule={weekSchedule} />
+                          </div>
+                          <div className="slide-in-bottom">
+                            <Announcement />
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-4">
+                          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: googleCalendarHeight, animationDuration: '2.5s' }}>
+                            <GoogleCalendar />
+                          </div>
+                          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: '165px' }}>
+                            <GoogleSuiteLinks />
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '156px' }}>
+                        <PeriodProgress weekSchedule={weekSchedule} />
+                      </div>
+                      <div className="h-16"></div>
+                    </main>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center min-h-screen text-center">
+                      <h1 className="text-4xl font-bold">You must log in to view this page</h1>
+                      <a href="/" className="mt-4 text-blue-500 underline">Go back to the landing page</a>
+                    </div>
+                  )
+                }
+              />
+            </Routes>
+          </div>
         </>
       )}
     </div>
