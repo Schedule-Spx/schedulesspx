@@ -1,4 +1,3 @@
-// src/PeriodProgress.jsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from './ThemeContext';
 
@@ -210,7 +209,7 @@ const PeriodProgress = ({ weekSchedule }) => {
   }, [currentState, currentTheme, progress, timeRemaining]);
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`} style={{ paddingBottom: '3px' }}>
       {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
