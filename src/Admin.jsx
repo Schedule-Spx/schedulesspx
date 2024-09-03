@@ -111,6 +111,8 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
     }
   };
 
+  const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`; // Added text-gray-900 for dark text
+
   return (
     <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <div className="flex-grow overflow-y-auto">
@@ -133,13 +135,13 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
                   placeholder="Announcement Title"
                   value={announcement.title}
                   onChange={(e) => setAnnouncement(prev => ({ ...prev, title: e.target.value }))}
-                  className={`w-full p-2 mb-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                 />
                 <textarea
                   placeholder="Announcement Message"
                   value={announcement.message}
                   onChange={(e) => setAnnouncement(prev => ({ ...prev, message: e.target.value }))}
-                  className={`w-full p-2 mb-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                   rows="3"
                 />
                 <button
@@ -175,7 +177,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
                 <select
                   value={selectedDay}
                   onChange={(e) => setSelectedDay(e.target.value)}
-                  className={`w-full p-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                 >
                   {Object.keys(weekSchedule).map(day => (
                     <option key={day} value={day}>{day}</option>
@@ -205,19 +207,19 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
                   placeholder="Period Name"
                   value={newPeriod.name}
                   onChange={(e) => setNewPeriod(prev => ({ ...prev, name: e.target.value }))}
-                  className={`w-full p-2 mb-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                 />
                 <input
                   type="time"
                   value={newPeriod.start}
                   onChange={(e) => setNewPeriod(prev => ({ ...prev, start: e.target.value }))}
-                  className={`w-full p-2 mb-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                 />
                 <input
                   type="time"
                   value={newPeriod.end}
                   onChange={(e) => setNewPeriod(prev => ({ ...prev, end: e.target.value }))}
-                  className={`w-full p-2 mb-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                 />
               </div>
               <div className="mb-4">
@@ -226,7 +228,7 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
                   value={bulkInput}
                   onChange={(e) => setBulkInput(e.target.value)}
                   placeholder="Paste formatted schedule here..."
-                  className={`w-full p-2 mb-2 border rounded ${currentTheme.input}`}
+                  className={inputStyle}
                   rows="10"
                 />
               </div>
