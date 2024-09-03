@@ -51,9 +51,9 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   const calculateProgress = useCallback((startTime, endTime, now) => {
     const totalDuration = endTime - startTime;
-    const remaining = endTime - now;
-    const progressPercentage = ((totalDuration - remaining) / totalDuration) * 100;
-    return progressPercentage;
+    const elapsed = now - startTime;
+    const progressPercentage = (elapsed / totalDuration) * 100;
+    return Math.min(Math.max(progressPercentage, 0), 100); // Ensure progress is between 0 and 100
   }, []);
 
   const handleSchoolDay = useCallback((schedule, now, currentDay) => {
@@ -96,7 +96,8 @@ const PeriodProgress = ({ weekSchedule }) => {
         updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
       } else if (schedule[0] && now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
         const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
-        const progressPercentage = calculateProgress(now, firstPeriodStart, now);
+        const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        const progressPercentage = calculateProgress(dayStart, firstPeriodStart, now);
         const timeUntilStart = firstPeriodStart - now;
 
         setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
@@ -119,8 +120,9 @@ const PeriodProgress = ({ weekSchedule }) => {
       nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
       const timeUntilNextSchool = nextSchoolDay - now;
-      const totalDuration = 24 * 60 * 60 * 1000 * getDayDifference(currentDay, nextDay);
-      const progressPercentage = ((totalDuration - timeUntilNextSchool) / totalDuration) * 100;
+      const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+      const progressPercentage = calculateProgress(dayStart, dayEnd, now);
 
       setCurrentState({ type: 'nonSchoolDay', nextDay });
       setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
@@ -132,7 +134,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       setProgress(0);
       updateTitle('No School', '');
     }
-  }, [weekSchedule, getNextSchoolDay, getDayDifference, parseTime, formatTimeRemaining, updateTitle]);
+  }, [weekSchedule, getNextSchoolDay, getDayDifference, parseTime, formatTimeRemaining, updateTitle, calculateProgress]);
 
   const handleAfterSchool = useCallback((now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
@@ -144,8 +146,9 @@ const PeriodProgress = ({ weekSchedule }) => {
       nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
       const timeUntilNextSchool = nextSchoolDay - now;
-      const totalDuration = 24 * 60 * 60 * 1000 * getDayDifference(currentDay, nextDay);
-      const progressPercentage = ((totalDuration - timeUntilNextSchool) / totalDuration) * 100;
+      const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+      const progressPercentage = calculateProgress(dayStart, dayEnd, now);
 
       setCurrentState({ type: 'afterSchool', nextDay });
       setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
@@ -154,7 +157,7 @@ const PeriodProgress = ({ weekSchedule }) => {
     } else {
       handleNonSchoolDay(now, currentDay);
     }
-  }, [weekSchedule, getNextSchoolDay, parseTime, formatTimeRemaining, updateTitle, handleNonSchoolDay]);
+  }, [weekSchedule, getNextSchoolDay, parseTime, formatTimeRemaining, updateTitle, handleNonSchoolDay, calculateProgress]);
 
   useEffect(() => {
     const updateCurrentState = () => {
@@ -214,7 +217,6 @@ const PeriodProgress = ({ weekSchedule }) => {
 
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
-      {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
         style={{
