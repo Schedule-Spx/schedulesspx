@@ -195,7 +195,7 @@ const PeriodProgress = ({ weekSchedule }) => {
         <div className={`w-full bg-opacity-20 ${currentTheme.main} rounded-full h-6 mb-4 relative overflow-hidden`}>
           <div 
             className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
-            style={{width: `${progress}%`}}
+            style={{width: `${progress}%`, marginBottom: '3px'}}
           ></div>
           <div className="absolute inset-0 flex items-center justify-center">
             <p className={`text-sm font-semibold ${currentTheme.text} z-10`}>
@@ -209,13 +209,14 @@ const PeriodProgress = ({ weekSchedule }) => {
   }, [currentState, currentTheme, progress, timeRemaining]);
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`} style={{ paddingBottom: '3px' }}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
       {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
         style={{
           background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
-          zIndex: 0
+          zIndex: 0,
+          marginBottom: '3px',
         }}
       ></div>
       <div className="p-5 relative z-10">
