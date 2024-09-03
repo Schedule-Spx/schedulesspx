@@ -135,12 +135,12 @@ const PeriodProgress = ({ weekSchedule }) => {
     if (nextDay && weekSchedule[nextDay]?.[0]) {
       const nextDaySchedule = weekSchedule[nextDay];
       const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
-      const tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
+      const nextSchoolDay = new Date(now);
+      nextSchoolDay.setDate(nextSchoolDay.getDate() + getDayDifference(currentDay, nextDay));
+      nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
-      const timeUntilNextSchool = tomorrow - now;
-      const totalDuration = 24 * 60 * 60 * 1000;
+      const timeUntilNextSchool = nextSchoolDay - now;
+      const totalDuration = 24 * 60 * 60 * 1000 * getDayDifference(currentDay, nextDay);
       const progressPercentage = ((totalDuration - timeUntilNextSchool) / totalDuration) * 100;
 
       setCurrentState({ type: 'afterSchool', nextDay });
@@ -195,7 +195,7 @@ const PeriodProgress = ({ weekSchedule }) => {
         <div className={`w-full bg-opacity-20 ${currentTheme.main} rounded-full h-6 mb-4 relative overflow-hidden`}>
           <div 
             className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
-            style={{width: `${progress}%`, marginBottom: '3px'}}
+            style={{width: `${progress}%`}}
           ></div>
           <div className="absolute inset-0 flex items-center justify-center">
             <p className={`text-sm font-semibold ${currentTheme.text} z-10`}>
@@ -216,7 +216,6 @@ const PeriodProgress = ({ weekSchedule }) => {
         style={{
           background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
           zIndex: 0,
-          marginBottom: '3px',
         }}
       ></div>
       <div className="p-5 relative z-10">
