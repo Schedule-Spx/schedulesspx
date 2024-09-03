@@ -27,7 +27,7 @@ function ThemedApp() {
   const [showTutorial, setShowTutorial] = useState(false);
 
   // Adjusted scheduleHeight to make the schedule's bottom edge higher
-  const scheduleHeight = '350px'; // Reduced by 50px
+  const scheduleHeight = '390px'; // Reduced by 50px
   const googleCalendarHeight = '300px';
 
   useEffect(() => {
@@ -164,7 +164,7 @@ function ThemedApp() {
                         </div>
                       </div>
                     </div>
-                    <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '157px' }}>
+                    <div className={`w-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: '156px' }}>
                       <PeriodProgress weekSchedule={weekSchedule} />
                     </div>
                     <div className="h-16"></div>
