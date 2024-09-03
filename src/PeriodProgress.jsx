@@ -45,6 +45,16 @@ const PeriodProgress = ({ weekSchedule }) => {
     return count < 7 ? nextDay : null;
   }, [weekSchedule]);
 
+  const getPreviousSchoolDay = useCallback((currentDay) => {
+    let prevDay = DAYS[(DAYS.indexOf(currentDay) - 1 + 7) % 7];
+    let count = 0;
+    while (!weekSchedule[prevDay] && count < 7) {
+      prevDay = DAYS[(DAYS.indexOf(prevDay) - 1 + 7) % 7];
+      count++;
+    }
+    return count < 7 ? prevDay : null;
+  }, [weekSchedule]);
+
   const getDayDifference = useCallback((day1, day2) => {
     return (DAYS.indexOf(day2) - DAYS.indexOf(day1) + 7) % 7;
   }, []);
@@ -53,10 +63,35 @@ const PeriodProgress = ({ weekSchedule }) => {
     const totalDuration = endTime - startTime;
     const elapsed = now - startTime;
     const progressPercentage = (elapsed / totalDuration) * 100;
-    return Math.min(Math.max(progressPercentage, 0), 100); // Ensure progress is between 0 and 100
+    return Math.min(Math.max(progressPercentage, 0), 100);
   }, []);
 
+  const getLastSchoolDayEnd = useCallback((currentDay) => {
+    const lastSchoolDay = getPreviousSchoolDay(currentDay);
+    if (!lastSchoolDay) return null;
+
+    const lastDaySchedule = weekSchedule[lastSchoolDay];
+    if (!lastDaySchedule || lastDaySchedule.length === 0) return null;
+
+    const lastPeriod = lastDaySchedule[lastDaySchedule.length - 1];
+    const [, time] = lastPeriod.split(' - ');
+    const [, endTime] = time.split('-').map(t => t.trim());
+    const endDateTime = parseTime(endTime);
+
+    // Set to 3 PM if the last period ends before 3 PM
+    if (endDateTime.getHours() < 15) {
+      endDateTime.setHours(15, 0, 0, 0);
+    }
+
+    const now = new Date();
+    const daysDiff = getDayDifference(lastSchoolDay, currentDay);
+    endDateTime.setDate(now.getDate() - daysDiff);
+
+    return endDateTime;
+  }, [weekSchedule, getPreviousSchoolDay, parseTime, getDayDifference]);
+
   const handleSchoolDay = useCallback((schedule, now, currentDay) => {
+    const lastSchoolDayEnd = getLastSchoolDayEnd(currentDay);
     const currentPeriodInfo = schedule.find(period => {
       const [, time] = period.split(' - ');
       const [start, end] = time.split('-').map(t => parseTime(t.trim()));
@@ -66,7 +101,7 @@ const PeriodProgress = ({ weekSchedule }) => {
     if (currentPeriodInfo) {
       const [name, time] = currentPeriodInfo.split(' - ');
       const [start, end] = time.split('-').map(t => parseTime(t.trim()));
-      const progressPercentage = calculateProgress(start, end, now);
+      const progressPercentage = calculateProgress(lastSchoolDayEnd, end, now);
       const remaining = end - now;
 
       setCurrentState({ type: 'activePeriod', name });
@@ -82,33 +117,18 @@ const PeriodProgress = ({ weekSchedule }) => {
       if (nextPeriod) {
         const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
         const nextPeriodStart = parseTime(nextPeriodTime.split('-')[0].trim());
-        const currentPeriodIndex = schedule.indexOf(nextPeriod) - 1;
-        const previousPeriodEnd = currentPeriodIndex >= 0 
-          ? parseTime(schedule[currentPeriodIndex].split(' - ')[1].split('-')[1].trim())
-          : parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
-
-        const progressPercentage = calculateProgress(previousPeriodEnd, nextPeriodStart, now);
+        const progressPercentage = calculateProgress(lastSchoolDayEnd, nextPeriodStart, now);
         const timeUntilNext = nextPeriodStart - now;
 
         setCurrentState({ type: 'betweenPeriods', nextPeriod: nextPeriodName });
         setTimeRemaining(formatTimeRemaining(timeUntilNext));
         setProgress(progressPercentage);
         updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
-      } else if (schedule[0] && now < parseTime(schedule[0].split(' - ')[1].split('-')[0].trim())) {
-        const firstPeriodStart = parseTime(schedule[0].split(' - ')[1].split('-')[0].trim());
-        const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-        const progressPercentage = calculateProgress(dayStart, firstPeriodStart, now);
-        const timeUntilStart = firstPeriodStart - now;
-
-        setCurrentState({ type: 'beforeSchool', nextPeriod: schedule[0].split(' - ')[0] });
-        setTimeRemaining(formatTimeRemaining(timeUntilStart));
-        setProgress(progressPercentage);
-        updateTitle('School starts in', formatTimeRemaining(timeUntilStart));
       } else {
         handleAfterSchool(now, currentDay);
       }
     }
-  }, [parseTime, formatTimeRemaining, updateTitle, calculateProgress]);
+  }, [parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd]);
 
   const handleNonSchoolDay = useCallback((now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
@@ -119,10 +139,9 @@ const PeriodProgress = ({ weekSchedule }) => {
       nextSchoolDay.setDate(nextSchoolDay.getDate() + getDayDifference(currentDay, nextDay));
       nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
+      const lastSchoolDayEnd = getLastSchoolDayEnd(currentDay);
       const timeUntilNextSchool = nextSchoolDay - now;
-      const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-      const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-      const progressPercentage = calculateProgress(dayStart, dayEnd, now);
+      const progressPercentage = calculateProgress(lastSchoolDayEnd, nextSchoolDay, now);
 
       setCurrentState({ type: 'nonSchoolDay', nextDay });
       setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
@@ -134,7 +153,7 @@ const PeriodProgress = ({ weekSchedule }) => {
       setProgress(0);
       updateTitle('No School', '');
     }
-  }, [weekSchedule, getNextSchoolDay, getDayDifference, parseTime, formatTimeRemaining, updateTitle, calculateProgress]);
+  }, [weekSchedule, getNextSchoolDay, getDayDifference, parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd]);
 
   const handleAfterSchool = useCallback((now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
@@ -145,10 +164,9 @@ const PeriodProgress = ({ weekSchedule }) => {
       nextSchoolDay.setDate(nextSchoolDay.getDate() + getDayDifference(currentDay, nextDay));
       nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
       
+      const lastSchoolDayEnd = getLastSchoolDayEnd(currentDay);
       const timeUntilNextSchool = nextSchoolDay - now;
-      const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-      const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-      const progressPercentage = calculateProgress(dayStart, dayEnd, now);
+      const progressPercentage = calculateProgress(lastSchoolDayEnd, nextSchoolDay, now);
 
       setCurrentState({ type: 'afterSchool', nextDay });
       setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
@@ -157,7 +175,7 @@ const PeriodProgress = ({ weekSchedule }) => {
     } else {
       handleNonSchoolDay(now, currentDay);
     }
-  }, [weekSchedule, getNextSchoolDay, parseTime, formatTimeRemaining, updateTitle, handleNonSchoolDay, calculateProgress]);
+  }, [weekSchedule, getNextSchoolDay, parseTime, formatTimeRemaining, updateTitle, handleNonSchoolDay, calculateProgress, getDayDifference, getLastSchoolDayEnd]);
 
   useEffect(() => {
     const updateCurrentState = () => {
