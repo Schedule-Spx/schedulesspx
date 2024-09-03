@@ -11,7 +11,7 @@ const Announcement = () => {
     useEffect(() => {
         const fetchAnnouncement = async () => {
             try {
-                const response = await fetch('https://your-worker-url.workers.dev/api/announcement');
+                const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement');
                 if (response.ok) {
                     const data = await response.json();
                     setAnnouncementText(data);
