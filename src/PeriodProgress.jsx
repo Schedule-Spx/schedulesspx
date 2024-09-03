@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from './ThemeContext';
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const PeriodProgress = ({ weekSchedule }) => {
+const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   const { currentTheme } = useTheme();
   const [currentState, setCurrentState] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -35,29 +35,20 @@ const PeriodProgress = ({ weekSchedule }) => {
     document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
   }, []);
 
-  const getNextSchoolDay = useCallback((currentDay) => {
-    let nextDay = DAYS[(DAYS.indexOf(currentDay) + 1) % 7];
-    let count = 0;
-    while (!weekSchedule[nextDay] && count < 7) {
-      nextDay = DAYS[(DAYS.indexOf(nextDay) + 1) % 7];
-      count++;
-    }
-    return count < 7 ? nextDay : null;
-  }, [weekSchedule]);
+  const getLastSchoolDayEnd = useCallback(() => {
+    if (!lastSchoolDay) return null;
+    const endDate = new Date(lastSchoolDay);
+    endDate.setHours(15, 0, 0, 0); // Set to 3 PM
+    return endDate;
+  }, [lastSchoolDay]);
 
-  const getPreviousSchoolDay = useCallback((currentDay) => {
-    let prevDay = DAYS[(DAYS.indexOf(currentDay) - 1 + 7) % 7];
-    let count = 0;
-    while (!weekSchedule[prevDay] && count < 7) {
-      prevDay = DAYS[(DAYS.indexOf(prevDay) - 1 + 7) % 7];
-      count++;
-    }
-    return count < 7 ? prevDay : null;
-  }, [weekSchedule]);
-
-  const getDayDifference = useCallback((day1, day2) => {
-    return (DAYS.indexOf(day2) - DAYS.indexOf(day1) + 7) % 7;
-  }, []);
+  const getSchoolStartTime = useCallback((schedule) => {
+    if (!schedule || schedule.length === 0) return null;
+    const firstPeriod = schedule[0];
+    const [, time] = firstPeriod.split(' - ');
+    const [startTime] = time.split('-').map(t => t.trim());
+    return parseTime(startTime);
+  }, [parseTime]);
 
   const calculateProgress = useCallback((startTime, endTime, now) => {
     const totalDuration = endTime - startTime;
@@ -66,32 +57,15 @@ const PeriodProgress = ({ weekSchedule }) => {
     return Math.min(Math.max(progressPercentage, 0), 100);
   }, []);
 
-  const getLastSchoolDayEnd = useCallback((currentDay) => {
-    const lastSchoolDay = getPreviousSchoolDay(currentDay);
-    if (!lastSchoolDay) return null;
-
-    const lastDaySchedule = weekSchedule[lastSchoolDay];
-    if (!lastDaySchedule || lastDaySchedule.length === 0) return null;
-
-    const lastPeriod = lastDaySchedule[lastDaySchedule.length - 1];
-    const [, time] = lastPeriod.split(' - ');
-    const [, endTime] = time.split('-').map(t => t.trim());
-    const endDateTime = parseTime(endTime);
-
-    // Set to 3 PM if the last period ends before 3 PM
-    if (endDateTime.getHours() < 15) {
-      endDateTime.setHours(15, 0, 0, 0);
+  const handleSchoolDay = useCallback((schedule, now) => {
+    const lastSchoolDayEnd = getLastSchoolDayEnd();
+    const schoolStartTime = getSchoolStartTime(schedule);
+    
+    if (!lastSchoolDayEnd || !schoolStartTime) {
+      console.error("Could not determine last school day end or school start time");
+      return;
     }
 
-    const now = new Date();
-    const daysDiff = getDayDifference(lastSchoolDay, currentDay);
-    endDateTime.setDate(now.getDate() - daysDiff);
-
-    return endDateTime;
-  }, [weekSchedule, getPreviousSchoolDay, parseTime, getDayDifference]);
-
-  const handleSchoolDay = useCallback((schedule, now, currentDay) => {
-    const lastSchoolDayEnd = getLastSchoolDayEnd(currentDay);
     const currentPeriodInfo = schedule.find(period => {
       const [, time] = period.split(' - ');
       const [start, end] = time.split('-').map(t => parseTime(t.trim()));
@@ -101,11 +75,11 @@ const PeriodProgress = ({ weekSchedule }) => {
     if (currentPeriodInfo) {
       const [name, time] = currentPeriodInfo.split(' - ');
       const [start, end] = time.split('-').map(t => parseTime(t.trim()));
-      const progressPercentage = calculateProgress(lastSchoolDayEnd, end, now);
+      const periodProgress = calculateProgress(start, end, now);
       const remaining = end - now;
 
       setCurrentState({ type: 'activePeriod', name });
-      setProgress(progressPercentage);
+      setProgress(periodProgress);
       setTimeRemaining(formatTimeRemaining(remaining));
       updateTitle(name, formatTimeRemaining(remaining));
     } else {
@@ -117,76 +91,59 @@ const PeriodProgress = ({ weekSchedule }) => {
       if (nextPeriod) {
         const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
         const nextPeriodStart = parseTime(nextPeriodTime.split('-')[0].trim());
-        const progressPercentage = calculateProgress(lastSchoolDayEnd, nextPeriodStart, now);
+        const currentPeriodIndex = schedule.indexOf(nextPeriod) - 1;
+        const previousPeriodEnd = currentPeriodIndex >= 0 
+          ? parseTime(schedule[currentPeriodIndex].split(' - ')[1].split('-')[1].trim())
+          : schoolStartTime;
+        
+        const betweenPeriodsProgress = calculateProgress(previousPeriodEnd, nextPeriodStart, now);
         const timeUntilNext = nextPeriodStart - now;
 
         setCurrentState({ type: 'betweenPeriods', nextPeriod: nextPeriodName });
         setTimeRemaining(formatTimeRemaining(timeUntilNext));
-        setProgress(progressPercentage);
+        setProgress(betweenPeriodsProgress);
         updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
       } else {
-        handleAfterSchool(now, currentDay);
+        const dayProgress = calculateProgress(lastSchoolDayEnd, schoolStartTime, now);
+        setCurrentState({ type: 'afterSchool' });
+        setTimeRemaining('');
+        setProgress(dayProgress);
+        updateTitle('After School', '');
       }
     }
-  }, [parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd]);
-
-  const handleNonSchoolDay = useCallback((now, currentDay) => {
-    const nextDay = getNextSchoolDay(currentDay);
-    if (nextDay && weekSchedule[nextDay]?.[0]) {
-      const nextDaySchedule = weekSchedule[nextDay];
-      const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
-      const nextSchoolDay = new Date(now);
-      nextSchoolDay.setDate(nextSchoolDay.getDate() + getDayDifference(currentDay, nextDay));
-      nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
-      
-      const lastSchoolDayEnd = getLastSchoolDayEnd(currentDay);
-      const timeUntilNextSchool = nextSchoolDay - now;
-      const progressPercentage = calculateProgress(lastSchoolDayEnd, nextSchoolDay, now);
-
-      setCurrentState({ type: 'nonSchoolDay', nextDay });
-      setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
-      setProgress(progressPercentage);
-      updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchool));
-    } else {
-      setCurrentState({ type: 'noSchool' });
-      setTimeRemaining('');
-      setProgress(0);
-      updateTitle('No School', '');
-    }
-  }, [weekSchedule, getNextSchoolDay, getDayDifference, parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd]);
-
-  const handleAfterSchool = useCallback((now, currentDay) => {
-    const nextDay = getNextSchoolDay(currentDay);
-    if (nextDay && weekSchedule[nextDay]?.[0]) {
-      const nextDaySchedule = weekSchedule[nextDay];
-      const nextSchoolStart = parseTime(nextDaySchedule[0].split(' - ')[1].split('-')[0].trim());
-      const nextSchoolDay = new Date(now);
-      nextSchoolDay.setDate(nextSchoolDay.getDate() + getDayDifference(currentDay, nextDay));
-      nextSchoolDay.setHours(nextSchoolStart.getHours(), nextSchoolStart.getMinutes(), 0, 0);
-      
-      const lastSchoolDayEnd = getLastSchoolDayEnd(currentDay);
-      const timeUntilNextSchool = nextSchoolDay - now;
-      const progressPercentage = calculateProgress(lastSchoolDayEnd, nextSchoolDay, now);
-
-      setCurrentState({ type: 'afterSchool', nextDay });
-      setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
-      setProgress(progressPercentage);
-      updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchool));
-    } else {
-      handleNonSchoolDay(now, currentDay);
-    }
-  }, [weekSchedule, getNextSchoolDay, parseTime, formatTimeRemaining, updateTitle, handleNonSchoolDay, calculateProgress, getDayDifference, getLastSchoolDayEnd]);
+  }, [parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd, getSchoolStartTime]);
 
   useEffect(() => {
     const updateCurrentState = () => {
       const now = new Date();
-      const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+      const currentDay = DAYS[now.getDay()];
       const todaySchedule = weekSchedule[currentDay];
 
       if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
-        handleSchoolDay(todaySchedule, now, currentDay);
+        handleSchoolDay(todaySchedule, now);
       } else {
-        handleNonSchoolDay(now, currentDay);
+        const lastSchoolDayEnd = getLastSchoolDayEnd();
+        const nextSchoolDay = Object.keys(weekSchedule).find(day => 
+          Array.isArray(weekSchedule[day]) && weekSchedule[day].length > 0
+        );
+        
+        if (nextSchoolDay && lastSchoolDayEnd) {
+          const nextSchoolStart = getSchoolStartTime(weekSchedule[nextSchoolDay]);
+          if (nextSchoolStart) {
+            const progressPercentage = calculateProgress(lastSchoolDayEnd, nextSchoolStart, now);
+            const timeUntilNextSchool = nextSchoolStart - now;
+
+            setCurrentState({ type: 'nonSchoolDay', nextDay: nextSchoolDay });
+            setTimeRemaining(formatTimeRemaining(timeUntilNextSchool));
+            setProgress(progressPercentage);
+            updateTitle('Next school day', formatTimeRemaining(timeUntilNextSchool));
+          }
+        } else {
+          setCurrentState({ type: 'noSchool' });
+          setTimeRemaining('');
+          setProgress(100);
+          updateTitle('No School', '');
+        }
       }
     };
 
@@ -194,7 +151,7 @@ const PeriodProgress = ({ weekSchedule }) => {
     updateCurrentState(); // Initial update
 
     return () => clearInterval(timer);
-  }, [weekSchedule, handleSchoolDay, handleNonSchoolDay]);
+  }, [weekSchedule, lastSchoolDay, handleSchoolDay, getLastSchoolDayEnd, getSchoolStartTime, calculateProgress, formatTimeRemaining, updateTitle]);
 
   const renderContent = useMemo(() => {
     if (!currentState) {
@@ -206,7 +163,7 @@ const PeriodProgress = ({ weekSchedule }) => {
         case 'activePeriod': return currentState.name;
         case 'betweenPeriods': return `Next: ${currentState.nextPeriod}`;
         case 'beforeSchool': return 'School starts soon';
-        case 'afterSchool':
+        case 'afterSchool': return 'After School';
         case 'nonSchoolDay': return `Next school day (${currentState.nextDay})`;
         default: return 'No School';
       }
