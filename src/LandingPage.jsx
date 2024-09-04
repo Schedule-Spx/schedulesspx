@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link for routing
-import GoogleLogin from './components/GoogleLogin'; // Adjust the import path if necessary
+import { useNavigate, Link } from 'react-router-dom';
 import './LandingPage.css';
 
-const LandingPage = ({ user, setUser }) => {
+const GoogleLogin = lazy(() => import('./components/GoogleLogin'));
+
+const LandingPage = React.memo(({ user, setUser }) => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
 
@@ -27,12 +28,12 @@ const LandingPage = ({ user, setUser }) => {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    navigate('/main'); // Redirect after successful sign-in
+    navigate('/main');
   };
 
   return (
     <div className="landing-page">
-      <div className="background-image-container"></div> {/* Background image container */}
+      <div className="background-image-container"></div>
       <motion.h1
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
@@ -63,13 +64,15 @@ const LandingPage = ({ user, setUser }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 1.5 }}
       >
-        <GoogleLogin onLoginSuccess={handleLoginSuccess} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <GoogleLogin onLoginSuccess={handleLoginSuccess} />
+        </Suspense>
         <p className="fine-print">
           By Signing in, you agree to the <Link to="/terms" className="highlight-link">Terms</Link> and the <Link to="/privacy" className="highlight-link">Privacy Policy</Link>
         </p>
       </motion.div>
     </div>
   );
-};
+});
 
 export default LandingPage;

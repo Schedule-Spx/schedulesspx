@@ -12,14 +12,21 @@ import NavBar from './NavBar';
 import LandingPage from './LandingPage';
 import TutorialModal from './components/TutorialModal';
 import Announcement from './Announcement';
+import ServiceWorkerWrapper from './ServiceWorkerWrapper';
+
+const preloadComponent = (factory) => {
+  const Component = lazy(factory);
+  Component.preload = factory;
+  return Component;
+};
 
 // Lazy-loaded components
-const Admin = lazy(() => import('./Admin'));
-const Account = lazy(() => import('./Account'));
-const About = lazy(() => import('./About'));
-const PrivacyPolicy = lazy(() => import('./PrivacyPolicy'));
-const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
-const GoogleCalendar = lazy(() => import('./components/GoogleCalendar'));
+const Admin = preloadComponent(() => import('./Admin'));
+const Account = preloadComponent(() => import('./Account'));
+const About = preloadComponent(() => import('./About'));
+const PrivacyPolicy = preloadComponent(() => import('./PrivacyPolicy'));
+const TermsAndConditions = preloadComponent(() => import('./TermsAndConditions'));
+const GoogleCalendar = preloadComponent(() => import('./components/GoogleCalendar'));
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
@@ -76,6 +83,28 @@ function ThemedApp() {
 
     window.addEventListener('resize', handleResize);
     handleResize();
+
+    // Preload components
+    Admin.preload();
+    Account.preload();
+    About.preload();
+    PrivacyPolicy.preload();
+    TermsAndConditions.preload();
+    GoogleCalendar.preload();
+
+    // Use Intersection Observer for lazy loading components
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+
+    document.querySelectorAll('.lazy-load').forEach(el => {
+      observer.observe(el);
+    });
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -205,6 +234,7 @@ function AppContent() {
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <ThemeProvider>
         <Router>
+          <ServiceWorkerWrapper />
           <ThemedApp />
         </Router>
       </ThemeProvider>
