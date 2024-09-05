@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import GoogleLogin from './components/GoogleLogin';
-import logo from './assets/logo.svg';
-import { useTheme } from './ThemeContext';
+import GoogleLogin from './GoogleLogin';
+import logo from '../assets/logo.svg';
+import { useTheme } from '../context/ThemeContext';
 
 const NavBar = ({ user, setUser }) => {
   const { currentTheme } = useTheme();

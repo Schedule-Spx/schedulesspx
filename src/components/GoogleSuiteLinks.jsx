@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme } from './ThemeContext';
-import googleDocsIcon from './assets/Google Docs Icon.svg';
-import googleDriveIcon from './assets/Google Drive Icon.svg';
-import googleSheetsIcon from './assets/Google Sheets Icon.svg';
-import googleSlidesIcon from './assets/Google Slide Icon.svg';
+import { useTheme } from '../context/ThemeContext';
+import googleDocsIcon from '../assets/Google Docs Icon.svg';
+import googleDriveIcon from '../assets/Google Drive Icon.svg';
+import googleSheetsIcon from '../assets/Google Sheets Icon.svg';
+import googleSlidesIcon from '../assets/Google Slide Icon.svg';
 
 const GoogleSuiteLinks = () => {
     const { currentTheme } = useTheme();

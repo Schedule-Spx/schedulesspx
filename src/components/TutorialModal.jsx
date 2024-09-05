@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './TutorialModal.css';
+import '../styles/TutorialModal.css';
 
 const TutorialModal = ({ closeTutorial }) => {
   const [step, setStep] = useState(1);

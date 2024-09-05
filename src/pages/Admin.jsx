@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from './ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const { currentTheme } = useTheme();

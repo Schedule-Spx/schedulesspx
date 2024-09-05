@@ -1,9 +1,9 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import './LandingPage.css';
+import '../styles/LandingPage.css';
 
-const GoogleLogin = lazy(() => import('./components/GoogleLogin'));
+const GoogleLogin = lazy(() => import('../components/GoogleLogin'));
 
 const LandingPage = React.memo(({ user, setUser }) => {
   const navigate = useNavigate();

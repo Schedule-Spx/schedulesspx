@@ -1,11 +1,11 @@
-// src/About.jsx
+// src/pages/About.jsx
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import './About.css';
-import AboutSection1Img from './assets/about section 1 img.png';
-import AboutSection2Img from './assets/about section 2 img.png';
-import AboutSection3Img from './assets/about section 3 img.png';
-import AboutSection4Img from './assets/about section 4 img.png';
+import '../styles/About.css';
+import AboutSection1Img from '../assets/about section 1 img.png';
+import AboutSection2Img from '../assets/about section 2 img.png';
+import AboutSection3Img from '../assets/about section 3 img.png';
+import AboutSection4Img from '../assets/about section 4 img.png';
 
 const About = () => {
   const [scrollY, setScrollY] = useState(0);

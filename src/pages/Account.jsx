@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from './ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './carousel.css';
+import '../styles/carousel.css';
 
 const Account = ({ user, weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
