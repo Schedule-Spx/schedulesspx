@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import './styles/index.css'  // Updated import path
 import App from './App.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import { registerSW } from 'virtual:pwa-register'
