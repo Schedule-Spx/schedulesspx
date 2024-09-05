@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useTheme } from '../ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';

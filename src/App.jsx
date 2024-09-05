@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { ThemeProvider, useTheme } from './ThemeContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import './App.css';
-import DayHeader from './DayHeader';
+import DayHeader from './components/DayHeader';
 import QuickLinks from './QuickLinks';
 import PeriodProgress from './PeriodProgress';
 import Schedule from './Schedule';
@@ -12,7 +12,7 @@ import NavBar from './NavBar';
 import LandingPage from './LandingPage';
 import TutorialModal from './components/TutorialModal';
 import Announcement from './Announcement';
-import ServiceWorkerWrapper from './ServiceWorkerWrapper';
+import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 
 const preloadComponent = (factory) => {
   const Component = lazy(factory);
@@ -23,9 +23,9 @@ const preloadComponent = (factory) => {
 // Lazy-loaded components
 const Admin = preloadComponent(() => import('./Admin'));
 const Account = preloadComponent(() => import('./Account'));
-const About = preloadComponent(() => import('./About'));
-const PrivacyPolicy = preloadComponent(() => import('./PrivacyPolicy'));
-const TermsAndConditions = preloadComponent(() => import('./TermsAndConditions'));
+const About = preloadComponent(() => import('./pages/About'));
+const PrivacyPolicy = preloadComponent(() => import('./pages/PrivacyPolicy'));
+const TermsAndConditions = preloadComponent(() => import('./pages/TermsAndConditions'));
 const GoogleCalendar = preloadComponent(() => import('./components/GoogleCalendar'));
 
 function ThemedApp() {
