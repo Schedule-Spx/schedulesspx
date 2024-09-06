@@ -3,19 +3,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import GoogleLogin from './GoogleLogin';
 import logo from '../assets/logo.svg';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
-const NavBar = ({ user, setUser }) => {
+const NavBar = () => {
   const { currentTheme } = useTheme();
+  const { user, login, logout } = useAuth();
   const navigate = useNavigate();
 
   const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org', 'davidpaulcamick@gmail.com'];
 
   const handleLoginSuccess = (userData) => {
-    setUser(userData);
+    login(userData);
   };
 
   const handleLogout = () => {
-    setUser(null);
+    logout();
     navigate('/');
   };
 
