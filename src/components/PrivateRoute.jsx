@@ -7,19 +7,17 @@ const PrivateRoute = ({ children }) => {
   const location = useLocation();
 
   if (!user) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
+    // Redirect them to the login page if not logged in
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
+  // Check if the user is authorized
   if (!isAuthorized()) {
-    // If the user is logged in but not authorized, you might want to show an error page
-    // or redirect them to a different page. For now, we'll just render null.
-    return null;
+    // If the user is logged in but not authorized, show an error message or redirect
+    return <Navigate to="/unauthorized" replace />;
   }
 
+  // If the user is logged in and authorized, render the children
   return children;
 };
 
