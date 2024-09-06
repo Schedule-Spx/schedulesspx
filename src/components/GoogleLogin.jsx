@@ -1,4 +1,3 @@
-// src/components/GoogleLogin.jsx
 import React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 
@@ -28,13 +27,7 @@ const GoogleLogin = ({ onLoginSuccess }) => {
   });
 
   return (
-    <button 
-      onClick={() => {
-        console.log("Google Login button clicked");
-        login();
-      }} 
-      className="bg-white text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-    >
+    <button onClick={() => login()} className="bg-white text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
       Sign in with Google
     </button>
   );
