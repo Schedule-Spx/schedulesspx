@@ -19,9 +19,8 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
-    const userWithAuth = { ...userData, isAuthorized: isAuthorized(userData.email) };
-    setUser(userWithAuth);
-    localStorage.setItem('user', JSON.stringify(userWithAuth));
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
     const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
     localStorage.setItem('sessionExpiry', expiry.toString());
   };
@@ -32,10 +31,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('sessionExpiry');
   };
 
-  const isAuthorized = (email) => {
+  const isAuthorized = () => {
+    if (!user) return false;
     const allowedDomains = ['spx.org', 'spxstudent.org'];
     const allowedEmails = ['kagenmjensen@me.com'];
-    return allowedDomains.includes(email.split('@')[1]) || allowedEmails.includes(email);
+    return allowedDomains.includes(user.email.split('@')[1]) || allowedEmails.includes(user.email);
   };
 
   return (
