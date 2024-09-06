@@ -16,6 +16,9 @@ const Schedule = ({ weekSchedule }) => {
     return () => clearInterval(timer);
   }, []);
 
+  console.log("Schedule - Current user:", user);
+  console.log("Schedule - Is authorized:", isAuthorized());
+
   const formatTime = (timeString) => {
     if (!timeString) return '';
     if (timeString.includes('AM') || timeString.includes('PM')) {
@@ -62,6 +65,7 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   if (!user || !isAuthorized()) {
+    console.log("Schedule - User not authorized");
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to view the schedule.</p>
@@ -69,6 +73,7 @@ const Schedule = ({ weekSchedule }) => {
     );
   }
 
+  console.log("Schedule - User authorized, rendering schedule");
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col`}>
       {/* Gradient Overlay */}

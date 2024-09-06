@@ -22,6 +22,9 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     fetchUserStats();
   }, []);
 
+  console.log("Admin - Current user:", user);
+  console.log("Admin - Is authorized:", isAuthorized());
+
   const fetchCurrentAnnouncement = async () => {
     try {
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement');
@@ -195,6 +198,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
   if (!user || !isAuthorized()) {
+    console.log("Admin - User not authorized");
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to access the admin panel.</p>
@@ -202,6 +206,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     );
   }
 
+  console.log("Admin - User authorized, rendering admin panel");
   return (
     <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <div className="flex-grow overflow-y-auto">
