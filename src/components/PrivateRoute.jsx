@@ -1,3 +1,4 @@
+// src/components/PrivateRoute.jsx
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -6,18 +7,20 @@ const PrivateRoute = ({ children }) => {
   const { user, isAuthorized } = useAuth();
   const location = useLocation();
 
+  console.log("PrivateRoute - user:", user);
+  console.log("PrivateRoute - isAuthorized:", isAuthorized());
+
   if (!user) {
-    // Redirect them to the login page if not logged in
+    console.log("PrivateRoute - No user, redirecting to login");
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // Check if the user is authorized
   if (!isAuthorized()) {
-    // If the user is logged in but not authorized, show an error message or redirect
+    console.log("PrivateRoute - User not authorized");
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // If the user is logged in and authorized, render the children
+  console.log("PrivateRoute - User authorized, rendering children");
   return children;
 };
 
