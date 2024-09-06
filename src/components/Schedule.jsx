@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 const Schedule = ({ weekSchedule }) => {
   const { currentTheme } = useTheme();
+  const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
@@ -58,6 +60,20 @@ const Schedule = ({ weekSchedule }) => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours, 10), parseInt(minutes, 10));
   };
+
+  const isAuthorized = () => {
+    const allowedDomains = ['spx.org', 'spxstudent.org'];
+    const allowedEmails = ['kagenmjensen@me.com'];
+    return user && (allowedDomains.includes(user.email.split('@')[1]) || allowedEmails.includes(user.email));
+  };
+
+  if (!isAuthorized()) {
+    return (
+      <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
+        <p className={`${currentTheme.text} text-center`}>You are not authorized to view the schedule.</p>
+      </div>
+    );
+  }
 
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col`}>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import './styles/App.css';
 import DayHeader from './components/DayHeader';
 import QuickLinks from './components/QuickLinks';
@@ -13,6 +14,7 @@ import LandingPage from './pages/LandingPage';
 import TutorialModal from './components/TutorialModal';
 import Announcement from './components/Announcement';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
+import PrivateRoute from './components/PrivateRoute';
 
 const preloadComponent = (factory) => {
   const Component = lazy(factory);
@@ -30,8 +32,8 @@ const GoogleCalendar = preloadComponent(() => import('./components/GoogleCalenda
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
+  const { user, setUser } = useAuth();
   const location = useLocation();
-  const [user, setUser] = useState(null);
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showTutorial, setShowTutorial] = useState(false);
   const contentRef = useRef(null);
@@ -47,17 +49,6 @@ function ThemedApp() {
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    const savedExpiry = localStorage.getItem('sessionExpiry');
-    if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      fetchUserTheme(parsedUser.email);
-    } else {
-      localStorage.removeItem('user');
-      localStorage.removeItem('sessionExpiry');
-    }
-
     const tutorialShown = localStorage.getItem('tutorialShown');
     if (!tutorialShown && location.pathname === '/main') {
       setShowTutorial(true);
@@ -136,20 +127,6 @@ function ThemedApp() {
     }
   };
 
-  const updateUser = (newUser) => {
-    setUser(newUser);
-    if (newUser) {
-      localStorage.setItem('user', JSON.stringify(newUser));
-      const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000;
-      localStorage.setItem('sessionExpiry', expiry.toString());
-      fetchUserTheme(newUser.email);
-    } else {
-      localStorage.removeItem('user');
-      localStorage.removeItem('sessionExpiry');
-      changeTheme('default');
-    }
-  };
-
   const closeTutorial = () => {
     setShowTutorial(false);
     localStorage.setItem('tutorialShown', 'true');
@@ -159,20 +136,28 @@ function ThemedApp() {
     <div className={`App flex flex-col min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />} 
       {location.pathname === '/' ? (
-        <LandingPage user={user} setUser={updateUser} />
+        <LandingPage />
       ) : (
         <>
-          <NavBar user={user} setUser={updateUser} />
+          <NavBar />
           <div ref={contentRef} className="flex-grow overflow-auto">
             <Suspense fallback={<div>Loading...</div>}>
               <Routes>
                 <Route 
                   path="/admin" 
-                  element={<Admin user={user} weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />} 
+                  element={
+                    <PrivateRoute>
+                      <Admin weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />
+                    </PrivateRoute>
+                  } 
                 />
                 <Route 
                   path="/account" 
-                  element={<Account user={user} weekSchedule={weekSchedule} />} 
+                  element={
+                    <PrivateRoute>
+                      <Account weekSchedule={weekSchedule} />
+                    </PrivateRoute>
+                  } 
                 />
                 <Route path="/about" element={<About />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -180,7 +165,7 @@ function ThemedApp() {
                 <Route
                   path="/main"
                   element={
-                    user ? (
+                    <PrivateRoute>
                       <main className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="flex flex-col space-y-4">
                           <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.dayHeaderHeight}px` }}>
@@ -212,12 +197,7 @@ function ThemedApp() {
                           <PeriodProgress weekSchedule={weekSchedule} />
                         </div>
                       </main>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center min-h-screen text-center">
-                        <h1 className="text-4xl font-bold">You must log in to view this page</h1>
-                        <a href="/" className="mt-4 text-blue-500 underline">Go back to the landing page</a>
-                      </div>
-                    )
+                    </PrivateRoute>
                   }
                 />
               </Routes>
@@ -232,12 +212,14 @@ function ThemedApp() {
 function AppContent() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <ThemeProvider>
-        <Router>
-          <ServiceWorkerWrapper />
-          <ThemedApp />
-        </Router>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <Router>
+            <ServiceWorkerWrapper />
+            <ThemedApp />
+          </Router>
+        </ThemeProvider>
+      </AuthProvider>
     </GoogleOAuthProvider>
   );
 }

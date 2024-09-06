@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
-const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
+const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const { currentTheme } = useTheme();
+  const { user } = useAuth();
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
   const [bulkInput, setBulkInput] = useState('');
   const [announcement, setAnnouncement] = useState({ title: '', message: '' });
   const [currentAnnouncement, setCurrentAnnouncement] = useState({ title: '', message: '' });
+  const [userStats, setUserStats] = useState({ totalUsers: 0, activeUsers: 0 });
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     if (Object.keys(weekSchedule).length === 0) {
       fetchSchedule();
     }
     fetchCurrentAnnouncement();
+    fetchUserStats();
   }, []);
 
   const fetchCurrentAnnouncement = async () => {
@@ -26,6 +31,23 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
       }
     } catch (error) {
       console.error('Error fetching announcement:', error);
+    }
+  };
+
+  const fetchUserStats = async () => {
+    try {
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/admin/users', {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserStats({ totalUsers: data.totalUsers, activeUsers: data.activeUsers });
+        setUsers(data.users);
+      }
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
     }
   };
 
@@ -72,7 +94,10 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
       setSaveStatus('Saving...');
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
         body: JSON.stringify(schedule)
       });
       if (!response.ok) {
@@ -94,7 +119,10 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
       setSaveStatus('Saving announcement...');
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
         body: JSON.stringify(announcement)
       });
       if (!response.ok) {
@@ -111,7 +139,60 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
     }
   };
 
-  const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`; // Added text-gray-900 for dark text
+  const handleUpdateUser = async (userId, updatedData) => {
+    try {
+      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify(updatedData)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      fetchUserStats();
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: { 
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      fetchUserStats();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleBanUser = async (userId) => {
+    try {
+      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}/ban`, {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      fetchUserStats();
+    } catch (error) {
+      console.error('Error banning user:', error);
+    }
+  };
+
+  const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
   return (
     <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text}`}>
@@ -119,6 +200,40 @@ const Admin = ({ user, weekSchedule, setWeekSchedule, fetchSchedule }) => {
         <div className="container mx-auto p-6">
           <div className={`${currentTheme.secondary} border-2 ${currentTheme.border} p-6 rounded-lg shadow-lg`}>
             <h2 className={`text-2xl font-bold mb-6`}>Admin Console</h2>
+
+            {/* User Statistics Section */}
+            <div className="mb-8">
+              <h3 className={`text-xl font-semibold mb-4`}>User Statistics</h3>
+              <p>Total Users: {userStats.totalUsers}</p>
+              <p>Active Users: {userStats.activeUsers}</p>
+            </div>
+
+            {/* User Management Section */}
+            <div className="mb-8">
+              <h3 className={`text-xl font-semibold mb-4`}>User Management</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">Email</th>
+                      <th className="px-4 py-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map(user => (
+                      <tr key={user.id}>
+                        <td className="border px-4 py-2">{user.email}</td>
+                        <td className="border px-4 py-2">
+                          <button onClick={() => handleUpdateUser(user.id)} className={`${currentTheme.accent} px-2 py-1 rounded mr-2`}>Update</button>
+                          <button onClick={() => handleDeleteUser(user.id)} className={`${currentTheme.accent} px-2 py-1 rounded mr-2`}>Delete</button>
+                          <button onClick={() => handleBanUser(user.id)} className={`${currentTheme.accent} px-2 py-1 rounded`}>Ban</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
             {/* Announcement Section */}
             <div className="mb-8">
