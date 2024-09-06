@@ -61,13 +61,7 @@ const Schedule = ({ weekSchedule }) => {
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours, 10), parseInt(minutes, 10));
   };
 
-  const isAuthorized = () => {
-    const allowedDomains = ['spx.org', 'spxstudent.org'];
-    const allowedEmails = ['kagenmjensen@me.com'];
-    return user && (allowedDomains.includes(user.email.split('@')[1]) || allowedEmails.includes(user.email));
-  };
-
-  if (!isAuthorized()) {
+  if (!user || !user.isAuthorized) {
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to view the schedule.</p>

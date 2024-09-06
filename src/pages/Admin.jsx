@@ -194,6 +194,14 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
+  if (!user || !user.isAuthorized) {
+    return (
+      <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
+        <p className={`${currentTheme.text} text-center`}>You are not authorized to access the admin panel.</p>
+      </div>
+    );
+  }
+
   return (
     <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <div className="flex-grow overflow-y-auto">

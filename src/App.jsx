@@ -14,7 +14,6 @@ import LandingPage from './pages/LandingPage';
 import TutorialModal from './components/TutorialModal';
 import Announcement from './components/Announcement';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
-import PrivateRoute from './components/PrivateRoute';
 
 const preloadComponent = (factory) => {
   const Component = lazy(factory);
@@ -32,7 +31,7 @@ const GoogleCalendar = preloadComponent(() => import('./components/GoogleCalenda
 
 function ThemedApp() {
   const { currentTheme, changeTheme } = useTheme();
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const [weekSchedule, setWeekSchedule] = useState({});
   const [showTutorial, setShowTutorial] = useState(false);
@@ -146,17 +145,13 @@ function ThemedApp() {
                 <Route 
                   path="/admin" 
                   element={
-                    <PrivateRoute>
-                      <Admin weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} />
-                    </PrivateRoute>
+                    user ? <Admin weekSchedule={weekSchedule} setWeekSchedule={setWeekSchedule} fetchSchedule={fetchSchedule} /> : <Navigate to="/" />
                   } 
                 />
                 <Route 
                   path="/account" 
                   element={
-                    <PrivateRoute>
-                      <Account weekSchedule={weekSchedule} />
-                    </PrivateRoute>
+                    user ? <Account weekSchedule={weekSchedule} /> : <Navigate to="/" />
                   } 
                 />
                 <Route path="/about" element={<About />} />
@@ -165,7 +160,7 @@ function ThemedApp() {
                 <Route
                   path="/main"
                   element={
-                    <PrivateRoute>
+                    user ? (
                       <main className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="flex flex-col space-y-4">
                           <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.dayHeaderHeight}px` }}>
@@ -197,7 +192,7 @@ function ThemedApp() {
                           <PeriodProgress weekSchedule={weekSchedule} />
                         </div>
                       </main>
-                    </PrivateRoute>
+                    ) : <Navigate to="/" />
                   }
                 />
               </Routes>

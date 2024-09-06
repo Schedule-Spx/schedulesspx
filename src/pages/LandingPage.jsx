@@ -2,12 +2,14 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/LandingPage.css';
+import { useAuth } from '../context/AuthContext';
 
 const GoogleLogin = lazy(() => import('../components/GoogleLogin'));
 
-const LandingPage = React.memo(({ user, setUser }) => {
+const LandingPage = React.memo(() => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
+  const { user, login } = useAuth();
 
   const handleScroll = () => {
     setScrollY(window.scrollY);
@@ -27,7 +29,7 @@ const LandingPage = React.memo(({ user, setUser }) => {
   }, [user, navigate]);
 
   const handleLoginSuccess = (userData) => {
-    setUser(userData);
+    login(userData);
     navigate('/main');
   };
 
