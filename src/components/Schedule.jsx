@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Schedule = ({ weekSchedule }) => {
   const { currentTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isAuthorized } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
@@ -61,7 +61,7 @@ const Schedule = ({ weekSchedule }) => {
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours, 10), parseInt(minutes, 10));
   };
 
-  if (!user || !user.isAuthorized) {
+  if (!user || !isAuthorized()) {
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to view the schedule.</p>

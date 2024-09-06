@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const { currentTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isAuthorized } = useAuth();
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
@@ -38,7 +38,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     try {
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/admin/users', {
         headers: {
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.accessToken}`
         }
       });
       if (response.ok) {
@@ -96,7 +96,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.accessToken}`
         },
         body: JSON.stringify(schedule)
       });
@@ -121,7 +121,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.accessToken}`
         },
         body: JSON.stringify(announcement)
       });
@@ -145,7 +145,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.accessToken}`
         },
         body: JSON.stringify(updatedData)
       });
@@ -163,7 +163,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
       const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: { 
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.accessToken}`
         }
       });
       if (!response.ok) {
@@ -180,7 +180,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
       const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}/ban`, {
         method: 'POST',
         headers: { 
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.accessToken}`
         }
       });
       if (!response.ok) {
@@ -194,7 +194,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
-  if (!user || !user.isAuthorized) {
+  if (!user || !isAuthorized()) {
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to access the admin panel.</p>
