@@ -7,21 +7,26 @@ import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
   const { currentTheme } = useTheme();
-  const { user, login, logout } = useAuth();
+  const { user, login, logout, isAuthorized } = useAuth();
   const navigate = useNavigate();
 
   const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org', 'davidpaulcamick@gmail.com'];
 
   const handleLoginSuccess = (userData) => {
+    console.log("NavBar - Login success, userData:", userData);
     login(userData);
   };
 
   const handleLogout = () => {
+    console.log("NavBar - Logout clicked");
     logout();
     navigate('/');
   };
 
   const isAdmin = user && adminEmails.includes(user.email.toLowerCase());
+
+  console.log("NavBar - Current user:", user);
+  console.log("NavBar - Is authorized:", isAuthorized());
 
   return (
     <nav className={`${currentTheme.main} ${currentTheme.text} py-3 px-6 flex justify-between items-center shadow-md`}>

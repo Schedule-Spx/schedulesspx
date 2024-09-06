@@ -9,13 +9,17 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    console.log("AuthContext - useEffect running");
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
+    console.log("AuthContext - Saved user:", savedUser);
+    console.log("AuthContext - Saved expiry:", savedExpiry);
     if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
       const parsedUser = JSON.parse(savedUser);
       console.log("AuthContext - Loaded user from storage:", parsedUser);
       setUser(parsedUser);
     } else {
+      console.log("AuthContext - Clearing local storage");
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
     }
@@ -52,7 +56,9 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthorized = () => {
     console.log("AuthContext - isAuthorized called, user:", user);
-    return user && user.isAuthorized;
+    const authorized = user && user.isAuthorized;
+    console.log("AuthContext - isAuthorized result:", authorized);
+    return authorized;
   };
 
   return (
