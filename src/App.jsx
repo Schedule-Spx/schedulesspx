@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { WeekScheduleProvider, useWeekSchedule } from './context/WeekScheduleContext';
 import './styles/App.css';
 import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
-import ErrorBoundary from './components/ErrorBoundary'; // You'll need to create this
+import ErrorBoundary from './components/ErrorBoundary';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
@@ -19,6 +20,7 @@ const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 
 function AppContent() {
   const { user, isAuthorized, isAdmin } = useAuth();
+  const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
 
   return (
     <Router>
@@ -41,7 +43,11 @@ function AppContent() {
                 <PrivateRoute requireAuth adminOnly>
                   <ErrorBoundary>
                     <Suspense fallback={<div>Loading Admin...</div>}>
-                      <Admin />
+                      <Admin 
+                        weekSchedule={weekSchedule} 
+                        setWeekSchedule={setWeekSchedule} 
+                        fetchSchedule={fetchSchedule}
+                      />
                     </Suspense>
                   </ErrorBoundary>
                 </PrivateRoute>
@@ -70,7 +76,9 @@ function App() {
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <AuthProvider>
         <ThemeProvider>
-          <AppContent />
+          <WeekScheduleProvider>
+            <AppContent />
+          </WeekScheduleProvider>
         </ThemeProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
