@@ -41,28 +41,28 @@ const MainDashboard = () => {
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
-      <div className="h-screen p-4 grid grid-cols-3 grid-rows-6 gap-4">
-        <Card className="row-span-2">
+      <div className="h-screen p-4 grid grid-cols-12 grid-rows-12 gap-4">
+        <Card className="col-span-4 row-span-2">
           <DayHeader />
         </Card>
-        <Card className="row-span-3">
+        <Card className="col-span-4 row-span-6">
           <Schedule weekSchedule={weekSchedule} />
         </Card>
-        <Card className="row-span-3">
+        <Card className="col-span-4 row-span-6">
           <Suspense fallback={<div>Loading Calendar...</div>}>
             <GoogleCalendar />
           </Suspense>
         </Card>
-        <Card className="row-span-4">
+        <Card className="col-span-4 row-span-8">
           <QuickLinks />
         </Card>
-        <Card className="row-span-2">
+        <Card className="col-span-4 row-span-4">
           <Announcement />
         </Card>
-        <Card className="row-span-2">
+        <Card className="col-span-4 row-span-2">
           <GoogleSuiteLinks />
         </Card>
-        <Card className="col-span-3 row-span-1">
+        <Card className="col-span-12 row-span-2">
           <PeriodProgress weekSchedule={weekSchedule} />
         </Card>
       </div>
