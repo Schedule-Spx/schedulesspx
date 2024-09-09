@@ -15,9 +15,9 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
         manifest: {
-          name: 'Your App Name',
-          short_name: 'App',
-          description: 'Your app description',
+          name: 'Schedule-SPX',
+          short_name: 'Schedule-SPX',
+          description: 'Your school schedule management app',
           theme_color: '#ffffff',
           icons: [
             {
@@ -31,6 +31,9 @@ export default defineConfig(({ mode }) => {
               type: 'image/png'
             }
           ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
         }
       })
     ],

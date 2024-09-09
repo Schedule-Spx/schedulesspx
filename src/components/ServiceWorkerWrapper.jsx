@@ -7,14 +7,20 @@ const ServiceWorkerWrapper = () => {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      const workboxInstance = new Workbox('/service-worker.js');
+      const workboxInstance = new Workbox('/service-worker.js', { type: 'module' });
       setWb(workboxInstance);
 
-      workboxInstance.addEventListener('waiting', () => {
+      workboxInstance.addEventListener('waiting', (event) => {
         setShowReload(true);
       });
 
-      workboxInstance.register();
+      workboxInstance.register()
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
     }
   }, []);
 

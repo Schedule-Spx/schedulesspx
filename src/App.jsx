@@ -13,7 +13,8 @@ import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage';
 import TutorialModal from './components/TutorialModal';
 import Announcement from './components/Announcement';
-import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
+
+// Remove the ServiceWorkerWrapper import
 
 const preloadComponent = (factory) => {
   const Component = lazy(factory);
@@ -210,7 +211,6 @@ function AppContent() {
       <AuthProvider>
         <ThemeProvider>
           <Router>
-            <ServiceWorkerWrapper />
             <ThemedApp />
           </Router>
         </ThemeProvider>
