@@ -25,7 +25,7 @@ const Card = ({ children, className, style }) => {
 
 const MainDashboard = () => {
   const { currentTheme } = useTheme();
-  const { weekSchedule } = useWeekSchedule();
+  const { weekSchedule, fetchSchedule } = useWeekSchedule();
   const [showTutorial, setShowTutorial] = useState(false);
   const contentRef = useRef(null);
 
@@ -43,6 +43,8 @@ const MainDashboard = () => {
     if (!tutorialShown) {
       setShowTutorial(true);
     }
+
+    fetchSchedule();
 
     const handleResize = () => {
       if (contentRef.current) {
@@ -66,7 +68,7 @@ const MainDashboard = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [fetchSchedule]);
 
   const closeTutorial = () => {
     setShowTutorial(false);
@@ -74,7 +76,7 @@ const MainDashboard = () => {
   };
 
   return (
-    <>
+    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
       <div ref={contentRef} className="flex-grow overflow-auto">
         <div className="container mx-auto p-4">
@@ -111,7 +113,7 @@ const MainDashboard = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

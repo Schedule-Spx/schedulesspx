@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import './styles/App.css';
 import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage';
+import PrivateRoute from './components/PrivateRoute';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
@@ -16,7 +17,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 
 function AppContent() {
-  const { user } = useAuth();
+  const { user, isAuthorized, isAdmin } = useAuth();
 
   return (
     <Router>
@@ -24,9 +25,30 @@ function AppContent() {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/main" element={user ? <MainDashboard /> : <Navigate to="/" />} />
-          <Route path="/admin" element={user ? <Admin /> : <Navigate to="/" />} />
-          <Route path="/account" element={user ? <Account /> : <Navigate to="/" />} />
+          <Route 
+            path="/main" 
+            element={
+              <PrivateRoute>
+                <MainDashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              <PrivateRoute requireAuth adminOnly>
+                <Admin />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/account" 
+            element={
+              <PrivateRoute>
+                <Account />
+              </PrivateRoute>
+            } 
+          />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsAndConditions />} />
