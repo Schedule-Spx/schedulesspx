@@ -1,8 +1,8 @@
+// src/main.jsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './styles/index.css'  // Updated import path
+import './styles/index.css'
 import App from './App.jsx'
-import { ThemeProvider } from './context/ThemeContext.jsx'
 import { registerSW } from 'virtual:pwa-register'
 
 const updateSW = registerSW({
@@ -18,8 +18,6 @@ const updateSW = registerSW({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <App />
   </React.StrictMode>
 )
