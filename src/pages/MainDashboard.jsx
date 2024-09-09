@@ -1,5 +1,5 @@
 // src/pages/MainDashboard.jsx
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import DayHeader from '../components/DayHeader';
 import QuickLinks from '../components/QuickLinks';
@@ -39,10 +39,10 @@ const MainDashboard = () => {
         <div className="col-span-4 row-span-4">
           <Schedule weekSchedule={weekSchedule} />
         </div>
-        <div className="col-span-4 row-span-4">
+        <div className="col-span-4 row-span-5">
           <GoogleCalendar />
         </div>
-        <div className="col-span-4 row-span-4">
+        <div className="col-span-4 row-span-3">
           <QuickLinks />
         </div>
         <div className="col-span-8 row-span-1">
