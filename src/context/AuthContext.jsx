@@ -21,7 +21,8 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     const authorizedUser = {
       ...userData,
-      isAuthorized: isAuthorizedEmail(userData.email)
+      isAuthorized: isAuthorizedEmail(userData.email),
+      isAdmin: isAdminEmail(userData.email)
     };
     setUser(authorizedUser);
     localStorage.setItem('user', JSON.stringify(authorizedUser));
@@ -41,12 +42,21 @@ export const AuthProvider = ({ children }) => {
     return allowedDomains.includes(email.split('@')[1]) || allowedEmails.includes(email);
   };
 
+  const isAdminEmail = (email) => {
+    const adminEmails = ['kagenmjensen@me.com'];
+    return adminEmails.includes(email.toLowerCase());
+  };
+
   const isAuthorized = () => {
     return user && user.isAuthorized;
   };
 
+  const isAdmin = () => {
+    return user && user.isAdmin;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthorized }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthorized, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
