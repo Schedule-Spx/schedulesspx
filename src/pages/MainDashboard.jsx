@@ -32,26 +32,26 @@ const MainDashboard = () => {
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
-      <div className="h-screen p-4 grid grid-cols-12 grid-rows-6 gap-4">
-        <div className="col-span-4 row-span-1">
+      <div className="h-screen p-4 grid grid-cols-12 grid-rows-12 gap-4">
+        <div className="col-span-4 row-span-2">
           <DayHeader />
         </div>
-        <div className="col-span-4 row-span-4">
+        <div className="col-span-4 row-span-6">
           <Schedule weekSchedule={weekSchedule} />
         </div>
-        <div className="col-span-4 row-span-5">
+        <div className="col-span-4 row-span-6">
           <GoogleCalendar />
         </div>
-        <div className="col-span-4 row-span-3">
+        <div className="col-span-4 row-span-8">
           <QuickLinks />
         </div>
-        <div className="col-span-8 row-span-1">
+        <div className="col-span-4 row-span-2">
           <Announcement />
         </div>
-        <div className="col-span-4 row-span-1">
+        <div className="col-span-4 row-span-2">
           <GoogleSuiteLinks />
         </div>
-        <div className="col-span-12 row-span-1">
+        <div className="col-span-12 row-span-2">
           <PeriodProgress weekSchedule={weekSchedule} />
         </div>
       </div>
