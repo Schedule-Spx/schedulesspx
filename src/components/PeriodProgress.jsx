@@ -6,10 +6,14 @@ const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 
 const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   const { currentTheme } = useTheme();
-  const { user, isAuthorized } = useAuth();
+  const { user, isLoggedIn, isAuthorized } = useAuth();
   const [currentState, setCurrentState] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
+
+  console.log("PeriodProgress - user:", user);
+  console.log("PeriodProgress - isLoggedIn:", isLoggedIn());
+  console.log("PeriodProgress - isAuthorized:", isAuthorized());
 
   const parseTime = useCallback((timeString) => {
     if (!timeString) return null;
@@ -224,7 +228,17 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
     );
   }, [currentState, currentTheme, progress, timeRemaining]);
 
-  if (!user || !isAuthorized()) {
+  if (!isLoggedIn()) {
+    console.log("PeriodProgress - User not logged in");
+    return (
+      <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
+        <p className={`${currentTheme.text} text-center`}>Please log in to view the period progress.</p>
+      </div>
+    );
+  }
+
+  if (!isAuthorized()) {
+    console.log("PeriodProgress - User not authorized");
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to view the period progress.</p>
@@ -232,6 +246,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
     );
   }
 
+  console.log("PeriodProgress - Rendering period progress");
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
       <div 
