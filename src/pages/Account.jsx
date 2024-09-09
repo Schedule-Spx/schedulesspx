@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../styles/carousel.css';
 
-const Account = ({ user, weekSchedule }) => {
+const Account = ({ weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
+  const { user, isLoggedIn } = useAuth();
   const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
+
+  console.log("Account - user:", user);
+  console.log("Account - isLoggedIn:", isLoggedIn());
 
   const themeCategories = {
     'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],
@@ -17,6 +22,7 @@ const Account = ({ user, weekSchedule }) => {
 
   useEffect(() => {
     setFilteredThemes('Featured Themes');
+    console.log("Account - Component mounted");
   }, []);
 
   const handleThemeChange = (themeName) => {
@@ -72,7 +78,8 @@ const Account = ({ user, weekSchedule }) => {
     );
   };
 
-  if (!user) {
+  if (!isLoggedIn()) {
+    console.log("Account - User not logged in");
     return (
       <div className={`container mx-auto mt-8 p-4 ${currentTheme.main} ${currentTheme.text}`}>
         <p className="text-center text-xl drop-shadow-md">Please log in to view your account information.</p>
@@ -80,6 +87,7 @@ const Account = ({ user, weekSchedule }) => {
     );
   }
 
+  console.log("Account - Rendering account information");
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text} p-4`} style={{ overflowY: 'auto', height: 'calc(100vh - 64px)' }}>
       <div className="max-w-4xl mx-auto pb-16">
