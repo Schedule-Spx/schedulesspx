@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   const { currentTheme } = useTheme();
+  const { user, isAuthorized } = useAuth();
   const [currentState, setCurrentState] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -221,6 +223,14 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
       </div>
     );
   }, [currentState, currentTheme, progress, timeRemaining]);
+
+  if (!user || !isAuthorized()) {
+    return (
+      <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
+        <p className={`${currentTheme.text} text-center`}>You are not authorized to view the period progress.</p>
+      </div>
+    );
+  }
 
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
