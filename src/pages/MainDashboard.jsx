@@ -36,16 +36,16 @@ const MainDashboard = () => {
         <div className="col-span-4 row-span-1">
           <DayHeader />
         </div>
-        <div className="col-span-4 row-span-3">
+        <div className="col-span-4 row-span-4">
           <Schedule weekSchedule={weekSchedule} />
         </div>
         <div className="col-span-4 row-span-4">
           <GoogleCalendar />
         </div>
-        <div className="col-span-4 row-span-3">
+        <div className="col-span-4 row-span-4">
           <QuickLinks />
         </div>
-        <div className="col-span-4 row-span-1">
+        <div className="col-span-8 row-span-1">
           <Announcement />
         </div>
         <div className="col-span-4 row-span-1">
