@@ -14,6 +14,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   console.log("PeriodProgress - user:", user);
   console.log("PeriodProgress - isLoggedIn:", isLoggedIn());
   console.log("PeriodProgress - isAuthorized:", isAuthorized());
+  console.log("PeriodProgress - user.isAuthorized:", user?.isAuthorized);
 
   const parseTime = useCallback((timeString) => {
     if (!timeString) return null;

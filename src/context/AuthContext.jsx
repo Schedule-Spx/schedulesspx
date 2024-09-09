@@ -11,13 +11,10 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('user');
     const savedExpiry = localStorage.getItem('sessionExpiry');
     if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      console.log("AuthProvider - Loaded user from localStorage:", parsedUser);
+      setUser(JSON.parse(savedUser));
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('sessionExpiry');
-      console.log("AuthProvider - No valid user in localStorage");
     }
   }, []);
 
@@ -31,20 +28,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(authorizedUser));
     const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
     localStorage.setItem('sessionExpiry', expiry.toString());
-    console.log("AuthProvider - User logged in:", authorizedUser);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('sessionExpiry');
-    console.log("AuthProvider - User logged out");
   };
 
   const isAuthorizedEmail = (email) => {
     const allowedDomains = ['spx.org', 'spxstudent.org'];
     const allowedEmails = ['kagenmjensen@me.com'];
-    return allowedDomains.includes(email.split('@')[1]) || allowedEmails.includes(email);
+    return allowedDomains.includes(email.split('@')[1].toLowerCase()) || allowedEmails.includes(email.toLowerCase());
   };
 
   const isAdminEmail = (email) => {
@@ -53,21 +48,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isLoggedIn = () => {
-    const loggedIn = !!user;
-    console.log("AuthProvider - isLoggedIn:", loggedIn);
-    return loggedIn;
+    return !!user;
   };
 
   const isAuthorized = () => {
-    const authorized = user && user.isAuthorized;
-    console.log("AuthProvider - isAuthorized:", authorized);
-    return authorized;
+    return user && user.isAuthorized;
   };
 
   const isAdmin = () => {
-    const admin = user && user.isAdmin;
-    console.log("AuthProvider - isAdmin:", admin);
-    return admin;
+    return user && user.isAdmin;
   };
 
   return (
