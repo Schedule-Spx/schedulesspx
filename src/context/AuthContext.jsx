@@ -47,6 +47,10 @@ export const AuthProvider = ({ children }) => {
     return adminEmails.includes(email.toLowerCase());
   };
 
+  const isLoggedIn = () => {
+    return !!user;
+  };
+
   const isAuthorized = () => {
     return user && user.isAuthorized;
   };
@@ -56,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthorized, isAdmin }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isAuthorized, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
