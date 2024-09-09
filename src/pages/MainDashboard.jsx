@@ -11,15 +11,6 @@ import GoogleCalendar from '../components/GoogleCalendar';
 import TutorialModal from '../components/TutorialModal';
 import { useWeekSchedule } from '../context/WeekScheduleContext';
 
-const Card = ({ children, className }) => {
-  const { currentTheme } = useTheme();
-  return (
-    <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col ${className}`}>
-      {children}
-    </div>
-  );
-};
-
 const MainDashboard = () => {
   const { currentTheme } = useTheme();
   const { weekSchedule, fetchSchedule } = useWeekSchedule();
@@ -41,30 +32,28 @@ const MainDashboard = () => {
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
-      <div className="h-screen p-4 grid grid-cols-12 grid-rows-12 gap-4">
-        <Card className="col-span-4 row-span-2">
+      <div className="h-screen p-4 grid grid-cols-12 grid-rows-6 gap-4">
+        <div className="col-span-4 row-span-1">
           <DayHeader />
-        </Card>
-        <Card className="col-span-4 row-span-6">
+        </div>
+        <div className="col-span-4 row-span-3">
           <Schedule weekSchedule={weekSchedule} />
-        </Card>
-        <Card className="col-span-4 row-span-6">
-          <Suspense fallback={<div>Loading Calendar...</div>}>
-            <GoogleCalendar />
-          </Suspense>
-        </Card>
-        <Card className="col-span-4 row-span-8">
+        </div>
+        <div className="col-span-4 row-span-4">
+          <GoogleCalendar />
+        </div>
+        <div className="col-span-4 row-span-3">
           <QuickLinks />
-        </Card>
-        <Card className="col-span-4 row-span-4">
+        </div>
+        <div className="col-span-4 row-span-1">
           <Announcement />
-        </Card>
-        <Card className="col-span-4 row-span-2">
+        </div>
+        <div className="col-span-4 row-span-1">
           <GoogleSuiteLinks />
-        </Card>
-        <Card className="col-span-12 row-span-2">
+        </div>
+        <div className="col-span-12 row-span-1">
           <PeriodProgress weekSchedule={weekSchedule} />
-        </Card>
+        </div>
       </div>
     </div>
   );
