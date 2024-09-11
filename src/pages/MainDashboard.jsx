@@ -20,10 +20,10 @@ const MainDashboard = () => {
   // Original heights reduced by 10%
   const originalHeights = {
     scheduleHeight: 390,
-    googleCalendarHeight: 400,
-    dayHeaderHeight: 170,
+    googleCalendarHeight: 390,
+    dayHeaderHeight: 165,
     quickLinksHeight: 300,
-    googleSuiteLinksHeight: 170,
+    googleSuiteLinksHeight: 165,
     periodProgressHeight: 150,
   };
 
