@@ -20,11 +20,11 @@ const MainDashboard = () => {
   // Original heights reduced by 10%
   const originalHeights = {
     scheduleHeight: 390,
-    googleCalendarHeight: 345,
+    googleCalendarHeight: 350,
     dayHeaderHeight: 165,
     quickLinksHeight: 300,
     googleSuiteLinksHeight: 165,
-    periodProgressHeight: 165,
+    periodProgressHeight: 160,
   };
 
   useEffect(() => {
