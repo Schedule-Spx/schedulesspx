@@ -27,6 +27,9 @@ const MainDashboard = () => {
     periodProgressHeight: 155,
   };
 
+  // Adjust this value to move the PeriodProgress bar up or down
+  const periodProgressOffset = -11; // in rem units
+
   useEffect(() => {
     const tutorialShown = localStorage.getItem('tutorialShown');
     if (!tutorialShown) {
@@ -73,7 +76,7 @@ const MainDashboard = () => {
         className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
         style={{ 
           height: `${originalHeights.periodProgressHeight}px`,
-          marginTop: '-11rem',
+          marginTop: `${periodProgressOffset}rem`,
           marginLeft: '1rem',
           marginRight: '1rem',
         }}
