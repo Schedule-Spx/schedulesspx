@@ -28,7 +28,7 @@ const MainDashboard = () => {
   };
 
   // Adjust this value to move the PeriodProgress bar up or down
-  const periodProgressOffset = -3; // in rem units
+  const periodProgressOffset = -3.75; // in rem units
 
   useEffect(() => {
     const tutorialShown = localStorage.getItem('tutorialShown');
