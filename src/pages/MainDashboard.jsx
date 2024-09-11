@@ -43,7 +43,7 @@ const MainDashboard = () => {
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
-      <div ref={contentRef} className="h-screen p-4 grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+      <div ref={contentRef} className="h-screen p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="flex flex-col space-y-4">
           <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.dayHeaderHeight}px` }}>
             <DayHeader />
@@ -68,14 +68,17 @@ const MainDashboard = () => {
             <GoogleSuiteLinks />
           </div>
         </div>
-        <div 
-          className={`absolute bottom-0 left-4 right-4 ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
-          style={{ 
-            height: `${originalHeights.periodProgressHeight}px`,
-          }}
-        >
-          <PeriodProgress weekSchedule={weekSchedule} />
-        </div>
+      </div>
+      <div 
+        className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
+        style={{ 
+          height: `${originalHeights.periodProgressHeight}px`,
+          marginTop: '-11rem',
+          marginLeft: '1rem',
+          marginRight: '1rem',
+        }}
+      >
+        <PeriodProgress weekSchedule={weekSchedule} />
       </div>
     </div>
   );
