@@ -27,8 +27,16 @@ const MainDashboard = () => {
     periodProgressHeight: 155,
   };
 
-  // Adjust this value to move the PeriodProgress bar up or down
-  const periodProgressOffset = -7; // in rem units
+  // Adjust these values to move widgets up or down (in rem units)
+  const widgetOffsets = {
+    dayHeader: 0,
+    quickLinks: 0,
+    schedule: 0,
+    announcement: 0,
+    googleCalendar: 0,
+    googleSuiteLinks: 0,
+    periodProgress: -4.5,
+  };
 
   useEffect(() => {
     const tutorialShown = localStorage.getItem('tutorialShown');
@@ -48,26 +56,61 @@ const MainDashboard = () => {
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
       <div ref={contentRef} className="h-screen p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="flex flex-col space-y-4">
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.dayHeaderHeight}px` }}>
+          <div 
+            className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} 
+            style={{ 
+              height: `${originalHeights.dayHeaderHeight}px`,
+              marginTop: `${widgetOffsets.dayHeader}rem`
+            }}
+          >
             <DayHeader />
           </div>
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} style={{ height: `${originalHeights.quickLinksHeight}px`, animationDuration: '2.5s' }}>
+          <div 
+            className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left`} 
+            style={{ 
+              height: `${originalHeights.quickLinksHeight}px`, 
+              animationDuration: '2.5s',
+              marginTop: `${widgetOffsets.quickLinks}rem`
+            }}
+          >
             <QuickLinks />
           </div>
         </div>
         <div className="flex flex-col space-y-4">
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} style={{ height: `${originalHeights.scheduleHeight}px` }}>
+          <div 
+            className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden flex flex-col slide-down`} 
+            style={{ 
+              height: `${originalHeights.scheduleHeight}px`,
+              marginTop: `${widgetOffsets.schedule}rem`
+            }}
+          >
             <Schedule weekSchedule={weekSchedule} />
           </div>
-          <div className="slide-in-bottom">
+          <div 
+            className="slide-in-bottom"
+            style={{ marginTop: `${widgetOffsets.announcement}rem` }}
+          >
             <Announcement />
           </div>
         </div>
         <div className="flex flex-col space-y-4">
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: `${originalHeights.googleCalendarHeight}px`, animationDuration: '2.5s' }}>
+          <div 
+            className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} 
+            style={{ 
+              height: `${originalHeights.googleCalendarHeight}px`, 
+              animationDuration: '2.5s',
+              marginTop: `${widgetOffsets.googleCalendar}rem`
+            }}
+          >
             <GoogleCalendar />
           </div>
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} style={{ height: `${originalHeights.googleSuiteLinksHeight}px` }}>
+          <div 
+            className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right`} 
+            style={{ 
+              height: `${originalHeights.googleSuiteLinksHeight}px`,
+              marginTop: `${widgetOffsets.googleSuiteLinks}rem`
+            }}
+          >
             <GoogleSuiteLinks />
           </div>
         </div>
@@ -75,7 +118,7 @@ const MainDashboard = () => {
           className={`col-span-3 ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
           style={{ 
             height: `${originalHeights.periodProgressHeight}px`,
-            marginTop: `${periodProgressOffset}rem`
+            marginTop: `${widgetOffsets.periodProgress}rem`
           }}
         >
           <PeriodProgress weekSchedule={weekSchedule} />
