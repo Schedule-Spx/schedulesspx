@@ -27,9 +27,6 @@ const MainDashboard = () => {
     periodProgressHeight: 155,
   };
 
-  // Adjust this value to move the PeriodProgress bar up or down
-  const periodProgressOffset = -4; // in rem units
-
   useEffect(() => {
     const tutorialShown = localStorage.getItem('tutorialShown');
     if (!tutorialShown) {
@@ -43,8 +40,10 @@ const MainDashboard = () => {
     localStorage.setItem('tutorialShown', 'true');
   };
 
+  console.log('WeekSchedule:', weekSchedule); // Debugging log
+
   return (
-    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text} relative`}>
+    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
       <div ref={contentRef} className="h-screen p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="flex flex-col space-y-4">
@@ -71,15 +70,14 @@ const MainDashboard = () => {
             <GoogleSuiteLinks />
           </div>
         </div>
-      </div>
-      <div 
-        className={`absolute left-4 right-4 ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
-        style={{ 
-          height: `${originalHeights.periodProgressHeight}px`,
-          bottom: `${periodProgressOffset}rem`,
-        }}
-      >
-        <PeriodProgress weekSchedule={weekSchedule} />
+        <div className={`col-span-3 ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
+             style={{ height: `${originalHeights.periodProgressHeight}px` }}>
+          {weekSchedule ? (
+            <PeriodProgress weekSchedule={weekSchedule} />
+          ) : (
+            <div className="flex items-center justify-center h-full">Loading week schedule...</div>
+          )}
+        </div>
       </div>
     </div>
   );
