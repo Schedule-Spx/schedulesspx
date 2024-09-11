@@ -21,9 +21,9 @@ const MainDashboard = () => {
   const originalHeights = {
     scheduleHeight: 390,
     googleCalendarHeight: 300,
-    dayHeaderHeight: 200,
+    dayHeaderHeight: 170,
     quickLinksHeight: 300,
-    googleSuiteLinksHeight: 200,
+    googleSuiteLinksHeight: 170,
     periodProgressHeight: 150,
   };
 
