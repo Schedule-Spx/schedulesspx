@@ -28,7 +28,7 @@ const MainDashboard = () => {
   };
 
   // Adjust this value to move the PeriodProgress bar up or down
-  const periodProgressOffset = 11; // in rem units
+  const periodProgressOffset = -4; // in rem units
 
   useEffect(() => {
     const tutorialShown = localStorage.getItem('tutorialShown');
@@ -44,7 +44,7 @@ const MainDashboard = () => {
   };
 
   return (
-    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
+    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text} relative`}>
       {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
       <div ref={contentRef} className="h-screen p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="flex flex-col space-y-4">
@@ -73,12 +73,10 @@ const MainDashboard = () => {
         </div>
       </div>
       <div 
-        className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
+        className={`absolute left-4 right-4 ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
         style={{ 
           height: `${originalHeights.periodProgressHeight}px`,
-          marginTop: `${periodProgressOffset}rem`,
-          marginLeft: '1rem',
-          marginRight: '1rem',
+          bottom: `${periodProgressOffset}rem`,
         }}
       >
         <PeriodProgress weekSchedule={weekSchedule} />
