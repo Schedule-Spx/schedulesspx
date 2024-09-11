@@ -1,3 +1,4 @@
+// src/components/GoogleCalendar.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
@@ -61,44 +62,38 @@ const GoogleCalendar = () => {
     return new Date(dateTimeString).toLocaleTimeString(undefined, options);
   };
 
-  // Filter out events with "8:00 am Start"
   const filterEvents = (events) => {
     return events.filter(event => event.summary !== '8:00 am Start');
   };
 
-  console.log('Current Theme:', currentTheme); // Debugging line
-
-  if (loading) return <div className={`p-4 ${currentTheme.text} text-center`}>Loading events...</div>;
-  if (error) return <div className={`p-4 ${currentTheme.text} text-center`}>Error: {error}</div>;
-  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center`}>No upcoming events</div>;
+  if (loading) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center`}>Loading events...</div>;
+  if (error) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center`}>Error: {error}</div>;
+  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center`}>No upcoming events</div>;
 
   return (
     <div 
-      className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative overflow-hidden`}
-      style={{ marginBottom: '0px', paddingBottom: '0px', borderBottomWidth: '4px' }}
+      className={`${currentTheme.accent} rounded-lg shadow-lg w-full h-full border-2 ${currentTheme.border} relative overflow-hidden`}
     >
-      {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
         style={{
-          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.2), transparent)`,
           zIndex: 0,
-          borderBottomWidth: '4px'
         }}
       ></div>
-      <div className="p-4 overflow-y-auto relative z-10" style={{ maxHeight: '40vh' }}>
+      <div className="p-4 overflow-y-auto relative z-10 h-full">
         {Object.entries(events).map(([date, dayEvents]) => {
           const filteredEvents = filterEvents(dayEvents);
           return (
             <div key={date} className="mb-4">
               {filteredEvents.length > 0 && (
                 <>
-                  <h3 className={`text-md font-semibold ${currentTheme.text} mb-2 text-center`} style={{ fontSize: '0.85rem', color: currentTheme.text + '80' }}>{formatDate(date)}</h3>
+                  <h3 className={`text-md font-semibold ${currentTheme.text} mb-2 text-center`} style={{ fontSize: '0.85rem', opacity: 0.8 }}>{formatDate(date)}</h3>
                   <ul className="space-y-2">
                     {filteredEvents.map((event) => (
                       <li 
                         key={event.id} 
-                        className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
+                        className={`${currentTheme.main} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
                         onClick={() => window.open(event.htmlLink, '_blank')}
                       >
                         <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
