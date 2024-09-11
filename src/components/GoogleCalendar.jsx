@@ -66,13 +66,13 @@ const GoogleCalendar = () => {
     return events.filter(event => event.summary !== '8:00 am Start');
   };
 
-  if (loading) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center`}>Loading events...</div>;
-  if (error) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center`}>Error: {error}</div>;
-  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center`}>No upcoming events</div>;
+  if (loading) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center ${currentTheme.main} ${currentTheme.border} border-2 rounded-lg`}>Loading events...</div>;
+  if (error) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center ${currentTheme.main} ${currentTheme.border} border-2 rounded-lg`}>Error: {error}</div>;
+  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center ${currentTheme.main} ${currentTheme.border} border-2 rounded-lg`}>No upcoming events</div>;
 
   return (
     <div 
-      className={`${currentTheme.accent} rounded-lg shadow-lg w-full h-full border-2 ${currentTheme.border} relative overflow-hidden`}
+      className={`${currentTheme.main} rounded-lg shadow-lg w-full h-full border-2 ${currentTheme.border} relative overflow-hidden`}
     >
       <div 
         className="absolute inset-0 rounded-lg"
@@ -93,7 +93,7 @@ const GoogleCalendar = () => {
                     {filteredEvents.map((event) => (
                       <li 
                         key={event.id} 
-                        className={`${currentTheme.main} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
+                        className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
                         onClick={() => window.open(event.htmlLink, '_blank')}
                       >
                         <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
