@@ -68,9 +68,17 @@ const MainDashboard = () => {
             <GoogleSuiteLinks />
           </div>
         </div>
-        <div className={`col-span-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} style={{ height: `${originalHeights.periodProgressHeight}px`, marginTop: '-1rem' }}>
-          <PeriodProgress weekSchedule={weekSchedule} />
-        </div>
+      </div>
+      <div 
+        className={`col-span-full ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden period-progress-container slide-up`} 
+        style={{ 
+          height: `${originalHeights.periodProgressHeight}px`,
+          marginTop: '-3rem',
+          marginLeft: '1rem',
+          marginRight: '1rem',
+        }}
+      >
+        <PeriodProgress weekSchedule={weekSchedule} />
       </div>
     </div>
   );
