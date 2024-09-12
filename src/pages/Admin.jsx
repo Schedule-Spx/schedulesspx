@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const { currentTheme } = useTheme();
-  const { user, isAuthorized } = useAuth();
+  const { user, isAuthorized, isAdmin } = useAuth();
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
@@ -24,13 +24,23 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   console.log("Admin - Current user:", user);
   console.log("Admin - Is authorized:", isAuthorized());
+  console.log("Admin - Is admin:", isAdmin());
 
   const fetchCurrentAnnouncement = async () => {
     try {
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement');
+      const token = localStorage.getItem('accessToken');
+      console.log("Fetching announcement with token:", token);
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log("Announcement response status:", response.status);
       if (response.ok) {
         const data = await response.json();
         setCurrentAnnouncement(data);
+      } else {
+        console.error("Failed to fetch announcement:", await response.text());
       }
     } catch (error) {
       console.error('Error fetching announcement:', error);
@@ -39,15 +49,20 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const fetchUserStats = async () => {
     try {
+      const token = localStorage.getItem('accessToken');
+      console.log("Fetching user stats with token:", token);
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/admin/users', {
         headers: {
-          'Authorization': `Bearer ${user.accessToken}`
+          'Authorization': `Bearer ${token}`
         }
       });
+      console.log("User stats response status:", response.status);
       if (response.ok) {
         const data = await response.json();
         setUserStats({ totalUsers: data.totalUsers, activeUsers: data.activeUsers });
         setUsers(data.users);
+      } else {
+        console.error("Failed to fetch user stats:", await response.text());
       }
     } catch (error) {
       console.error('Error fetching user stats:', error);
@@ -95,16 +110,20 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const saveSchedule = async (schedule) => {
     try {
       setSaveStatus('Saving...');
+      const token = localStorage.getItem('accessToken');
+      console.log("Saving schedule with token:", token);
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(schedule)
       });
+      console.log("Save schedule response status:", response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       const result = await response.json();
       console.log('Save response:', result);
@@ -120,16 +139,20 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const saveAnnouncement = async () => {
     try {
       setSaveStatus('Saving announcement...');
+      const token = localStorage.getItem('accessToken');
+      console.log("Saving announcement with token:", token);
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(announcement)
       });
+      console.log("Save announcement response status:", response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       const result = await response.json();
       console.log('Save announcement response:', result);
@@ -144,16 +167,20 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const handleUpdateUser = async (userId, updatedData) => {
     try {
+      const token = localStorage.getItem('accessToken');
+      console.log("Updating user with token:", token);
       const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(updatedData)
       });
+      console.log("Update user response status:", response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       fetchUserStats();
     } catch (error) {
@@ -163,14 +190,18 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const handleDeleteUser = async (userId) => {
     try {
+      const token = localStorage.getItem('accessToken');
+      console.log("Deleting user with token:", token);
       const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: { 
-          'Authorization': `Bearer ${user.accessToken}`
+          'Authorization': `Bearer ${token}`
         }
       });
+      console.log("Delete user response status:", response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       fetchUserStats();
     } catch (error) {
@@ -180,14 +211,18 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const handleBanUser = async (userId) => {
     try {
+      const token = localStorage.getItem('accessToken');
+      console.log("Banning user with token:", token);
       const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}/ban`, {
         method: 'POST',
         headers: { 
-          'Authorization': `Bearer ${user.accessToken}`
+          'Authorization': `Bearer ${token}`
         }
       });
+      console.log("Ban user response status:", response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       fetchUserStats();
     } catch (error) {
@@ -197,8 +232,8 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 
   const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
-  if (!user || !isAuthorized()) {
-    console.log("Admin - User not authorized");
+  if (!user || !isAuthorized() || !isAdmin()) {
+    console.log("Admin - User not authorized or not admin");
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to access the admin panel.</p>

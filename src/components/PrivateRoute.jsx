@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const PrivateRoute = ({ children, requireAuth = false, adminOnly = false }) => {
-  const { isLoggedIn, isAuthorized, isAdmin } = useAuth();
+const PrivateRoute = ({ children, requireAuth = false, adminOnly = false, teacherToolsAccess = false }) => {
+  const { isLoggedIn, isAuthorized, isAdmin, user } = useAuth();
   const location = useLocation();
 
   console.log("PrivateRoute - isLoggedIn:", isLoggedIn());
@@ -11,6 +11,7 @@ const PrivateRoute = ({ children, requireAuth = false, adminOnly = false }) => {
   console.log("PrivateRoute - isAdmin:", isAdmin());
   console.log("PrivateRoute - requireAuth:", requireAuth);
   console.log("PrivateRoute - adminOnly:", adminOnly);
+  console.log("PrivateRoute - teacherToolsAccess:", teacherToolsAccess);
 
   if (!isLoggedIn()) {
     console.log("PrivateRoute - Not logged in, redirecting to login");
@@ -24,6 +25,11 @@ const PrivateRoute = ({ children, requireAuth = false, adminOnly = false }) => {
 
   if (adminOnly && !isAdmin()) {
     console.log("PrivateRoute - Admin access required but user is not admin");
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  if (teacherToolsAccess && !(user.email.endsWith('@spx.org') || isAdmin())) {
+    console.log("PrivateRoute - Teacher Tools access required but user is not eligible");
     return <Navigate to="/unauthorized" replace />;
   }
 

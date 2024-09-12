@@ -7,10 +7,9 @@ import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
   const { currentTheme } = useTheme();
-  const { user, login, logout, isAuthorized } = useAuth();
+  const { user, login, logout, isAuthorized, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [announcement, setAnnouncement] = useState(null);
-
   const adminEmails = ['kagenmjensen@me.com', 'dcamick25@spxstudent.org', 'davidpaulcamick@gmail.com'];
 
   useEffect(() => {
@@ -40,20 +39,23 @@ const NavBar = () => {
     navigate('/');
   };
 
-  const isAdmin = user && adminEmails.includes(user.email.toLowerCase());
+  const canAccessTeacherTools = () => {
+    return user && (user.email.endsWith('@spx.org') || isAdmin());
+  };
 
   return (
-    <nav className={`${currentTheme.main} ${currentTheme.text} py-3 px-6 flex flex-wrap justify-between items-center shadow-md`}>
+    <nav className={`${currentTheme.main} ${currentTheme.text} py-3 px-6 flex flex-wrap justify-between items-center shadow-md relative`}>
       <div className="flex items-center space-x-6">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Schedule-SPX Logo" className="h-10 w-auto mr-3" />
-          <span className={`text-2xl font-bold hover:opacity-80 transition-opacity duration-200`}>Schedule-SPX</span>
+          <span className="text-2xl font-bold hover:opacity-80 transition-opacity duration-200">Schedule-SPX</span>
         </Link>
-        <Link to="/about" className={`text-sm font-medium hover:opacity-80 transition-opacity duration-200`}>About</Link>
+        <Link to="/about" className="text-sm font-medium hover:opacity-80 transition-opacity duration-200">About</Link>
       </div>
+      
       {announcement && (
-        <div className="w-full md:w-auto flex-grow flex justify-center items-center my-2 md:my-0">
-          <div className={`${currentTheme.accent} px-4 py-2 rounded-full shadow-md transition-all duration-300 hover:shadow-lg`}>
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <div className={`${currentTheme.accent} px-4 py-2 rounded-full shadow-md transition-all duration-300 hover:shadow-lg whitespace-nowrap`}>
             <span className={`text-sm font-medium ${currentTheme.text}`}>
               <span className="font-bold mr-2">{announcement.title}:</span>
               {announcement.message}
@@ -61,13 +63,22 @@ const NavBar = () => {
           </div>
         </div>
       )}
+      
       <div className="flex items-center space-x-4">
         {user ? (
           <>
-            <Link to="/account" className={`text-sm font-medium hover:opacity-80 transition-opacity duration-200`}>{user.name}</Link>
-            {isAdmin && (
-              <Link 
-                to="/admin" 
+            <Link to="/account" className="text-sm font-medium hover:opacity-80 transition-opacity duration-200">{user.name}</Link>
+            {canAccessTeacherTools() && (
+              <Link
+                to="/teacher-tools"
+                className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
+              >
+                Teacher Tools
+              </Link>
+            )}
+            {isAdmin() && (
+              <Link
+                to="/admin"
                 className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-2 px-4 rounded hover:opacity-80 transition-opacity duration-200`}
               >
                 Admin Console

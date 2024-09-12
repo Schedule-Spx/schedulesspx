@@ -17,6 +17,7 @@ const Account = lazy(() => import('./pages/Account'));
 const About = lazy(() => import('./pages/About'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
+const TeacherTools = lazy(() => import('./pages/TeacherTools'));
 
 function AppContent() {
   const { user, isAuthorized, isAdmin } = useAuth();
@@ -58,6 +59,18 @@ function AppContent() {
               element={
                 <PrivateRoute>
                   <Account />
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/teacher-tools" 
+              element={
+                <PrivateRoute teacherToolsAccess>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading Teacher Tools...</div>}>
+                      <TeacherTools />
+                    </Suspense>
+                  </ErrorBoundary>
                 </PrivateRoute>
               } 
             />
