@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAdminEmail = (email) => {
-    const adminEmails = ['kagenmjensen@me.com'];
+    const adminEmails = ['kagenmjensen@me.com',"dcamick25@spxstudent.org"];
     return adminEmails.includes(email.toLowerCase());
   };
 
