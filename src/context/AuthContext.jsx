@@ -38,12 +38,12 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthorizedEmail = (email) => {
     const allowedDomains = ['spx.org', 'spxstudent.org'];
-    const allowedEmails = ['kagenmjensen@me.com'];
+    const allowedEmails = ['kagenmjensen@me.com',];
     return allowedDomains.includes(email.split('@')[1].toLowerCase()) || allowedEmails.includes(email.toLowerCase());
   };
 
   const isAdminEmail = (email) => {
-    const adminEmails = ['kagenmjensen@me.com',"dcamick25@spxstudent.org"];
+    const adminEmails = ['kagenmjensen@me.com',"dcamick25@spxstudent.org", "rpage27@spxstudent.org"];
     return adminEmails.includes(email.toLowerCase());
   };
 
