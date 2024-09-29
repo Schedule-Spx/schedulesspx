@@ -73,6 +73,13 @@ export const themes = {
     text: 'text-white',
     border: 'border-yellow-700',
   },
+  retro: {
+    name: 'Retro',
+    main: 'bg-[#403D39]', // Dark gray
+    accent: 'bg-[#EB5E28]', // Orange
+    text: 'text-[#FFFCF2]', // Off-white
+    border: 'border-[#CCC5B9]', // Light beige
+  },
   skyblue: {
     name: 'Sky Blue',
     main: 'bg-blue-400',
