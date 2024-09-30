@@ -15,6 +15,7 @@ const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Account = lazy(() => import('./pages/Account'));
 const About = lazy(() => import('./pages/About'));
+const Contributors = lazy(() => import('./pages/Contributors'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 const TeacherTools = lazy(() => import('./pages/TeacherTools'));
@@ -75,6 +76,7 @@ function AppContent() {
               } 
             />
             <Route path="/about" element={<About />} />
+            <Route path="/contributors" element={<Contributors />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsAndConditions />} />
           </Routes>
