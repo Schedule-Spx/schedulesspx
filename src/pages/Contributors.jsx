@@ -34,7 +34,7 @@ const Contributors = () => {
                         </a>
                         <br />
 
-                        <strong>Russell:</strong> Joined afterwards and is currently a contributor as well. {' '}
+                        <strong>Russell:</strong> Russell joined shortly after Kagen & David and is currently a contributor. {' '}
                         <a 
                             href="https://russellwpage.com" 
                             className={`underline accent}`}  
@@ -44,7 +44,16 @@ const Contributors = () => {
                             More about Russell...
                         </a>
                         <br />
-                        <strong>Eli:</strong> Joined the development team at the same time as Russell and is a contributor currently.
+                        <strong>Eli:</strong> Eli joined the development team at the same time as Russell and is a contributor currently. {' '}
+                        <a 
+                            href="" 
+                            className={`underline accent}`}  
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                            More about Eli...
+                        </a>
+
                     </p>
                 </div>
 
