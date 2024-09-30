@@ -51,6 +51,7 @@ const NavBar = () => {
           <span className="text-2xl font-bold hover:opacity-80 transition-opacity duration-200">Schedule-SPX</span>
         </Link>
         <Link to="/about" className="text-sm font-medium hover:opacity-80 transition-opacity duration-200">About</Link>
+        <Link to="/contributors" className="text-sm font-medium hover:opacity-80 transition-opacity duration-200">Contributors</Link>
       </div>
       
       {announcement && (
