@@ -39,6 +39,7 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       port: 3000,
+      open: true,
     },
     resolve: {
       extensions: ['.js', '.jsx', '.json'],
@@ -52,14 +53,21 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist',
-      target: 'chrome58',
-      minify: 'terser',
+      target: 'esnext',
+      minify: mode === 'production' ? 'terser' : false,
       terserOptions: {
         compress: {
-          drop_console: true,
-          drop_debugger: true
+          drop_console: mode === 'production',
+          drop_debugger: mode === 'production'
         }
-      }
+      },
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+          },
+        },
+      },
     },
     publicDir: 'public',
     css: {
@@ -72,6 +80,9 @@ export default defineConfig(({ mode }) => {
     },
     esbuild: {
       logOverride: { 'this-is-undefined-in-esm': 'silent' }
-    }
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom'],
+    },
   };
 });
