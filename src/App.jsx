@@ -1,5 +1,4 @@
-// src/App.jsx
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
@@ -9,6 +8,7 @@ import './styles/App.css';
 import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
+import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
@@ -23,6 +23,30 @@ const News = lazy(() => import('./pages/News')); // Import the News component
 function AppContent() {
   const { user, isAuthorized, isAdmin } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
+
+  // State to manage showing the Snake game
+  const [showSnakeGame, setShowSnakeGame] = useState(false);
+  const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
+  let pressedKeys = [];
+
+  // Listen for the Konami code input
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      pressedKeys.push(event.key);
+      if (pressedKeys.join().includes(konamiCode.join())) {
+        setShowSnakeGame(true); // Show the Snake game when Konami code is matched
+      }
+      if (pressedKeys.length > konamiCode.length) {
+        pressedKeys.shift(); // Limit the pressedKeys array size
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Router>
@@ -82,6 +106,9 @@ function AppContent() {
           </Routes>
         </Suspense>
       </ErrorBoundary>
+
+      {/* Conditionally render the SnakeGamePopup */}
+      {showSnakeGame && <SnakeGamePopup />}
     </Router>
   );
 }
