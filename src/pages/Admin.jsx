@@ -11,31 +11,24 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const [bulkInput, setBulkInput] = useState('');
   const [announcement, setAnnouncement] = useState({ title: '', message: '' });
   const [currentAnnouncement, setCurrentAnnouncement] = useState({ title: '', message: '' });
-  const [userStats, setUserStats] = useState({ totalUsers: 0, activeUsers: 0 });
-  const [users, setUsers] = useState([]);
+  const [popup, setPopup] = useState({ title: '', message: '', author: '', isActive: false });
 
   useEffect(() => {
     if (Object.keys(weekSchedule).length === 0) {
       fetchSchedule();
     }
     fetchCurrentAnnouncement();
-    fetchUserStats();
+    fetchCurrentPopup();
   }, []);
-
-  console.log("Admin - Current user:", user);
-  console.log("Admin - Is authorized:", isAuthorized());
-  console.log("Admin - Is admin:", isAdmin());
 
   const fetchCurrentAnnouncement = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      console.log("Fetching announcement with token:", token);
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log("Announcement response status:", response.status);
       if (response.ok) {
         const data = await response.json();
         setCurrentAnnouncement(data);
@@ -47,25 +40,22 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     }
   };
 
-  const fetchUserStats = async () => {
+  const fetchCurrentPopup = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      console.log("Fetching user stats with token:", token);
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/admin/users', {
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/popup', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log("User stats response status:", response.status);
       if (response.ok) {
         const data = await response.json();
-        setUserStats({ totalUsers: data.totalUsers, activeUsers: data.activeUsers });
-        setUsers(data.users);
+        setPopup(data);
       } else {
-        console.error("Failed to fetch user stats:", await response.text());
+        console.error("Failed to fetch popup:", await response.text());
       }
     } catch (error) {
-      console.error('Error fetching user stats:', error);
+      console.error('Error fetching popup:', error);
     }
   };
 
@@ -111,7 +101,6 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     try {
       setSaveStatus('Saving...');
       const token = localStorage.getItem('accessToken');
-      console.log("Saving schedule with token:", token);
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/schedule', {
         method: 'POST',
         headers: { 
@@ -120,13 +109,11 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
         },
         body: JSON.stringify(schedule)
       });
-      console.log("Save schedule response status:", response.status);
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       const result = await response.json();
-      console.log('Save response:', result);
       setSaveStatus('Schedule saved successfully');
       setTimeout(() => setSaveStatus(''), 3000);
       fetchSchedule();
@@ -140,7 +127,6 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     try {
       setSaveStatus('Saving announcement...');
       const token = localStorage.getItem('accessToken');
-      console.log("Saving announcement with token:", token);
       const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
         method: 'POST',
         headers: { 
@@ -149,13 +135,10 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
         },
         body: JSON.stringify(announcement)
       });
-      console.log("Save announcement response status:", response.status);
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
-      const result = await response.json();
-      console.log('Save announcement response:', result);
       setSaveStatus('Announcement saved successfully');
       setTimeout(() => setSaveStatus(''), 3000);
       fetchCurrentAnnouncement();
@@ -165,75 +148,34 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     }
   };
 
-  const handleUpdateUser = async (userId, updatedData) => {
+  const savePopup = async () => {
     try {
+      setSaveStatus('Saving popup...');
       const token = localStorage.getItem('accessToken');
-      console.log("Updating user with token:", token);
-      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
-        method: 'PUT',
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/popup', {
+        method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(updatedData)
+        body: JSON.stringify(popup)
       });
-      console.log("Update user response status:", response.status);
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
-      fetchUserStats();
+      setSaveStatus('Popup saved successfully');
+      setTimeout(() => setSaveStatus(''), 3000);
+      fetchCurrentPopup();
     } catch (error) {
-      console.error('Error updating user:', error);
-    }
-  };
-
-  const handleDeleteUser = async (userId) => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      console.log("Deleting user with token:", token);
-      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}`, {
-        method: 'DELETE',
-        headers: { 
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log("Delete user response status:", response.status);
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-      fetchUserStats();
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
-  };
-
-  const handleBanUser = async (userId) => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      console.log("Banning user with token:", token);
-      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/admin/users/${userId}/ban`, {
-        method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log("Ban user response status:", response.status);
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-      fetchUserStats();
-    } catch (error) {
-      console.error('Error banning user:', error);
+      console.error('Error saving popup:', error);
+      setSaveStatus(`Failed to save popup: ${error.message}`);
     }
   };
 
   const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
   if (!user || !isAuthorized() || !isAdmin()) {
-    console.log("Admin - User not authorized or not admin");
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to access the admin panel.</p>
@@ -241,7 +183,6 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     );
   }
 
-  console.log("Admin - User authorized, rendering admin panel");
   return (
     <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <div className="flex-grow overflow-y-auto">
@@ -249,37 +190,54 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
           <div className={`${currentTheme.secondary} border-2 ${currentTheme.border} p-6 rounded-lg shadow-lg`}>
             <h2 className={`text-2xl font-bold mb-6`}>Admin Console</h2>
 
-            {/* User Statistics Section */}
+            {/* Popup Management Section */}
             <div className="mb-8">
-              <h3 className={`text-xl font-semibold mb-4`}>User Statistics</h3>
-              <p>Total Users: {userStats.totalUsers}</p>
-              <p>Active Users: {userStats.activeUsers}</p>
-            </div>
-
-            {/* User Management Section */}
-            <div className="mb-8">
-              <h3 className={`text-xl font-semibold mb-4`}>User Management</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2">Email</th>
-                      <th className="px-4 py-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(user => (
-                      <tr key={user.id}>
-                        <td className="border px-4 py-2">{user.email}</td>
-                        <td className="border px-4 py-2">
-                          <button onClick={() => handleUpdateUser(user.id)} className={`${currentTheme.accent} px-2 py-1 rounded mr-2`}>Update</button>
-                          <button onClick={() => handleDeleteUser(user.id)} className={`${currentTheme.accent} px-2 py-1 rounded mr-2`}>Delete</button>
-                          <button onClick={() => handleBanUser(user.id)} className={`${currentTheme.accent} px-2 py-1 rounded`}>Ban</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <h3 className={`text-xl font-semibold mb-4`}>Manage Popup</h3>
+              <div className="mb-4">
+                <h4 className={`text-lg font-medium mb-2`}>Current Popup</h4>
+                <p>Title: {popup.title}</p>
+                <p>Message: {popup.message}</p>
+                <p>Author: {popup.author}</p>
+                <p>Active: {popup.isActive ? 'Yes' : 'No'}</p>
+              </div>
+              <div className="mb-4">
+                <h4 className={`text-lg font-medium mb-2`}>Set New Popup</h4>
+                <input
+                  type="text"
+                  placeholder="Popup Title"
+                  value={popup.title}
+                  onChange={(e) => setPopup(prev => ({ ...prev, title: e.target.value }))}
+                  className={inputStyle}
+                />
+                <textarea
+                  placeholder="Popup Message"
+                  value={popup.message}
+                  onChange={(e) => setPopup(prev => ({ ...prev, message: e.target.value }))}
+                  className={inputStyle}
+                  rows="3"
+                />
+                <input
+                  type="text"
+                  placeholder="Author"
+                  value={popup.author}
+                  onChange={(e) => setPopup(prev => ({ ...prev, author: e.target.value }))}
+                  className={inputStyle}
+                />
+                <div className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={popup.isActive}
+                    onChange={(e) => setPopup(prev => ({ ...prev, isActive: e.target.checked }))}
+                    className="mr-2"
+                  />
+                  <label>Active</label>
+                </div>
+                <button
+                  onClick={savePopup}
+                  className={`${currentTheme.accent} px-4 py-2 rounded hover:opacity-80`}
+                >
+                  Save Popup
+                </button>
               </div>
             </div>
 

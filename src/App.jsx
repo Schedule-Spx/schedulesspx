@@ -18,6 +18,7 @@ const About = lazy(() => import('./pages/About'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 const TeacherTools = lazy(() => import('./pages/TeacherTools'));
+const News = lazy(() => import('./pages/News')); // Import the News component
 
 function AppContent() {
   const { user, isAuthorized, isAdmin } = useAuth();
@@ -77,6 +78,7 @@ function AppContent() {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsAndConditions />} />
+            <Route path="/news" element={<News />} /> {/* Add the News route */}
           </Routes>
         </Suspense>
       </ErrorBoundary>

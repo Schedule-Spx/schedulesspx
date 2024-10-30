@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import PeriodCustomization from '../components/PeriodCustomization';
 import '../styles/carousel.css';
 
 const Account = ({ weekSchedule }) => {
@@ -105,37 +106,42 @@ const Account = ({ weekSchedule }) => {
             </div>
           </div>
         </div>
+
+        {/* Period Customization section */}
+        <div className="mb-8">
+          <PeriodCustomization />
+        </div>
         
         {/* Theme Customization section */}
         <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h2 className="text-xl font-bold mb-4 text-center">Theme Customization</h2>
-          <div className="flex justify-center mb-4">
+          <div className="flex flex-wrap justify-center mb-4 gap-2">
             <button
-              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
               onClick={() => handleFilterChange('Featured Themes')}
             >
               Featured Themes
             </button>
             <button
-              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
               onClick={() => handleFilterChange('General Themes')}
             >
               General Themes
             </button>
             <button
-              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
               onClick={() => handleFilterChange('Holiday Themes')}
             >
               Holiday Themes
             </button>
             <button
-              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
               onClick={() => handleFilterChange('People Themes')}
             >
               People Themes
             </button>
             <button
-              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded mx-2`}
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
               onClick={() => handleFilterChange('Show All')}
             >
               Show All

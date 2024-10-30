@@ -1,3 +1,4 @@
+// GoogleLogin.jsx
 import React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 
@@ -15,6 +16,7 @@ const GoogleLogin = ({ onLoginSuccess }) => {
         const userData = {
           name: userInfo.name,
           email: userInfo.email,
+          profilePicture: userInfo.picture,
           accessToken: tokenResponse.access_token
         };
         console.log("Google Login - Passing user data to onLoginSuccess:", userData);

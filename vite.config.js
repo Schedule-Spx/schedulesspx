@@ -7,10 +7,15 @@ import autoprefixer from 'autoprefixer';
 import tailwindcss from 'tailwindcss';
 
 export default defineConfig(({ mode }) => {
+  // Load environment variables
   const env = loadEnv(mode, process.cwd(), '');
+
   return {
     plugins: [
+      // React plugin with SWC for faster builds
       react(),
+      
+      // PWA configuration
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
@@ -38,51 +43,52 @@ export default defineConfig(({ mode }) => {
       })
     ],
     server: {
-      port: 3000,
-      open: true,
+      port: 3000, // Dev server port
+      open: true, // Opens the browser automatically
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.json'],
+      extensions: ['.js', '.jsx', '.json'], // Default extensions
       alias: {
-        '@': path.resolve(__dirname, './src'),
+        '@': path.resolve(__dirname, './src'), // Alias for src directory
       },
     },
     define: {
+      // Define environment variables for use in the app
       'import.meta.env.VITE_GOOGLE_API_KEY': JSON.stringify(env.VITE_GOOGLE_API_KEY),
       'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(env.VITE_GOOGLE_CLIENT_ID),
     },
     build: {
-      outDir: 'dist',
-      target: 'esnext',
-      minify: mode === 'production' ? 'terser' : false,
+      outDir: 'dist', // Output directory for build
+      target: 'esnext', // JavaScript target
+      minify: mode === 'production' ? 'terser' : false, // Minification settings
       terserOptions: {
         compress: {
-          drop_console: mode === 'production',
-          drop_debugger: mode === 'production'
+          drop_console: mode === 'production', // Remove console logs in production
+          drop_debugger: mode === 'production' // Remove debugger statements in production
         }
       },
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: ['react', 'react-dom', 'react-router-dom'],
+            vendor: ['react', 'react-dom', 'react-router-dom'], // Separate vendor chunk
           },
         },
       },
     },
-    publicDir: 'public',
+    publicDir: 'public', // Directory for static assets
     css: {
       postcss: {
         plugins: [
-          autoprefixer(),
-          tailwindcss()
+          autoprefixer(), // Adds vendor prefixes
+          tailwindcss()   // Tailwind CSS integration
         ]
       }
     },
     esbuild: {
-      logOverride: { 'this-is-undefined-in-esm': 'silent' }
+      logOverride: { 'this-is-undefined-in-esm': 'silent' } // Suppress specific warnings
     },
     optimizeDeps: {
-      include: ['react', 'react-dom', 'react-router-dom'],
+      include: ['react', 'react-dom', 'react-router-dom'], // Pre-bundle dependencies
     },
   };
 });
