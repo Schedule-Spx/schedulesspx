@@ -227,7 +227,7 @@ const About = () => {
           >
             <h2 className="about-title">it was time to expand our team</h2>
             <p className="about-body">
-              We realized that it was too much for just Kagen and David to keep updating the site, so they recruited Russel to help with development, and to help maintain the site once the seniors graduated. We also now were officially represented by Mrs. Farrell! She helps our Teacher-Student site relationship and is our #1 supporter! (type the year she got her B.A for a surprise)
+              We realized that it was too much for just Kagen and David to keep updating the site, so they recruited Russell to help with development, and to help maintain the site once the seniors graduated. We also now were officially represented by Mrs. Farrell! She helps our Teacher-Student site relationship and is our #1 supporter! (type the year she got her B.A for a surprise)
             </p>
           </motion.div>
           <motion.div
