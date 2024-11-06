@@ -1,5 +1,5 @@
 // src/pages/MainDashboard.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import DayHeader from '../components/DayHeader';
 import QuickLinks from '../components/QuickLinks';
@@ -11,25 +11,14 @@ import { useWeekSchedule } from '../context/WeekScheduleContext';
 const MainDashboard = () => {
   const { currentTheme } = useTheme();
   const { weekSchedule, fetchSchedule } = useWeekSchedule();
-  const [showTutorial, setShowTutorial] = useState(false);
   const contentRef = useRef(null);
 
   useEffect(() => {
-    const tutorialShown = localStorage.getItem('tutorialShown');
-    if (!tutorialShown) {
-      setShowTutorial(true);
-    }
     fetchSchedule();
   }, [fetchSchedule]);
 
-  const closeTutorial = () => {
-    setShowTutorial(false);
-    localStorage.setItem('tutorialShown', 'true');
-  };
-
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
-      {showTutorial && <TutorialModal closeTutorial={closeTutorial} />}
       <div ref={contentRef} className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="flex flex-col space-y-4">
           <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left h-[164px]`}>
