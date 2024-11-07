@@ -1,21 +1,39 @@
 name: Security Scan
 on:
-  schedule:
-    - cron: '0 0 * * *' # Daily scan
+  pull_request:
+    branches: [ main ]
   push:
-    branches: [main]
+    branches: [ main ]
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 jobs:
-  security:
+  analyze:
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
     steps:
-      - uses: actions/checkout@v4
-      
-      # CodeQL Analysis
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: javascript
-          
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
