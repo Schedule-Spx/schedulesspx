@@ -1,61 +1,77 @@
 import React, { useState } from 'react';
-import { useTheme } from '../../context/ThemeContext';
 
 const GroupDivider = () => {
-  const { currentTheme } = useTheme();
-  const [inputValue, setInputValue] = useState('');
-  const [groupSize, setGroupSize] = useState(2);
+  const [names, setNames] = useState('');
+  const [groupSize, setGroupSize] = useState(1);
   const [groups, setGroups] = useState([]);
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    setNames(e.target.value);
   };
 
   const handleGroupSizeChange = (e) => {
-    setGroupSize(Number(e.target.value));
+    const value = parseInt(e.target.value, 10);
+    setGroupSize(value);
   };
 
   const divideIntoGroups = () => {
-    const names = inputValue.split('\n').filter(name => name.trim() !== '');
+    const nameArray = names.split('\n').filter(name => name.trim() !== '');
+    const shuffledNames = nameArray.sort(() => Math.random() - 0.5);
     const newGroups = [];
-    for (let i = 0; i < names.length; i += groupSize) {
-      newGroups.push(names.slice(i, i + groupSize));
+
+    for (let i = 0; i < shuffledNames.length; i += groupSize) {
+      newGroups.push(shuffledNames.slice(i, i + groupSize));
     }
+
     setGroups(newGroups);
   };
 
   return (
-    <div className={`${currentTheme.main} ${currentTheme.text} p-6 rounded-lg shadow-md`}>
-      <h2 className="text-2xl font-bold mb-4">Group Divider</h2>
-      <textarea
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder="Enter names (one per line)"
-        className={`${currentTheme.input} rounded px-2 py-1 mb-4 w-full`}
-        style={{ resize: 'none', color: 'black' }}
-      />
-      <div className="mb-4">
-        <label htmlFor="groupSize" className="block mb-2">People per group: {groupSize}</label>
-        <input
-          type="range"
-          id="groupSize"
-          min="1"
-          max="10"
-          value={groupSize}
-          onChange={handleGroupSizeChange}
-          className="w-full"
+    <div className="flex">
+      {/* Left side for names input */}
+      <div className="w-1/2 p-4">
+        <textarea
+          value={names}
+          onChange={handleInputChange}
+          className="w-full h-64 p-2 border rounded text-black"
+          placeholder="Enter names (one per line and select number of people after entering names)"
         />
+        <div className="mt-2 flex items-center">
+          <input
+            type="range"
+            min="1"
+            max={Math.max(1, names.split('\n').filter(name => name.trim() !== '').length)}
+            value={groupSize}
+            onChange={handleGroupSizeChange}
+            className="w-full"
+          />
+          <input
+            type="number"
+            min="1"
+            max={Math.max(1, names.split('\n').filter(name => name.trim() !== '').length)}
+            value={groupSize}
+            onChange={handleGroupSizeChange}
+            className="w-16 ml-2 p-1 border rounded text-center text-black"
+          />
+        </div>
+        <button
+          onClick={divideIntoGroups}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Divide into Groups
+        </button>
       </div>
-      <button
-        onClick={divideIntoGroups}
-        className={`${currentTheme.accent} ${currentTheme.text} px-4 py-2 rounded hover:opacity-80 transition-opacity duration-200`}
-      >
-        Divide into Groups
-      </button>
-      <div className="mt-4">
-        {groups.map((group, index) => (
-          <div key={index} className="mb-2">
-            <strong>Group {index + 1}:</strong> {group.join(', ')}
+
+      {/* Right side for displaying groups */}
+      <div className="w-1/2 p-4">
+        {groups.length > 0 && groups.map((group, index) => (
+          <div key={index} className="mb-4 p-2 border rounded">
+            <h3 className="font-bold">Group {index + 1}</h3>
+            <ul>
+              {group.map((name, i) => (
+                <li key={i}>{name}</li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>
