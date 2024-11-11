@@ -4,6 +4,7 @@ import Timer from '../components/TeacherTools/Timer';
 import NamePicker from '../components/TeacherTools/NamePicker';
 import GameSelector from '../components/TeacherTools/GameSelector';
 import DiceRoller from '../components/TeacherTools/DiceRoller';
+import GroupDivider from '@/components/TeacherTools/GroupDivider';
 import { motion } from 'framer-motion';
 
 const TeacherTools = () => {
@@ -35,6 +36,13 @@ const TeacherTools = () => {
       icon: '🎲',
       gradient: `${currentTheme.accent}`
     },
+    { 
+      name: 'Group Creator', 
+      component: GroupDivider,
+      icon: '👥',
+      gradient: `${currentTheme.accent}`
+    },
+
   ];
 
   return (
