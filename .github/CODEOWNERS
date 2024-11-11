@@ -1,0 +1,6 @@
+# Default owners for everything in the repo
+*       @kdogdevs @davidcamick
+
+# Special protection for authentication and GitHub settings
+src/context/AuthContext.jsx    @kdogdevs
+.github/**    @kdogdevs
