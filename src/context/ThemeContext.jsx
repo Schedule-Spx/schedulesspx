@@ -75,10 +75,10 @@ export const themes = {
   },
   retro: {
     name: 'Retro',
-    main: 'bg-[#403D39]', // Dark gray
-    accent: 'bg-[#EB5E28]', // Orange
-    text: 'text-[#FFFCF2]', // Off-white
-    border: 'border-[#CCC5B9]', // Light beige
+    main: 'bg-[#403D39]', 
+    accent: 'bg-[#EB5E28]', 
+    text: 'text-[#FFFCF2]', 
+    border: 'border-[#CCC5B9]', 
   },
   skyblue: {
     name: 'Sky Blue',
@@ -129,13 +129,13 @@ export const themes = {
     text: 'text-white',
     border: 'border-yellow-600',
   },
-  christmas: {
-    name: 'Christmas',
-    main: 'bg-red-700',
-    accent: 'bg-green-600',
-    text: 'text-white',
-    border: 'border-yellow-300',
-  },
+  candycane: {
+  name: 'Candy Cane',
+  main: 'bg-[#FFFAF0]', 
+  accent: 'bg-[#FF3B3F]', 
+  text: 'text-[#2C2C2C]', 
+  border: 'border-[#FF3B3F]', 
+},
   halloween: {
     name: 'Halloween',
     main: 'bg-orange-600',

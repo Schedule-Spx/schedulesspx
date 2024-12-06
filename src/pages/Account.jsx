@@ -15,9 +15,9 @@ const Account = ({ weekSchedule }) => {
   console.log("Account - isLoggedIn:", isLoggedIn());
 
   const themeCategories = {
-    'Featured Themes': ['Default', 'Dark', 'Light', 'LaborDay'],
+    'Featured Themes': ['Default', 'Dark', 'Light', 'candycane'],
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee', 'Retro',],
-    'Holiday Themes': ['Christmas', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
+    'Holiday Themes': ['candycane', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
     'People Themes': ['StJoseph', 'StPeter', 'StPaul', 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', 'StCatherine', 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
   };
 
