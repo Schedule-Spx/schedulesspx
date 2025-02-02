@@ -1,4 +1,3 @@
-// NavBar.jsx
 "use client";
 
 import React, { useState } from "react";
@@ -36,7 +35,7 @@ const AccountIcon = () => (
 
 const NavBar = () => {
   const { currentTheme } = useTheme();
-  const { user, login, logout, isAdmin } = useAuth();
+  const { user, login, logout, isAdmin, isStudent } = useAuth();
   const navigate = useNavigate();
 
   const handleLoginSuccess = (userData) => {
@@ -52,6 +51,10 @@ const NavBar = () => {
 
   const canAccessTeacherTools = () => {
     return user && (user.email.endsWith("@spx.org") || isAdmin());
+  };
+
+  const canAccessStudentTools = () => {
+    return user && (isStudent() || isAdmin());
   };
 
   return (
@@ -138,6 +141,20 @@ const NavBar = () => {
                         className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-1.5 px-3 rounded`}
                       >
                         Teacher Tools
+                      </Link>
+                    </motion.div>
+                  )}
+
+                  {canAccessStudentTools() && (
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
+                      <Link
+                        to="/student-tools"
+                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-1.5 px-3 rounded`}
+                      >
+                        Student Tools
                       </Link>
                     </motion.div>
                   )}

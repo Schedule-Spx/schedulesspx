@@ -19,9 +19,10 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 const TeacherTools = lazy(() => import('./pages/TeacherTools'));
 const News = lazy(() => import('./pages/News')); // Import the News component
+const StudentTools = lazy(() => import('./pages/StudentTools')); // Import the StudentTools component
 
 function AppContent() {
-  const { user, isAuthorized, isAdmin } = useAuth();
+  const { user, isAuthorized, isAdmin, isStudent } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
 
   // State to manage showing the Snake game
@@ -94,6 +95,18 @@ function AppContent() {
                   <ErrorBoundary>
                     <Suspense fallback={<div>Loading Teacher Tools...</div>}>
                       <TeacherTools />
+                    </Suspense>
+                  </ErrorBoundary>
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/student-tools" 
+              element={
+                <PrivateRoute requireAuth={isStudent() || isAdmin()}>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading Student Tools...</div>}>
+                      <StudentTools />
                     </Suspense>
                   </ErrorBoundary>
                 </PrivateRoute>

@@ -22,7 +22,8 @@ export const AuthProvider = ({ children }) => {
     const authorizedUser = {
       ...userData,
       isAuthorized: isAuthorizedEmail(userData.email),
-      isAdmin: isAdminEmail(userData.email)
+      isAdmin: isAdminEmail(userData.email),
+      isStudent: isStudentEmail(userData.email)
     };
     setUser(authorizedUser);
     localStorage.setItem('user', JSON.stringify(authorizedUser));
@@ -47,6 +48,11 @@ export const AuthProvider = ({ children }) => {
     return adminEmails.includes(email.toLowerCase());
   };
 
+  const isStudentEmail = (email) => {
+    const studentDomains = ['spxstudent.org'];
+    return studentDomains.includes(email.split('@')[1].toLowerCase());
+  };
+
   const isLoggedIn = () => {
     return !!user;
   };
@@ -59,8 +65,12 @@ export const AuthProvider = ({ children }) => {
     return user && user.isAdmin;
   };
 
+  const isStudent = () => {
+    return user && user.isStudent;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isAuthorized, isAdmin }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isAuthorized, isAdmin, isStudent }}>
       {children}
     </AuthContext.Provider>
   );
