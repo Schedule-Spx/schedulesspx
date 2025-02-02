@@ -29,7 +29,7 @@ const FinalGradeCalculator = () => {
           type="number"
           value={currentGrade}
           onChange={(e) => setCurrentGrade(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-black"
         />
       </div>
       <div className="mb-4">
@@ -38,7 +38,7 @@ const FinalGradeCalculator = () => {
           type="number"
           value={desiredGrade}
           onChange={(e) => setDesiredGrade(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-black"
         />
       </div>
       <div className="mb-4">
@@ -47,7 +47,7 @@ const FinalGradeCalculator = () => {
           type="number"
           value={finalExamWeight}
           onChange={(e) => setFinalExamWeight(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-black"
         />
       </div>
       <button
