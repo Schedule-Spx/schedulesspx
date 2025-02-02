@@ -1,45 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
+import FinalGradeCalculator from '../components/StudentTools/FinalGradeCalculator';
 import { useTheme } from '../context/ThemeContext';
-import Timer from '../components/TeacherTools/Timer';
-import NamePicker from '../components/TeacherTools/NamePicker';
-import GameSelector from '../components/TeacherTools/GameSelector';
-import DiceRoller from '../components/TeacherTools/DiceRoller';
-import GroupDivider from '@/components/TeacherTools/GroupDivider';
 import { motion } from 'framer-motion';
 
-const TeacherTools = () => {
+const StudentTools = () => {
   const { currentTheme } = useTheme();
-  const [activeTool, setActiveTool] = useState(null);
 
   const tools = [
     { 
-      name: 'Timer', 
-      component: Timer,
-      icon: '⏱️',
-      gradient: `${currentTheme.accent}`
-    },
-    { 
-      name: 'Name Picker', 
-      component: NamePicker,
-      icon: '👥',
-      gradient: `${currentTheme.accent}`
-    },
-    { 
-      name: 'Game Selector', 
-      component: GameSelector,
-      icon: '🎮',
-      gradient: `${currentTheme.accent}`
-    },
-    { 
-      name: 'Dice Roller', 
-      component: DiceRoller,
-      icon: '🎲',
-      gradient: `${currentTheme.accent}`
-    },
-    { 
-      name: 'Group Creator', 
-      component: GroupDivider,
-      icon: '👥',
+      name: 'Final Grade Calculator', 
+      component: FinalGradeCalculator,
+      icon: '📊',
       gradient: `${currentTheme.accent}`
     },
   ];
@@ -55,7 +26,7 @@ const TeacherTools = () => {
               animate={{ opacity: 1, y: 0 }}
               className={`text-4xl font-bold mb-8 ${currentTheme.text} text-center`}
             >
-              Teacher Tools
+              Student Tools
             </motion.h1>
 
             {/* Tools Grid */}
@@ -72,7 +43,6 @@ const TeacherTools = () => {
                     shadow-lg hover:shadow-xl
                     transition-all duration-300
                   `}
-                  onClick={() => setActiveTool(tool.name)}
                 >
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
                   <div className="relative z-10 flex flex-col items-center space-y-2">
@@ -123,14 +93,7 @@ const TeacherTools = () => {
               />
 
               <div className="relative z-10">
-                {activeTool ? (
-                  React.createElement(tools.find(tool => tool.name === activeTool).component)
-                ) : (
-                  <div className="text-center py-12">
-                    <span className="text-4xl mb-4 block">✨</span>
-                    <p className={`text-xl ${currentTheme.text}`}>Select a tool to get started</p>
-                  </div>
-                )}
+                {React.createElement(tools[0].component)}
               </div>
             </motion.div>
           </div>
@@ -148,4 +111,4 @@ const TeacherTools = () => {
   );
 };
 
-export default TeacherTools;
+export default StudentTools;
