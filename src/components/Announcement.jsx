@@ -5,8 +5,11 @@ const Announcement = () => {
     const { currentTheme } = useTheme();
     const [announcementText, setAnnouncementText] = useState({
         title: 'Welcome to ScheduleSPX 2.0!',
-        message: 'We\'re so happy you\'re here! Enjoy all the new features!'
+        message: 'We\'re so happy you\'re here! Enjoy all the new features!',
+        dismissible: true,
+        duration: 10000
     });
+    const [visible, setVisible] = useState(true);
 
     useEffect(() => {
         const fetchAnnouncement = async () => {
@@ -24,6 +27,21 @@ const Announcement = () => {
         fetchAnnouncement();
     }, []);
 
+    useEffect(() => {
+        if (announcementText.duration && announcementText.duration > 0) {
+            const timer = setTimeout(() => {
+                setVisible(false);
+            }, announcementText.duration);
+            return () => clearTimeout(timer);
+        }
+    }, [announcementText]);
+
+    const handleDismiss = () => {
+        setVisible(false);
+    };
+
+    if (!visible) return null;
+
     return (
         <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
             <div 
@@ -39,6 +57,14 @@ const Announcement = () => {
                     <p className={`text-sm ${currentTheme.text} opacity-80`}>
                         {announcementText.message}
                     </p>
+                    {announcementText.dismissible && (
+                        <button 
+                            onClick={handleDismiss} 
+                            className={`${currentTheme.accent} ${currentTheme.text} font-bold py-1 px-3 rounded mt-2`}
+                        >
+                            Dismiss
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

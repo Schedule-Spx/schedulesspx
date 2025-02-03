@@ -10,6 +10,7 @@ import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
 import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
+import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
@@ -20,6 +21,7 @@ const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 const TeacherTools = lazy(() => import('./pages/TeacherTools'));
 const News = lazy(() => import('./pages/News')); // Import the News component
 const StudentTools = lazy(() => import('./pages/StudentTools')); // Import the StudentTools component
+const ChangeLog = lazy(() => import('./pages/ChangeLog')); // Import the ChangeLog component
 
 function AppContent() {
   const { user, isAuthorized, isAdmin, isStudent } = useAuth();
@@ -52,6 +54,7 @@ function AppContent() {
   return (
     <Router>
       <NavBar />
+      <ServiceWorkerWrapper />
       <ErrorBoundary>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
@@ -116,6 +119,7 @@ function AppContent() {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsAndConditions />} />
             <Route path="/news" element={<News />} /> {/* Add the News route */}
+            <Route path="/changelog" element={<ChangeLog />} /> {/* Add the ChangeLog route */}
           </Routes>
         </Suspense>
       </ErrorBoundary>

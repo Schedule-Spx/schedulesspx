@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Workbox } from 'workbox-window';
+import Announcement from './Announcement';
 
 const ServiceWorkerWrapper = () => {
   const [showReload, setShowReload] = useState(false);
@@ -39,6 +40,7 @@ const ServiceWorkerWrapper = () => {
           <button onClick={reloadPage}>Reload</button>
         </div>
       )}
+      <Announcement />
     </>
   );
 };
