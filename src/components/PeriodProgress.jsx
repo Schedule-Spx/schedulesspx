@@ -203,18 +203,24 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   }, [weekSchedule, handleSchoolDay, handleNonSchoolDay]);
 
   const renderContent = useMemo(() => {
-    if (!currentState) {
-      return <p className={`text-lg font-medium ${currentTheme.text} text-center`}>Loading...</p>;
-    }
+    if (!currentState) return null;
 
     const getStatusText = () => {
       switch (currentState.type) {
-        case 'activePeriod': return currentState.name;
-        case 'betweenPeriods': return `Next: ${currentState.nextPeriod}`;
-        case 'beforeSchool': return 'School starts soon';
+        case 'activePeriod':
+          return `Current Period: ${currentState.name}`;
+        case 'betweenPeriods':
+          return `Next Period: ${currentState.nextPeriod}`;
+        case 'beforeSchool':
+          return `School starts in: ${timeRemaining}`;
         case 'afterSchool':
-        case 'nonSchoolDay': return `Next school day (${currentState.nextDay})`;
-        default: return 'No School';
+          return `School ended. Next school day: ${currentState.nextDay}`;
+        case 'nonSchoolDay':
+          return `No school today. Next school day: ${currentState.nextDay}`;
+        case 'noSchool':
+          return 'No school today';
+        default:
+          return '';
       }
     };
 
