@@ -6,6 +6,7 @@ import QuickLinks from '../components/QuickLinks';
 import PeriodProgress from '../components/PeriodProgress';
 import Schedule from '../components/Schedule';
 import GoogleCalendar from '../components/GoogleCalendar';
+import PopupMessage from '../components/PopupMessage';
 import { useWeekSchedule } from '../context/WeekScheduleContext';
 
 const MainDashboard = () => {
@@ -44,6 +45,7 @@ const MainDashboard = () => {
           <PeriodProgress weekSchedule={weekSchedule} />
         </div>
       </div>
+      <PopupMessage />
     </div>
   );
 };

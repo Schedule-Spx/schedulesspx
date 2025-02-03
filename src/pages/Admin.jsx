@@ -9,36 +9,14 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   const [newPeriod, setNewPeriod] = useState({ name: '', start: '', end: '' });
   const [saveStatus, setSaveStatus] = useState('');
   const [bulkInput, setBulkInput] = useState('');
-  const [announcement, setAnnouncement] = useState({ title: '', message: '' });
-  const [currentAnnouncement, setCurrentAnnouncement] = useState({ title: '', message: '' });
   const [popup, setPopup] = useState({ title: '', message: '', author: '', isActive: false });
 
   useEffect(() => {
     if (Object.keys(weekSchedule).length === 0) {
       fetchSchedule();
     }
-    fetchCurrentAnnouncement();
     fetchCurrentPopup();
   }, []);
-
-  const fetchCurrentAnnouncement = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCurrentAnnouncement(data);
-      } else {
-        console.error("Failed to fetch announcement:", await response.text());
-      }
-    } catch (error) {
-      console.error('Error fetching announcement:', error);
-    }
-  };
 
   const fetchCurrentPopup = async () => {
     try {
@@ -120,31 +98,6 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     } catch (error) {
       console.error('Error saving schedule:', error);
       setSaveStatus(`Failed to save schedule: ${error.message}`);
-    }
-  };
-
-  const saveAnnouncement = async () => {
-    try {
-      setSaveStatus('Saving announcement...');
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/announcement', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(announcement)
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-      setSaveStatus('Announcement saved successfully');
-      setTimeout(() => setSaveStatus(''), 3000);
-      fetchCurrentAnnouncement();
-    } catch (error) {
-      console.error('Error saving announcement:', error);
-      setSaveStatus(`Failed to save announcement: ${error.message}`);
     }
   };
 
@@ -237,39 +190,6 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
                   className={`${currentTheme.accent} px-4 py-2 rounded hover:opacity-80`}
                 >
                   Save Popup
-                </button>
-              </div>
-            </div>
-
-            {/* Announcement Section */}
-            <div className="mb-8">
-              <h3 className={`text-xl font-semibold mb-4`}>Manage Announcement</h3>
-              <div className="mb-4">
-                <h4 className={`text-lg font-medium mb-2`}>Current Announcement</h4>
-                <p>Title: {currentAnnouncement.title}</p>
-                <p>Message: {currentAnnouncement.message}</p>
-              </div>
-              <div className="mb-4">
-                <h4 className={`text-lg font-medium mb-2`}>Set New Announcement</h4>
-                <input
-                  type="text"
-                  placeholder="Announcement Title"
-                  value={announcement.title}
-                  onChange={(e) => setAnnouncement(prev => ({ ...prev, title: e.target.value }))}
-                  className={inputStyle}
-                />
-                <textarea
-                  placeholder="Announcement Message"
-                  value={announcement.message}
-                  onChange={(e) => setAnnouncement(prev => ({ ...prev, message: e.target.value }))}
-                  className={inputStyle}
-                  rows="3"
-                />
-                <button
-                  onClick={saveAnnouncement}
-                  className={`${currentTheme.accent} px-4 py-2 rounded hover:opacity-80`}
-                >
-                  Save Announcement
                 </button>
               </div>
             </div>

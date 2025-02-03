@@ -153,7 +153,7 @@ const Account = ({ weekSchedule }) => {
         </div>
 
         {/* Legal Information section */}
-        <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6`}>
+        <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6 mb-8`}>
           <h2 className="text-xl font-bold mb-4 text-center">Legal Information</h2>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <Link 
@@ -167,6 +167,19 @@ const Account = ({ weekSchedule }) => {
               className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
             >
               Terms of Service
+            </Link>
+          </div>
+        </div>
+
+        {/* Change Log section */}
+        <div className={`${currentTheme.main} border ${currentTheme.border} rounded-lg shadow-lg p-6`}>
+          <h2 className="text-xl font-bold mb-4 text-center">Change Log</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-center">
+            <Link 
+              to="/changelog" 
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200`}
+            >
+              View Change Log
             </Link>
           </div>
         </div>
