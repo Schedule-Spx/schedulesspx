@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import LunchCountdown from './LunchCountdown';
 
 const Schedule = ({ weekSchedule }) => {
   const { currentTheme } = useTheme();
@@ -139,6 +140,7 @@ const Schedule = ({ weekSchedule }) => {
                     <span className={`relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'} text-center`}>
                       {formatTime(start)} - {formatTime(end)}
                     </span>
+                    <LunchCountdown period={customName} />
                   </div>
                 );
               })}
