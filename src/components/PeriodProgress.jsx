@@ -10,6 +10,14 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   const [currentState, setCurrentState] = useState(null);
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [customNames, setCustomNames] = useState({});
+
+  useEffect(() => {
+    const savedNames = localStorage.getItem('customPeriodNames');
+    if (savedNames) {
+      setCustomNames(JSON.parse(savedNames));
+    }
+  }, []);
 
   console.log("PeriodProgress - user:", user);
   console.log("PeriodProgress - isLoggedIn:", isLoggedIn());
@@ -86,10 +94,12 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
       const progressPercentage = calculateProgress(start, end, now);
       const remaining = end - now;
 
-      setCurrentState({ type: 'activePeriod', name });
+      const customName = customNames[`period${schedule.indexOf(currentPeriodInfo) + 1}`] || name;
+
+      setCurrentState({ type: 'activePeriod', name: customName });
       setProgress(progressPercentage);
       setTimeRemaining(formatTimeRemaining(remaining));
-      updateTitle(name, formatTimeRemaining(remaining));
+      updateTitle(customName, formatTimeRemaining(remaining));
     } else {
       const nextPeriod = schedule.find(period => {
         const startTime = parseTime(period.split(' - ')[1].split('-')[0].trim());
@@ -124,7 +134,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
         handleAfterSchool(now, currentDay);
       }
     }
-  }, [parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd]);
+  }, [parseTime, formatTimeRemaining, updateTitle, calculateProgress, getLastSchoolDayEnd, customNames]);
 
   const handleNonSchoolDay = useCallback((now, currentDay) => {
     const nextDay = getNextSchoolDay(currentDay);
