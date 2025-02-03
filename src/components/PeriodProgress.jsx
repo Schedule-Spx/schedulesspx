@@ -208,7 +208,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
     const getStatusText = () => {
       switch (currentState.type) {
         case 'activePeriod':
-          return `Current Period: ${currentState.name}`;
+          return `${currentState.name}`;
         case 'betweenPeriods':
           return `Next Period: ${currentState.nextPeriod}`;
         case 'beforeSchool':
