@@ -1,47 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Workbox } from 'workbox-window';
-import Announcement from './Announcement';
 
 const ServiceWorkerWrapper = () => {
-  const [showReload, setShowReload] = useState(false);
-  const [wb, setWb] = useState(null);
+  const [waitingWorker, setWaitingWorker] = useState(null);
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      const workboxInstance = new Workbox('/service-worker.js', { type: 'module' });
-      setWb(workboxInstance);
+      const wb = new Workbox('/sw.js');
 
-      workboxInstance.addEventListener('waiting', (event) => {
-        setShowReload(true);
-      });
+      const handleWaitingWorker = (worker) => {
+        setWaitingWorker(worker);
+      };
 
-      workboxInstance.register()
-        .then((registration) => {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch((error) => {
-          console.error('Service Worker registration failed:', error);
-        });
+      wb.addEventListener('waiting', () => handleWaitingWorker(wb));
+      wb.register();
     }
   }, []);
 
-  const reloadPage = () => {
-    wb.addEventListener('controlling', () => {
-      window.location.reload();
-    });
-    wb.messageSkipWaiting();
+  const handleUpdate = () => {
+    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
+    setWaitingWorker(null);
+    window.location.reload();
   };
 
   return (
-    <>
-      {showReload && (
-        <div className="update-banner">
-          <p>A new version is available!</p>
-          <button onClick={reloadPage}>Reload</button>
-        </div>
-      )}
-      <Announcement />
-    </>
+    waitingWorker && (
+      <div className="update-notification">
+        <p>A new version is available!</p>
+        <button onClick={handleUpdate}>Update</button>
+      </div>
+    )
   );
 };
 
