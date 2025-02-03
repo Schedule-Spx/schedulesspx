@@ -9,10 +9,15 @@ const Schedule = ({ weekSchedule }) => {
   const [loading, setLoading] = useState(true);
   const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
   const daySchedule = weekSchedule[currentDay] || [];
+  const [customNames, setCustomNames] = useState({});
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     setLoading(false);
+    const savedNames = localStorage.getItem('customPeriodNames');
+    if (savedNames) {
+      setCustomNames(JSON.parse(savedNames));
+    }
     return () => clearInterval(timer);
   }, []);
 
@@ -108,6 +113,7 @@ const Schedule = ({ weekSchedule }) => {
                 }
                 if (!name || !start || !end) return null; // Skip if essential data is missing
                 const active = isActivePeriod(start.trim(), end.trim());
+                const customName = customNames[`period${index + 1}`] || name;
                 return (
                   <div 
                     key={index} 
@@ -129,7 +135,7 @@ const Schedule = ({ weekSchedule }) => {
                         animationDuration: '1s',
                       }}
                     ></div>
-                    <span className={`font-medium relative z-10 ${currentTheme.text} text-center`}>{name}</span>
+                    <span className={`font-medium relative z-10 ${currentTheme.text} text-center`}>{customName}</span>
                     <span className={`relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'} text-center`}>
                       {formatTime(start)} - {formatTime(end)}
                     </span>

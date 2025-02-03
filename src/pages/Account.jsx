@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import PeriodCustomization from '../components/PeriodCustomization';
+import PeriodRenamer from '../components/PeriodRenamer';
 import '../styles/carousel.css';
 
 const Account = ({ weekSchedule }) => {
@@ -109,7 +109,7 @@ const Account = ({ weekSchedule }) => {
 
         {/* Period Customization section */}
         <div className="mb-8">
-          <PeriodCustomization />
+          <PeriodRenamer />
         </div>
         
         {/* Theme Customization section */}
