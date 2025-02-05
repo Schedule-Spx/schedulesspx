@@ -94,7 +94,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
       const progressPercentage = calculateProgress(start, end, now);
       const remaining = end - now;
 
-      const customName = customNames[`period${schedule.indexOf(currentPeriodInfo) + 1}`] || name;
+      const customName = /^[1-8]$/.test(name) ? (customNames[`period${name}`] || name) : name;
 
       setCurrentState({ type: 'activePeriod', name: customName });
       setProgress(progressPercentage);

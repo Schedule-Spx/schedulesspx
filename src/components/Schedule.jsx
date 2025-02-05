@@ -113,7 +113,7 @@ const Schedule = ({ weekSchedule }) => {
                 }
                 if (!name || !start || !end) return null; // Skip if essential data is missing
                 const active = isActivePeriod(start.trim(), end.trim());
-                const customName = customNames[`period${index + 1}`] || name;
+                const customName = /^[1-8]$/.test(name) ? (customNames[`period${name}`] || name) : name;
                 return (
                   <div 
                     key={index} 
