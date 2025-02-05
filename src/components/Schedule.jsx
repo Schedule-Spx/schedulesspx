@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import LunchCountdown from './LunchCountdown';
 
 const Schedule = ({ weekSchedule }) => {
   const { currentTheme } = useTheme();
@@ -21,6 +20,9 @@ const Schedule = ({ weekSchedule }) => {
     }
     return () => clearInterval(timer);
   }, []);
+
+  console.log("Schedule - Current user:", user);
+  console.log("Schedule - Is authorized:", isAuthorized());
 
   const formatTime = (timeString) => {
     if (!timeString) return '';
@@ -68,6 +70,7 @@ const Schedule = ({ weekSchedule }) => {
   };
 
   if (!user || !isAuthorized()) {
+    console.log("Schedule - User not authorized");
     return (
       <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col justify-center items-center`}>
         <p className={`${currentTheme.text} text-center`}>You are not authorized to view the schedule.</p>
@@ -75,8 +78,10 @@ const Schedule = ({ weekSchedule }) => {
     );
   }
 
+  console.log("Schedule - User authorized, rendering schedule");
   return (
     <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col`}>
+      {/* Gradient Overlay */}
       <div 
         className="absolute inset-0 rounded-lg"
         style={{
@@ -109,7 +114,6 @@ const Schedule = ({ weekSchedule }) => {
                 if (!name || !start || !end) return null; // Skip if essential data is missing
                 const active = isActivePeriod(start.trim(), end.trim());
                 const customName = customNames[`period${index + 1}`] || name;
-                const periodNumber = name.match(/\d+/) ? name.match(/\d+/)[0] : customName.match(/\d+/) ? customName.match(/\d+/)[0] : null;
                 return (
                   <div 
                     key={index} 
@@ -132,9 +136,6 @@ const Schedule = ({ weekSchedule }) => {
                       }}
                     ></div>
                     <span className={`font-medium relative z-10 ${currentTheme.text} text-center`}>{customName}</span>
-                    {['4', '5', '6'].includes(periodNumber) && (
-                      <LunchCountdown period={periodNumber} customText="Lunch in:" />
-                    )}
                     <span className={`relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'} text-center`}>
                       {formatTime(start)} - {formatTime(end)}
                     </span>
