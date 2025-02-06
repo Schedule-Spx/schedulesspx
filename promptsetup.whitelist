@@ -1,9 +1,0 @@
-src
-.env
-.gitignore
-index.html
-package.json
-postcss.config.js
-README.md
-tailwind.config.js
-vite.config.js
