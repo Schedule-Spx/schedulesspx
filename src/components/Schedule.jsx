@@ -1,3 +1,4 @@
+// src/components/Schedule.jsx
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -29,11 +30,9 @@ const Schedule = ({ weekSchedule }) => {
     if (timeString.includes('AM') || timeString.includes('PM')) {
       return timeString;
     }
-    
     const [hours, minutes] = timeString.split(':');
     let period = 'AM';
     let hours12 = parseInt(hours, 10);
-    
     if (hours12 >= 12) {
       period = 'PM';
       if (hours12 > 12) {
@@ -43,16 +42,7 @@ const Schedule = ({ weekSchedule }) => {
     if (hours12 === 0) {
       hours12 = 12;
     }
-    
     return `${hours12.toString().padStart(2, '0')}:${minutes} ${period}`;
-  };
-
-  const isActivePeriod = (start, end) => {
-    if (!start || !end) return false;
-    const now = currentTime;
-    const startTime = parseTime(start);
-    const endTime = parseTime(end);
-    return now >= startTime && now < endTime;
   };
 
   const parseTime = (timeString) => {
@@ -67,6 +57,14 @@ const Schedule = ({ weekSchedule }) => {
     }
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours, 10), parseInt(minutes, 10));
+  };
+
+  const isActivePeriod = (start, end) => {
+    if (!start || !end) return false;
+    const now = currentTime;
+    const startTime = parseTime(start.trim());
+    const endTime = parseTime(end.trim());
+    return now >= startTime && now < endTime;
   };
 
   if (!user || !isAuthorized()) {
@@ -97,7 +95,7 @@ const Schedule = ({ weekSchedule }) => {
           ) : daySchedule.length > 0 ? (
             <div className="space-y-2">
               {daySchedule.map((period, index) => {
-                if (!period) return null; // Skip if period is undefined
+                if (!period) return null;
                 let name, start, end;
                 if (typeof period === 'string') {
                   const parts = period.split(' - ');
@@ -106,14 +104,19 @@ const Schedule = ({ weekSchedule }) => {
                     [start, end] = parts[1].split('-');
                   }
                 } else {
-                  // Handle case where period might be an object
                   name = period.name;
                   start = period.start;
                   end = period.end;
                 }
-                if (!name || !start || !end) return null; // Skip if essential data is missing
-                const active = isActivePeriod(start.trim(), end.trim());
+                if (!name || !start || !end) return null;
+                const active = isActivePeriod(start, end);
                 const customName = /^[1-8]$/.test(name) ? (customNames[`period${name}`] || name) : name;
+
+                // Calculate duration in minutes using Math.ceil to count the first minute
+                const startTime = parseTime(start.trim());
+                const endTime = parseTime(end.trim());
+                const diffMinutes = Math.ceil((endTime - startTime) / 60000);
+
                 return (
                   <div 
                     key={index} 
@@ -123,7 +126,7 @@ const Schedule = ({ weekSchedule }) => {
                       transition-all duration-300 ease-in-out
                       animate-fadeIn
                     `}
-                    style={{animationDelay: `${index * 50}ms`}}
+                    style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <div 
                       className={`
@@ -136,9 +139,18 @@ const Schedule = ({ weekSchedule }) => {
                       }}
                     ></div>
                     <span className={`font-medium relative z-10 ${currentTheme.text} text-center`}>{customName}</span>
-                    <span className={`relative z-10 ${currentTheme.text} ${active ? 'font-semibold' : 'opacity-80'} text-center`}>
-                      {formatTime(start)} - {formatTime(end)}
-                    </span>
+                    {/* Time range replaced on hover with duration */}
+                    <div className="relative inline-block group">
+                      <span className="transition-opacity duration-300 group-hover:opacity-0">
+                        {formatTime(start)} - {formatTime(end)}
+                      </span>
+                      <span 
+                        className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+                        style={{ color: currentTheme.text.replace('text-', '') }}
+                      >
+                        {diffMinutes} Minutes
+                      </span>
+                    </div>
                   </div>
                 );
               })}
