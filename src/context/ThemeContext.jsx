@@ -388,6 +388,13 @@ export const themes = {
     text: 'text-white',
     border: 'border-red-500',
   },
+    legoat: {
+    name: 'Le 🐐',
+    main: 'bg-[#552583]', // Lakers Purple
+    accent: 'bg-[#FDB927]', // Lakers Yellow
+    text: 'text-white', // Black
+    border: "border-[#552583]" // Lakers Purple
+}
 };
 
 export const ThemeProvider = ({ children }) => {
