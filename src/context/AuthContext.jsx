@@ -18,7 +18,13 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const bannedEmails = ['banned@example.com', 'spam@example.com']; // P69aa
+
   const login = (userData) => {
+    if (bannedEmails.includes(userData.email.toLowerCase())) {
+      alert('This email is banned.');
+      return;
+    }
     const authorizedUser = {
       ...userData,
       isAuthorized: isAuthorizedEmail(userData.email),
@@ -40,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   const isAuthorizedEmail = (email) => {
     const allowedDomains = ['spx.org', 'spxstudent.org'];
     const allowedEmails = ['kagenmjensen@me.com',];
-    return allowedDomains.includes(email.split('@')[1].toLowerCase()) || allowedEmails.includes(email.toLowerCase());
+    return !bannedEmails.includes(email.toLowerCase()) && (allowedDomains.includes(email.split('@')[1].toLowerCase()) || allowedEmails.includes(email.toLowerCase()));
   };
 
   const isAdminEmail = (email) => {
