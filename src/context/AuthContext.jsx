@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const bannedEmails = ['banned@example.com', 'spam@example.com']; // P69aa
+  const bannedEmails = ['ccrosby25@spxstudent.org']; // P69aa
 
   const login = (userData) => {
     if (bannedEmails.includes(userData.email.toLowerCase())) {
