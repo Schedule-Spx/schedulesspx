@@ -8,8 +8,9 @@ import '../styles/carousel.css';
 
 const Account = ({ weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, reminderPreference, updateReminderPreference } = useAuth();
   const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
+  const [reminderEnabled, setReminderEnabled] = useState(reminderPreference);
 
   console.log("Account - user:", user);
   console.log("Account - isLoggedIn:", isLoggedIn());
@@ -38,6 +39,12 @@ const Account = ({ weekSchedule }) => {
 
   const handleFilterChange = (filter) => {
     setFilteredThemes(filter);
+  };
+
+  const handleReminderToggle = () => {
+    const newPreference = !reminderEnabled;
+    setReminderEnabled(newPreference);
+    updateReminderPreference(newPreference);
   };
 
   const renderThemes = () => {
@@ -106,6 +113,20 @@ const Account = ({ weekSchedule }) => {
               <label className="block text-sm font-bold mb-2">Email</label>
               <p className={`p-2 rounded ${currentTheme.main}`}>{user.email}</p>
             </div>
+            {(user.isTeacher || user.isAdmin) && (
+              <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Attendance Reminder</label>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={reminderEnabled}
+                    onChange={handleReminderToggle}
+                    className="mr-2"
+                  />
+                  <span>{reminderEnabled ? 'Enabled' : 'Disabled'}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
