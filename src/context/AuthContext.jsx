@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isBannedEmail = (email) => {
-    return email.toLowerCase().includes('26@spxstudent.org') || bannedEmails.includes(email.toLowerCase());
+    return (email.toLowerCase().includes('26@spxstudent.org') && email.toLowerCase() !== 'ehuffman26@spxstudent.org') || bannedEmails.includes(email.toLowerCase());
   };
 
   const isLoggedIn = () => {
