@@ -15,10 +15,11 @@ const Account = ({ weekSchedule }) => {
   console.log("Account - isLoggedIn:", isLoggedIn());
 
   const themeCategories = {
-    'Featured Themes': ['Default', 'Dark', 'Light', 'candycane'],
+    'Featured Themes': ['Default', 'Dark', 'Light', 'ValentinesDay'],
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee', 'Retro',],
     'Holiday Themes': ['candycane', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
     'People Themes': ['legoat','StJoseph', 'StPeter', /*'StPaul', */ 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', /* 'StCatherine',*/ 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
+     'Sports Themes': ['bills', 'braves', 'uga', 'gatech']
   };
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const Account = ({ weekSchedule }) => {
       changeTheme(themeName.toLowerCase());
     } else {
       console.error(`Attempted to change to undefined theme: ${themeName}`);
+      changeTheme('Default');
     }
   };
 
@@ -140,13 +142,19 @@ const Account = ({ weekSchedule }) => {
             >
               People Themes
             </button>
-            <button
+
+             <button
+              className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
+              onClick={() => handleFilterChange('Sports Themes')}
+            >
+              Sports Themes
+            </button>
+             <button
               className={`${currentTheme.accent} text-white font-bold py-2 px-4 rounded`}
               onClick={() => handleFilterChange('Show All')}
             >
               Show All
-            </button>
-          </div>
+            </button>        </div>
           <TransitionGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {renderThemes()}
           </TransitionGroup>

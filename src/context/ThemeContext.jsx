@@ -388,13 +388,42 @@ export const themes = {
     text: 'text-white',
     border: 'border-red-500',
   },
-    legoat: {
+  legoat: {
     name: 'Le 🐐',
-    main: 'bg-[#552583]', // Lakers Purple
-    accent: 'bg-[#FDB927]', // Lakers Yellow
-    text: 'text-white', // Black
-    border: "border-[#552583]" // Lakers Purple
-}
+    main: 'bg-[#552583]', 
+    accent: 'bg-[#FDB927]', 
+    text: 'text-white', 
+    border: "border-[#552583]" 
+    },
+  //Sports Teams
+   bills: {
+    name: 'Buffalo Bills',
+    main: 'bg-[#00338D]', 
+    accent: 'bg-[#C60C30]', 
+    text: 'text-white', 
+    border: 'border-[#C60C30]'
+    },
+   braves: {
+    name: 'Atlanta Braves',
+    main: 'bg-[#13274F]',
+    accent: 'bg-[#CE1141]',
+    text: 'text-white',
+    border: 'border-[#EAAA00]',
+    },
+   uga: {
+    name: 'Georgia Bulldogs',
+    main: 'bg-black',
+    accent: 'bg-[#BA0C2F]',
+    border: 'border-[#BA0C2F]',
+    text: 'text-white',
+    },
+   gatech: {
+    name: 'Georgia Tech Yellow Jackets',
+    main: 'bg-[#003057]',
+    accent: 'bg-[#B3A369]',
+    text: 'text-white',
+    border: 'border-[#C99700]',
+    },
 };
 
 export const ThemeProvider = ({ children }) => {
