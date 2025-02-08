@@ -18,6 +18,11 @@ const PrivateRoute = ({ children, requireAuth = false, adminOnly = false, teache
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
+  if (user?.isBanned) {
+    console.log("PrivateRoute - User is banned, redirecting to banned page");
+    return <Navigate to="/banned" replace />;
+  }
+
   if (requireAuth && !isAuthorized()) {
     console.log("PrivateRoute - User not authorized");
     return <Navigate to="/unauthorized" replace />;

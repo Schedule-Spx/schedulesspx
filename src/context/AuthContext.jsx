@@ -33,11 +33,6 @@ export const AuthProvider = ({ children }) => {
   const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org'];
 
   const login = (userData) => {
-    if (bannedEmails.includes(userData.email.toLowerCase())) {
-      alert('This email is banned.');
-      window.location.href = '/banned';
-      return;
-    }
     const authorizedUser = {
       ...userData,
       isAuthorized: isAuthorizedEmail(userData.email),
@@ -45,6 +40,17 @@ export const AuthProvider = ({ children }) => {
       isStudent: isStudentEmail(userData.email),
       isBanned: isBannedEmail(userData.email),
     };
+
+    if (authorizedUser.isBanned) {
+      setUser(authorizedUser);
+      localStorage.setItem('user', JSON.stringify(authorizedUser));
+      const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
+      localStorage.setItem('sessionExpiry', expiry.toString());
+      localStorage.setItem('isBanned', authorizedUser.isBanned.toString());
+      window.location.href = '/banned';
+      return;
+    }
+
     setUser(authorizedUser);
     localStorage.setItem('user', JSON.stringify(authorizedUser));
     const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
