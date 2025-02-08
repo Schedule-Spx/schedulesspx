@@ -30,11 +30,12 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org']; // P69aa
+  const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org'];
 
   const login = (userData) => {
     if (bannedEmails.includes(userData.email.toLowerCase())) {
       alert('This email is banned.');
+      window.location.href = '/banned';
       return;
     }
     const authorizedUser = {
@@ -75,7 +76,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isBannedEmail = (email) => {
-    return email.toLowerCase().includes('26') || bannedEmails.includes(email.toLowerCase('kjensen25@spxstudent.org'));
+    return email.toLowerCase().includes('26') || bannedEmails.includes(email.toLowerCase());
   };
 
   const isLoggedIn = () => {
