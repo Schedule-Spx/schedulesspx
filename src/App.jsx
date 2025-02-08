@@ -53,6 +53,13 @@ function AppContent() {
   }, []);
 
   // **🔹 Redirect Banned Users & Hide UI**
+  useEffect(() => {
+    const isBanned = localStorage.getItem('isBanned') === 'true';
+    if (isBanned) {
+      window.location.href = '/banned';
+    }
+  }, []);
+
   if (user?.isBanned) {
     return (
       <Router>
