@@ -6,6 +6,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [reminderPreference, setReminderPreference] = useState(true);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }) => {
       isAdmin: isAdminEmail(userData.email),
       isStudent: isStudentEmail(userData.email),
       isBanned: isBannedEmail(userData.email),
+      reminderPreference: userData.reminderPreference ?? true,
     };
 
     if (authorizedUser.isBanned) {
@@ -105,8 +107,17 @@ export const AuthProvider = ({ children }) => {
     return user && user.isStudent;
   };
 
+  const updateReminderPreference = (preference) => {
+    setReminderPreference(preference);
+    if (user) {
+      const updatedUser = { ...user, reminderPreference: preference };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isAuthorized, isAdmin, isStudent }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isAuthorized, isAdmin, isStudent, reminderPreference, updateReminderPreference }}>
       {children}
     </AuthContext.Provider>
   );

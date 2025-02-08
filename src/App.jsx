@@ -11,6 +11,7 @@ import PrivateRoute from './components/PrivateRoute';
 import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
+import AttendanceReminderPopup from './components/AttendanceReminderPopup';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
@@ -33,6 +34,9 @@ function AppContent() {
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
   let pressedKeys = [];
 
+  // State to manage the reminder preference
+  const [reminderPreference, setReminderPreference] = useState(user?.reminderPreference);
+
   // Listen for the Konami code input
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -51,6 +55,17 @@ function AppContent() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  // Use useEffect to trigger the reminder 8 minutes into every period
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (user?.isTeacher && reminderPreference) {
+        setShowSnakeGame(true);
+      }
+    }, 8 * 60 * 1000); // 8 minutes
+
+    return () => clearInterval(timer);
+  }, [user, reminderPreference]);
 
   if (user?.isBanned) {
     return (
@@ -139,6 +154,8 @@ function AppContent() {
 
       {/* Conditionally render the SnakeGamePopup */}
       {showSnakeGame && <SnakeGamePopup />}
+      {/* Conditionally render the AttendanceReminderPopup */}
+      {reminderPreference && <AttendanceReminderPopup onClose={() => setReminderPreference(false)} />}
     </Router>
   );
 }
