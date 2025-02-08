@@ -14,14 +14,15 @@ import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
+const Banned = lazy(() => import('./pages/Banned')); // Ensure Banned page is imported
 const Account = lazy(() => import('./pages/Account'));
 const About = lazy(() => import('./pages/About'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 const TeacherTools = lazy(() => import('./pages/TeacherTools'));
-const News = lazy(() => import('./pages/News')); // Import the News component
-const StudentTools = lazy(() => import('./pages/StudentTools')); // Import the StudentTools component
-const ChangeLog = lazy(() => import('./pages/ChangeLog')); // Import the ChangeLog component
+const News = lazy(() => import('./pages/News'));
+const StudentTools = lazy(() => import('./pages/StudentTools'));
+const ChangeLog = lazy(() => import('./pages/ChangeLog'));
 
 function AppContent() {
   const { user, isAuthorized, isAdmin, isStudent } = useAuth();
@@ -37,10 +38,10 @@ function AppContent() {
     const handleKeyDown = (event) => {
       pressedKeys.push(event.key);
       if (pressedKeys.join().includes(konamiCode.join())) {
-        setShowSnakeGame(true); // Show the Snake game when Konami code is matched
+        setShowSnakeGame(true);
       }
       if (pressedKeys.length > konamiCode.length) {
-        pressedKeys.shift(); // Limit the pressedKeys array size
+        pressedKeys.shift();
       }
     };
 
@@ -51,6 +52,18 @@ function AppContent() {
     };
   }, []);
 
+  // **🔹 Redirect Banned Users & Hide UI**
+  if (user?.isBanned) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/banned" element={<Banned />} />
+          <Route path="*" element={<Navigate to="/banned" replace />} />
+        </Routes>
+      </Router>
+    );
+  }
+
   return (
     <Router>
       <NavBar />
@@ -59,6 +72,7 @@ function AppContent() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/banned" element={<Banned />} />
             <Route 
               path="/main" 
               element={
@@ -118,8 +132,8 @@ function AppContent() {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsAndConditions />} />
-            <Route path="/news" element={<News />} /> {/* Add the News route */}
-            <Route path="/changelog" element={<ChangeLog />} /> {/* Add the ChangeLog route */}
+            <Route path="/news" element={<News />} />
+            <Route path="/changelog" element={<ChangeLog />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>
