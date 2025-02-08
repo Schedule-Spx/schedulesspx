@@ -5,8 +5,11 @@ const BannedPage = () => {
     const { user } = useAuth();
 
     const getBanMessage = () => {
-        if (user?.email.includes('26','kjensen25@spxstudent.org')) {
-            return 'You are banned Under suspission for stealing the spirit stick';
+        if (user?.email.includes('26@spxstudent.org')) {
+            return 'You are banned Under suspicion for stealing the spirit stick';
+        }
+        if (user?.email.includes('kjensen25@spxstudent.org')) {
+            return 'You are banned Under suspicion for stealing the spirit stick';
         }
         return 'You have been permanently banned for violating the terms of service.';
     };

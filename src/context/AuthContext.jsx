@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org'];
+  const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org', '26@spxstudent.org'];
 
   const login = (userData) => {
     const authorizedUser = {
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isBannedEmail = (email) => {
-    return email.toLowerCase().includes('26') || bannedEmails.includes(email.toLowerCase());
+    return email.toLowerCase().includes('26@spxstudent.org') || bannedEmails.includes(email.toLowerCase());
   };
 
   const isLoggedIn = () => {
