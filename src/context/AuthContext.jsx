@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org];
+  const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org'];
 
   const login = (userData) => {
     const authorizedUser = {
