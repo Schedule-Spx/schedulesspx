@@ -16,6 +16,7 @@ const BannedPage = () => {
             <h1 className='text-5xl'> Banned</h1>
             <br />
             <p className='text-2xl'>{getBanMessage()}</p>
+            <p className='text-xl'>You are not allowed to access any other parts of the website.</p>
         </div>
     );
 }
