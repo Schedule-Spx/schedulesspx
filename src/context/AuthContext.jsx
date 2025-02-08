@@ -28,6 +28,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('sessionExpiry');
       localStorage.removeItem('isBanned');
     }
+
+    if (user?.isBanned) {
+      window.location.href = '/banned';
+    }
   }, []);
 
   const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org'];
