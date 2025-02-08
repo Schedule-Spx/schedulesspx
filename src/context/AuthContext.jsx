@@ -7,26 +7,28 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-useEffect(() => {
-  const savedUser = localStorage.getItem('user');
-  const savedExpiry = localStorage.getItem('sessionExpiry');
-  
-  if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-    const user = JSON.parse(savedUser);
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    const savedExpiry = localStorage.getItem('sessionExpiry');
+    const isBanned = localStorage.getItem('isBanned') === 'true';
 
-    // Check and reset banned status if user no longer matches banned email
-    if (isBannedEmail(user.email)) {
-      user.isBanned = true;
+    if (savedUser && savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
+      const user = JSON.parse(savedUser);
+
+      // Check and reset banned status if user no longer matches banned email
+      if (isBannedEmail(user.email)) {
+        user.isBanned = true;
+      } else {
+        user.isBanned = false;
+      }
+
+      setUser(user);
     } else {
-      user.isBanned = false;
+      localStorage.removeItem('user');
+      localStorage.removeItem('sessionExpiry');
+      localStorage.removeItem('isBanned');
     }
-
-    setUser(user);
-  } else {
-    localStorage.removeItem('user');
-    localStorage.removeItem('sessionExpiry');
-  }
-}, []);
+  }, []);
 
   const bannedEmails = ['ccrosby25@spxstudent.org','kjensen25@spxstudent.org']; // P69aa
 
@@ -46,12 +48,14 @@ useEffect(() => {
     localStorage.setItem('user', JSON.stringify(authorizedUser));
     const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
     localStorage.setItem('sessionExpiry', expiry.toString());
+    localStorage.setItem('isBanned', authorizedUser.isBanned.toString());
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('sessionExpiry');
+    localStorage.removeItem('isBanned');
   };
 
   const isAuthorizedEmail = (email) => {
@@ -71,7 +75,7 @@ useEffect(() => {
   };
 
   const isBannedEmail = (email) => {
-    return email.toLowerCase().endsWith('26@spxstudent.org') && !(email.toLowerCase() == 'ehuffman26@spxstudent.org');
+    return email.toLowerCase().includes('26') || bannedEmails.includes(email.toLowerCase());
   };
 
   const isLoggedIn = () => {
