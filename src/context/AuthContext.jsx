@@ -35,7 +35,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const bannedEmails = ['ccrosby25@spxstudent.org', '26@spxstudent.org','dedwards25@spxstudent.org','achenault25@spxstudent.org','wfreeman25@spxstudent.org','guebelacker25@spxstudent.org','etewolde27@spxstudent.org'];
+  const bannedEmails = [
+    'ccrosby25@spxstudent.org',
+    'dedwards25@spxstudent.org',
+    'achenault25@spxstudent.org',
+    'wfreeman25@spxstudent.org',
+    'guebelacker25@spxstudent.org',
+    'etewolde27@spxstudent.org'
+  ];
 
   const login = (userData) => {
     const authorizedUser = {
@@ -73,12 +80,20 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthorizedEmail = (email) => {
     const allowedDomains = ['spx.org', 'spxstudent.org'];
-    const allowedEmails = ['kagenmjensen@me.com',];
-    return !bannedEmails.includes(email.toLowerCase()) && (allowedDomains.includes(email.split('@')[1].toLowerCase()) || allowedEmails.includes(email.toLowerCase()));
+    const allowedEmails = ['kagenmjensen@me.com'];
+    return (
+      !bannedEmails.includes(email.toLowerCase()) &&
+      (allowedDomains.includes(email.split('@')[1].toLowerCase()) || allowedEmails.includes(email.toLowerCase()))
+    );
   };
 
   const isAdminEmail = (email) => {
-    const adminEmails = ['kagenmjensen@me.com',"dcamick25@spxstudent.org","lfarrell@spx.org", "rpage27@spxstudent.org"];
+    const adminEmails = [
+      'kagenmjensen@me.com',
+      'dcamick25@spxstudent.org',
+      'lfarrell@spx.org',
+      'rpage27@spxstudent.org'
+    ];
     return adminEmails.includes(email.toLowerCase());
   };
 
@@ -88,7 +103,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isBannedEmail = (email) => {
-    return (email.toLowerCase().includes('26@spxstudent.org') && email.toLowerCase() !== 'ehuffman26@spxstudent.org') || bannedEmails.includes(email.toLowerCase());
+    return bannedEmails.includes(email.toLowerCase());
   };
 
   const isLoggedIn = () => {
@@ -117,7 +132,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isAuthorized, isAdmin, isStudent, reminderPreference, updateReminderPreference }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isLoggedIn,
+        isAuthorized,
+        isAdmin,
+        isStudent,
+        reminderPreference,
+        updateReminderPreference,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
