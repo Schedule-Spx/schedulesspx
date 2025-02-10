@@ -6,7 +6,7 @@ const BannedPage = () => {
 
     const getBanMessage = () => {
         if (user?.email.includes('26@spxstudent.org')) {
-            return 'Due to the allogations regarding the theft and unrightful ownership of the Spirit Stick, and you being the primary (and only suspect) you and all your members have been banned from ScheduleSPX. The ban will cover all aspects of our site, and will be lifted when a verdict has been reached';
+            return 'Due to the allegations regarding the theft and unrightful ownership of the Spirit Stick, and you being the primary (and only suspect) you and all your members have been banned from ScheduleSPX. The ban will cover all aspects of our site, and will be lifted when a verdict has been reached';
         }
 
         return 'You have been permanently banned for violating the terms of service.';
