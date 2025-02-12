@@ -12,6 +12,7 @@ import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import AttendanceReminderPopup from './components/AttendanceReminderPopup';
+import SeniorRetreatPopup from './components/SeniorRetreatPopup';
 
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
@@ -26,7 +27,7 @@ const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
 
 function AppContent() {
-  const { user, isAuthorized, isAdmin, isStudent } = useAuth();
+  const { user, isAuthorized, isAdmin, isStudent, isSenior } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
 
   // State to manage showing the Snake game
@@ -156,6 +157,8 @@ function AppContent() {
       {showSnakeGame && <SnakeGamePopup />}
       {/* Conditionally render the AttendanceReminderPopup */}
       {reminderPreference && <AttendanceReminderPopup onClose={() => setReminderPreference(false)} />}
+      {/* Conditionally render the SeniorRetreatPopup */}
+      {isSenior(user?.email) && <SeniorRetreatPopup onClose={() => setShowSnakeGame(false)} />}
     </Router>
   );
 }

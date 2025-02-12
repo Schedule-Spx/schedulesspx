@@ -106,6 +106,10 @@ export const AuthProvider = ({ children }) => {
     return bannedEmails.includes(email.toLowerCase());
   };
 
+  const isSenior = (email) => {
+    return email.endsWith('25@spxstudent.org');
+  };
+
   const isLoggedIn = () => {
     return !!user;
   };
@@ -141,6 +145,7 @@ export const AuthProvider = ({ children }) => {
         isAuthorized,
         isAdmin,
         isStudent,
+        isSenior,
         reminderPreference,
         updateReminderPreference,
       }}
