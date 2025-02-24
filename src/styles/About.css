@@ -168,3 +168,41 @@ body {
   width: 100%;
   border-radius: 15px;
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+    padding: 2rem 1rem;
+  }
+
+  .about-main-title {
+    font-size: 3rem;
+    padding-top: 2rem;
+  }
+
+  .about-title {
+    font-size: 2rem;
+  }
+
+  .about-body {
+    font-size: 1rem;
+  }
+
+  .about-image-placeholder {
+    padding: 1rem;
+  }
+
+  .popup-content {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .popup-heading {
+    font-size: 1.5rem;
+  }
+
+  .popup-text {
+    font-size: 0.875rem;
+  }
+}

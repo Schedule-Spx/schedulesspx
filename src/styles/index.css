@@ -55,3 +55,52 @@ p, span, div {
 nav {
   @apply bg-gray-900 text-white py-2 px-4 flex justify-between items-center;
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  body {
+    @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+  }
+
+  .App {
+    @apply h-screen flex flex-col;
+  }
+
+  main {
+    @apply flex-grow flex flex-col;
+  }
+
+  .glass-tile {
+    @apply bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-3xl p-4 shadow-lg text-inherit flex flex-col justify-center;
+  }
+
+  .ad-component {
+    @apply glass-tile flex items-center justify-center;
+    min-height: 250px;
+  }
+
+  .period-progress {
+    @apply glass-tile flex items-center justify-center flex-col p-2 w-full;
+  }
+
+  .grid {
+    @apply gap-4;
+  }
+
+  h1, h2, h3 {
+    @apply text-lg font-bold;
+  }
+
+  p, span, div {
+    @apply text-sm;
+  }
+
+  nav {
+    @apply bg-gray-900 text-white py-2 px-4 flex justify-between items-center;
+  }
+}

@@ -1,4 +1,3 @@
-// src/pages/MainDashboard.jsx
 import React, { useRef, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import DayHeader from '../components/DayHeader';

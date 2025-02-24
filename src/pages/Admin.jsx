@@ -137,7 +137,7 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
   }
 
   return (
-    <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text}`}>
+    <div className={`flex flex-col h-screen ${currentTheme.main} ${currentTheme.text} p-4`} style={{ overflowY: 'auto', height: 'calc(100vh - 64px)' }}>
       <div className="flex-grow overflow-y-auto">
         <div className="container mx-auto p-6">
           <div className={`${currentTheme.secondary} border-2 ${currentTheme.border} p-6 rounded-lg shadow-lg`}>
@@ -288,4 +288,3 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
 };
 
 export default Admin;
-

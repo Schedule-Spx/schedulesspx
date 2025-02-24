@@ -1,4 +1,3 @@
-// src/pages/About.jsx
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/About.css';

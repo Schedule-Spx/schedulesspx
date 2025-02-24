@@ -141,3 +141,26 @@
         transform: translateY(-10px);
     }
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .landing-title {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .landing-subtitle {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .landing-body {
+        font-size: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .landing-buttons button {
+        font-size: 1.25rem;
+        padding: 0.75rem 1.5rem;
+    }
+}
