@@ -1,0 +1,32 @@
+{
+  "": {
+    "dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleSPX.d",
+    "object": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleSPX.o",
+    "swift-dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/master.swiftdeps"
+  },
+  "/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/AppDelegate.swift": {
+    "object": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate.swift.o",
+    "swiftmodule": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate.swiftdeps"
+  },
+  "/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/Extensions.swift": {
+    "object": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions.swift.o",
+    "swiftmodule": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions.swiftdeps"
+  },
+  "/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/Models.swift": {
+    "object": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models.swift.o",
+    "swiftmodule": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models~partial.swiftmodule",
+    "swift-dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models.swiftdeps"
+  },
+  "/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/ScheduleModel.swift": {
+    "object": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel.swift.o",
+    "swiftmodule": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel~partial.swiftmodule",
+    "swift-dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel.swiftdeps"
+  },
+  "/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/main.swift": {
+    "object": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main.swift.o",
+    "swiftmodule": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main.swiftdeps"
+  }
+}

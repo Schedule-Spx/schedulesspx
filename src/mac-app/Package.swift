@@ -10,6 +10,10 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "ScheduleSPX",
-            dependencies: [])
+            dependencies: [],
+            resources: [
+                .process("Resources")
+            ]
+        )
     ]
 )

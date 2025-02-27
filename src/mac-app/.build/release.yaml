@@ -1,0 +1,66 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "PackageStructure": ["<PackageStructure>"]
+  "ScheduleSPX-arm64-apple-macosx15.0-release.exe": ["<ScheduleSPX-arm64-apple-macosx15.0-release.exe>"]
+  "ScheduleSPX-arm64-apple-macosx15.0-release.module": ["<ScheduleSPX-arm64-apple-macosx15.0-release.module>"]
+  "main": ["<ScheduleSPX-arm64-apple-macosx15.0-release.exe>","<ScheduleSPX-arm64-apple-macosx15.0-release.module>"]
+  "test": ["<ScheduleSPX-arm64-apple-macosx15.0-release.exe>","<ScheduleSPX-arm64-apple-macosx15.0-release.module>"]
+default: "main"
+nodes:
+  "/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/AppDelegate.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/Extensions.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/Models.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/ScheduleModel.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/main.swift"]
+    outputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/sources"]
+    description: "Write auxiliary file /Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/sources"
+
+  "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main.swift.o"]
+    outputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.product/Objects.LinkFileList"
+
+  "/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+
+  "<ScheduleSPX-arm64-apple-macosx15.0-release.exe>":
+    tool: phony
+    inputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX"]
+    outputs: ["<ScheduleSPX-arm64-apple-macosx15.0-release.exe>"]
+
+  "<ScheduleSPX-arm64-apple-macosx15.0-release.module>":
+    tool: phony
+    inputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/Modules/ScheduleSPX.swiftmodule"]
+    outputs: ["<ScheduleSPX-arm64-apple-macosx15.0-release.module>"]
+
+  "C.ScheduleSPX-arm64-apple-macosx15.0-release.exe":
+    tool: shell
+    inputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.product/Objects.LinkFileList"]
+    outputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX"]
+    description: "Linking ./.build/arm64-apple-macosx/release/ScheduleSPX"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release","-o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX","-module-name","ScheduleSPX","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-dead_strip","-Xlinker","-alias","-Xlinker","_ScheduleSPX_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.product/Objects.LinkFileList","-target","arm64-apple-macosx12.0","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.ScheduleSPX-arm64-apple-macosx15.0-release.module":
+    tool: shell
+    inputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/AppDelegate.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/Extensions.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/Models.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/ScheduleModel.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/main.swift","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/sources"]
+    outputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/AppDelegate.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Extensions.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/Models.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/ScheduleModel.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/main.swift.o","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/Modules/ScheduleSPX.swiftmodule"]
+    description: "Compiling Swift Module 'ScheduleSPX' (5 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","ScheduleSPX","-emit-dependencies","-emit-module","-emit-module-path","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/Modules/ScheduleSPX.swiftmodule","-output-file-map","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/output-file-map.json","-whole-module-optimization","-num-threads","8","-c","@/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ScheduleSPX.build/sources","-I","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/Modules","-target","arm64-apple-macosx12.0","-O","-j8","-DSWIFT_PACKAGE","-module-cache-path","/Users/david/Desktop/schedulesspx/src/mac-app/.build/arm64-apple-macosx/release/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","ScheduleSPX_main","-color-diagnostics","-swift-version","5","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/david/Desktop/schedulesspx/src/mac-app/Sources/ScheduleSPX/","/Users/david/Desktop/schedulesspx/src/mac-app/Package.swift","/Users/david/Desktop/schedulesspx/src/mac-app/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+
