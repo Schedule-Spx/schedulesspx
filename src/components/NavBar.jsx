@@ -29,7 +29,7 @@ const AccountIcon = () => (
     fill="currentColor"
     className="w-6 h-6"
   >
-    <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clipRule="evenodd" />
+    <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zM12 14.25c-1.656 0-3-1.344-3-3s1.344-3 3-3 3 1.344 3 3-1.344 3-3 3zm0 1.5c2.21 0 4 1.79 4 4H8c0-2.21 1.79-4 4-4z" clipRule="evenodd" />
   </svg>
 );
 
@@ -65,7 +65,7 @@ const NavBar = () => {
           overflow-hidden
         `}>
           {/* Shine Effect */}
-          <div 
+          <div
             className="absolute inset-0"
             style={{
               background: `
@@ -84,7 +84,7 @@ const NavBar = () => {
           />
 
           {/* Gradient Overlay */}
-          <div 
+          <div
             className="absolute inset-0"
             style={{
               background: `linear-gradient(to top right, ${currentTheme.accent}33, transparent)`,
@@ -102,11 +102,11 @@ const NavBar = () => {
               >
                 <Link to="/" className="flex items-center whitespace-nowrap">
                   <img src={logo} alt="Schedule-SPX Logo" className="h-8 w-auto mr-2" />
-                  <span className={`text-xl font-bold ${currentTheme.text}`}>Schedule-SPX</span>
+                  <span className={`text-xl font-bold ${currentTheme.text} hidden sm:block`}>Schedule-SPX</span>
                 </Link>
               </motion.div>
 
-              <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-6 hidden sm:flex">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -138,7 +138,7 @@ const NavBar = () => {
                     >
                       <Link
                         to="/teacher-tools"
-                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-1.5 px-3 rounded`}
+                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium hidden sm:block py-1.5 px-3 rounded`}
                       >
                         Teacher Tools
                       </Link>
@@ -152,7 +152,7 @@ const NavBar = () => {
                     >
                       <Link
                         to="/student-tools"
-                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-1.5 px-3 rounded`}
+                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium hidden sm:block py-1.5 px-3 rounded`}
                       >
                         Student Tools
                       </Link>
@@ -166,7 +166,7 @@ const NavBar = () => {
                     >
                       <Link
                         to="/admin"
-                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-1.5 px-3 rounded`}
+                        className={`${currentTheme.accent} ${currentTheme.text} text-sm font-medium py-1.5 px-3 rounded hidden sm:block`}
                       >
                         Admin Console
                       </Link>
@@ -181,9 +181,9 @@ const NavBar = () => {
                       <Link to="/account">
                         <div className={`h-9 w-9 rounded-full flex items-center justify-center overflow-hidden ${currentTheme.accent} bg-opacity-20`}>
                           {user.profilePicture ? (
-                            <img 
-                              src={user.profilePicture} 
-                              alt="Profile" 
+                            <img
+                              src={user.profilePicture}
+                              alt="Profile"
                               className="h-full w-full object-cover"
                             />
                           ) : (

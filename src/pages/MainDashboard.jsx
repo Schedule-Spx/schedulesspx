@@ -22,10 +22,10 @@ const MainDashboard = () => {
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       <div ref={contentRef} className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="flex flex-col space-y-4">
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left h-[164px]`}>
+          <div className={`hidden lg:block ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left h-[164px]`}>
             <DayHeader />
           </div>
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left h-[300px]`}>
+          <div className={`hidden lg:block ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-left h-[300px]`}>
             <QuickLinks />
           </div>
         </div>
@@ -35,7 +35,7 @@ const MainDashboard = () => {
           </div>
         </div>
         <div className="flex flex-col space-y-4">
-          <div className={`${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right h-[484px]`}>
+          <div className={`hidden lg:block ${currentTheme.accent} ${currentTheme.border} rounded-lg shadow-md overflow-hidden slide-in-right h-[484px]`}>
             <div className="h-full overflow-y-auto">
               <GoogleCalendar />
             </div>
