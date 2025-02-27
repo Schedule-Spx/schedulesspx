@@ -105,6 +105,26 @@ const NavBar = () => {
                   <span className={`text-xl font-bold ${currentTheme.text} hidden sm:block`}>Schedule-SPX</span>
                 </Link>
               </motion.div>
+
+              <div className="flex items-center space-x-6 hidden sm:flex">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Link to="/about" className={`text-sm font-medium ${currentTheme.text}`}>
+                    About
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Link to="/news" className={`text-sm font-medium ${currentTheme.text}`}>
+                    News
+                  </Link>
+                </motion.div>
+              </div>
             </div>
 
             {/* Right section */}
