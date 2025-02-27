@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 import Timer from '../components/TeacherTools/Timer';
 import NamePicker from '../components/TeacherTools/NamePicker';
 import GameSelector from '../components/TeacherTools/GameSelector';
@@ -10,6 +11,7 @@ import { motion } from 'framer-motion';
 const TeacherTools = () => {
   const { currentTheme } = useTheme();
   const [activeTool, setActiveTool] = useState(null);
+  const navigate = useNavigate();
 
   const tools = [
     { 
@@ -42,6 +44,12 @@ const TeacherTools = () => {
       icon: '👥',
       gradient: `${currentTheme.accent}`
     },
+    { 
+      name: 'Board Mode', 
+      action: () => navigate('/board'),
+      icon: '📊',
+      gradient: `${currentTheme.accent}`
+    },
   ];
 
   return (
@@ -72,7 +80,7 @@ const TeacherTools = () => {
                     shadow-lg hover:shadow-xl
                     transition-all duration-300
                   `}
-                  onClick={() => setActiveTool(tool.name)}
+                  onClick={() => tool.action ? tool.action() : setActiveTool(tool.name)}
                 >
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
                   <div className="relative z-10 flex flex-col items-center space-y-2">
@@ -124,7 +132,7 @@ const TeacherTools = () => {
 
               <div className="relative z-10">
                 {activeTool ? (
-                  React.createElement(tools.find(tool => tool.name === activeTool).component)
+                  React.createElement(tools.find(tool => tool.name === activeTool && tool.component)?.component || (() => null))
                 ) : (
                   <div className="text-center py-12">
                     <span className="text-4xl mb-4 block">✨</span>

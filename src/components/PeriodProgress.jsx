@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
+const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizing = false }) => {
   const { currentTheme } = useTheme();
   const { user, isLoggedIn, isAuthorized } = useAuth();
   const [currentState, setCurrentState] = useState(null);
@@ -186,6 +186,29 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
   useEffect(() => {
     const updateCurrentState = () => {
       const now = new Date();
+      
+      // If a custom end time is provided
+      if (customEndTime) {
+        const [hours, minutes] = customEndTime.split(':').map(Number);
+        const endTime = new Date();
+        endTime.setHours(hours, minutes, 0, 0);
+        
+        // If the custom end time is in the past, set it to tomorrow
+        if (endTime < now) {
+          endTime.setDate(endTime.getDate() + 1);
+        }
+        
+        const timeUntilEnd = endTime - now;
+        const totalDuration = 3600000; // 1 hour in milliseconds - arbitrary for progress calculation
+        const progressPercentage = (1 - (timeUntilEnd / totalDuration)) * 100;
+        
+        setCurrentState({ type: 'customEndTime', name: 'Custom Timer' });
+        setProgress(Math.min(Math.max(progressPercentage, 0), 100));
+        setTimeRemaining(formatTimeRemaining(timeUntilEnd));
+        updateTitle('Custom Timer', formatTimeRemaining(timeUntilEnd));
+        return;
+      }
+      
       const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
       const todaySchedule = weekSchedule[currentDay];
 
@@ -200,12 +223,16 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
     updateCurrentState(); // Initial update
 
     return () => clearInterval(timer);
-  }, [weekSchedule, handleSchoolDay, handleNonSchoolDay]);
+  }, [weekSchedule, handleSchoolDay, handleNonSchoolDay, customEndTime, formatTimeRemaining, updateTitle]);
 
   const renderContent = useMemo(() => {
     if (!currentState) return null;
 
     const getStatusText = () => {
+      if (currentState.type === 'customEndTime') {
+        return 'Time Remaining:';
+      }
+      
       switch (currentState.type) {
         case 'activePeriod':
           return `${currentState.name}`;
@@ -224,26 +251,38 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
       }
     };
 
+    const textSizeClasses = largeSizing 
+      ? 'text-4xl mb-6' 
+      : 'text-xl mb-4';
+    
+    const progressBarClasses = largeSizing 
+      ? 'h-14 mb-8' 
+      : 'h-6 mb-4';
+    
+    const timeRemainingClasses = largeSizing 
+      ? 'text-6xl font-bold' 
+      : 'text-lg font-medium';
+
     return (
       <div className="flex flex-col items-center">
-        <p className={`text-xl font-bold ${currentTheme.text} text-center mb-4`}>
+        <p className={`${textSizeClasses} font-bold ${currentTheme.text} text-center`}>
           {getStatusText()}
         </p>
-        <div className={`w-full bg-opacity-20 ${currentTheme.main} rounded-full h-6 mb-4 relative overflow-hidden`}>
+        <div className={`w-full bg-opacity-20 ${currentTheme.main} rounded-full ${progressBarClasses} relative overflow-hidden`}>
           <div 
             className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
             style={{width: `${progress}%`}}
           ></div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className={`text-sm font-semibold ${currentTheme.text} z-10`}>
+            <p className={`${largeSizing ? 'text-2xl' : 'text-sm'} font-semibold ${currentTheme.text} z-10`}>
               {progress.toFixed(1)}%
             </p>
           </div>
         </div>
-        <p className={`text-lg font-medium ${currentTheme.text}`}>{timeRemaining}</p>
+        <p className={`${timeRemainingClasses} ${currentTheme.text}`}>{timeRemaining}</p>
       </div>
     );
-  }, [currentState, currentTheme, progress, timeRemaining]);
+  }, [currentState, currentTheme, progress, timeRemaining, largeSizing]);
 
   if (!isLoggedIn()) {
     console.log("PeriodProgress - User not logged in");
@@ -265,7 +304,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
 
   console.log("PeriodProgress - Rendering period progress");
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative`}>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative ${largeSizing ? 'p-10' : 'p-5'}`}>
       <div 
         className="absolute inset-0 rounded-lg"
         style={{
@@ -273,7 +312,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay }) => {
           zIndex: 0,
         }}
       ></div>
-      <div className="p-5 relative z-10">
+      <div className={`relative z-10 ${largeSizing ? 'pt-4' : ''}`}>
         {renderContent}
       </div>
     </div>

@@ -24,6 +24,7 @@ const TeacherTools = lazy(() => import('./pages/TeacherTools'));
 const News = lazy(() => import('./pages/News'));
 const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
+const BoardMode = lazy(() => import('./pages/BoardMode')); // Import the BoardMode page
 
 function AppContent() {
   const { user, isAuthorized, isAdmin, isStudent } = useAuth();
@@ -92,6 +93,15 @@ function AppContent() {
               element={
                 <PrivateRoute>
                   <MainDashboard />
+                </PrivateRoute>
+              } 
+            />
+            {/* Add Board Mode route */}
+            <Route 
+              path="/board" 
+              element={
+                <PrivateRoute teacherToolsAccess>
+                  <BoardMode />
                 </PrivateRoute>
               } 
             />
