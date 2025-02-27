@@ -10,6 +10,12 @@ html, body {
   overflow: hidden;
 }
 
+@media only screen and (max-width: 768px) {
+  html, body {
+    overflow: auto;
+  }
+}
+
 .content-wrapper {
   position: relative;
   z-index: 1;
