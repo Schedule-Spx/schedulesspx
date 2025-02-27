@@ -5,17 +5,21 @@ set -e
 APP_NAME="ScheduleSPX"
 APP_BUNDLE="${APP_NAME}.app"
 DMG_NAME="${APP_NAME}_Installer.dmg"
+TMP_DMG_NAME="${APP_NAME}_tmp.dmg"
 BUILD_DIR="./build"
 OUTPUT_DIR="./dist"
 RESOURCES_DIR="./Resources"
+DMG_DIR="./dmg_contents"
 ICON_PATH="${RESOURCES_DIR}/AppIcon.icns"
 SVG_SOURCE="./assets/logo.svg"
 INFO_PLIST_SOURCE="./Sources/ScheduleSPX/Info.plist"
+BACKGROUND_IMG="${RESOURCES_DIR}/dmg_background.png"
 
 # Create necessary directories
 mkdir -p "${BUILD_DIR}"
 mkdir -p "${OUTPUT_DIR}"
 mkdir -p "${RESOURCES_DIR}"
+mkdir -p "${DMG_DIR}"
 mkdir -p "./Sources/ScheduleSPX/Resources"
 
 # Ensure Info.plist exists
@@ -66,6 +70,19 @@ if [ ! -f "${ICON_PATH}" ] && [ -f "${SVG_SOURCE}" ]; then
     cd ..
 fi
 
+# Create a DMG background image if it doesn't exist
+if [ ! -f "${BACKGROUND_IMG}" ]; then
+    echo "Creating DMG background image..."
+    if command -v convert &> /dev/null; then
+        # Run the script to generate the gradient background
+        "${RESOURCES_DIR}/create_dmg_background.sh" "${BACKGROUND_IMG}"
+    else
+        echo "ImageMagick not found. Installing with Homebrew for custom DMG background."
+        brew install imagemagick
+        "${RESOURCES_DIR}/create_dmg_background.sh" "${BACKGROUND_IMG}"
+    fi
+fi
+
 # Clean any previous build artifacts
 rm -rf .build
 echo "Building Swift package..."
@@ -90,8 +107,33 @@ if [ -f "${ICON_PATH}" ]; then
     cp "${ICON_PATH}" "${BUILD_DIR}/${APP_BUNDLE}/Contents/Resources/AppIcon.icns"
 fi
 
-# Create DMG
-echo "Creating DMG installer..."
-hdiutil create -volname "${APP_NAME}" -srcfolder "${BUILD_DIR}/${APP_BUNDLE}" -ov -format UDZO "${OUTPUT_DIR}/${DMG_NAME}"
+# Create a simple DMG with Applications folder link
+echo "Creating simple DMG installer..."
+mkdir -p "${DMG_DIR}"
+cp -R "${BUILD_DIR}/${APP_BUNDLE}" "${DMG_DIR}/"
+ln -s /Applications "${DMG_DIR}/Applications"
+
+# Add README file with instructions
+echo "Adding installation instructions..."
+cat > "${DMG_DIR}/README.txt" << EOF
+# ScheduleSPX Installation Instructions
+
+If you see a message that "ScheduleSPX.app is damaged and can't be opened", this is due to macOS security features for apps without a developer signature.
+
+To fix this:
+
+1. After installing the app to your Applications folder, open Terminal
+2. Copy and paste this command:
+   xattr -d com.apple.quarantine /Applications/ScheduleSPX.app
+3. Press Return
+
+Alternatively:
+- Right-click on ScheduleSPX.app
+- Select "Open"
+- Click "Open" when the warning appears
+EOF
+
+# Create the DMG directly
+hdiutil create -volname "${APP_NAME}" -srcfolder "${DMG_DIR}" -ov -format UDZO "${OUTPUT_DIR}/${DMG_NAME}"
 
 echo "Build complete! DMG available at ${OUTPUT_DIR}/${DMG_NAME}"
