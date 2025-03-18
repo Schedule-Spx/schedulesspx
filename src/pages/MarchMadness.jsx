@@ -66,8 +66,14 @@ const MarchMadness = () => {
         const tournamentGames = response.data.events.map(game => ({
           id: game.id,
           name: game.name,
-          homeTeam: game.competitions[0].competitors.find(team => team.homeAway === 'home'),
-          awayTeam: game.competitions[0].competitors.find(team => team.homeAway === 'away'),
+          homeTeam: {
+            ...game.competitions[0].competitors.find(team => team.homeAway === 'home'),
+            seed: game.competitions[0].competitors.find(team => team.homeAway === 'home')?.curatedRank?.current
+          },
+          awayTeam: {
+            ...game.competitions[0].competitors.find(team => team.homeAway === 'away'),
+            seed: game.competitions[0].competitors.find(team => team.homeAway === 'away')?.curatedRank?.current
+          },
           status: game.status.type.state,
           clock: game.status.displayClock,
           period: game.status.period,
@@ -75,6 +81,7 @@ const MarchMadness = () => {
           gameTime: game.competitions[0]?.status?.type?.shortDetail,
           link: `https://www.espn.com/mens-college-basketball/game/_/gameId/${game.id}`
         })) || [];
+        
         setGames(tournamentGames);
         setLoading(false);
       } catch (err) {
@@ -99,48 +106,120 @@ const MarchMadness = () => {
 
   // Update time every second
   useEffect(() => {
+    const formatTimeRemaining = (ms) => {
+      const seconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (days > 0) return `${days}d ${hours % 24}h ${minutes % 60}m`;
+      if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+      if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+      return `${seconds}s`;
+    };
+
+    const updateTitle = (status, time) => {
+      document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
+    };
+
+    const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    
+    const getNextSchoolDay = (currentDay) => {
+      let nextDay = DAYS[(DAYS.indexOf(currentDay) + 1) % 7];
+      let count = 0;
+      while (!weekSchedule[nextDay] && count < 7) {
+        nextDay = DAYS[(DAYS.indexOf(nextDay) + 1) % 7];
+        count++;
+      }
+      return count < 7 ? nextDay : null;
+    };
+
     const timer = setInterval(() => {
       const now = new Date();
       setCurrentTime(now);
       
-      // Calculate which period we're in based on current time
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const timeValue = hours * 60 + minutes; // minutes since midnight
+      const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+      const todaySchedule = weekSchedule[currentDay];
       
-      // Example periods (can be adjusted)
-      const periods = [
-        { name: "Before School", start: 0, end: 480 }, // 12am-8am
-        { name: "Period 1", start: 480, end: 535 }, // 8:00-8:55
-        { name: "Period 2", start: 535, end: 590 }, // 8:55-9:50
-        { name: "Period 3", start: 590, end: 645 }, // 9:50-10:45
-        { name: "Period 4", start: 645, end: 700 }, // 10:45-11:40
-        { name: "Period 5", start: 700, end: 755 }, // 11:40-12:35
-        { name: "Period 6", start: 755, end: 810 }, // 12:35-1:30
-        { name: "Period 7", start: 810, end: 865 }, // 1:30-2:25
-        { name: "Period 8", start: 865, end: 920 }, // 2:25-3:20
-        { name: "After School", start: 920, end: 1440 } // 3:20pm-12am
-      ];
-      
-      // Find current period
-      const currentPeriodObj = periods.find(period => timeValue >= period.start && timeValue < period.end);
-      
-      if (currentPeriodObj) {
-        setCurrentPeriod(currentPeriodObj.name);
+      if (Array.isArray(todaySchedule) && todaySchedule.length > 0) {
+        // School day handling
+        const parseTime = (timeString) => {
+          if (!timeString) return null;
+          const [time, modifier] = timeString.split(' ');
+          let [hours, minutes] = time.split(':').map(Number);
+          if (modifier?.toLowerCase() === 'pm' && hours !== 12) hours += 12;
+          else if (modifier?.toLowerCase() === 'am' && hours === 12) hours = 0;
+          return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        };
         
-        // Calculate progress percentage
-        const periodDuration = currentPeriodObj.end - currentPeriodObj.start;
-        const elapsed = timeValue - currentPeriodObj.start;
-        const percent = Math.min(Math.round((elapsed / periodDuration) * 100), 100);
-        setProgressPercent(percent);
+        // Find if we're in a period
+        const currentPeriodInfo = todaySchedule.find(period => {
+          const [, time] = period.split(' - ');
+          const [start, end] = time.split('-').map(t => parseTime(t.trim()));
+          return start && end && now >= start && now < end;
+        });
+
+        if (currentPeriodInfo) {
+          // Active period
+          const [name, time] = currentPeriodInfo.split(' - ');
+          const [, end] = time.split('-').map(t => parseTime(t.trim()));
+          const remaining = end - now;
+          
+          setCurrentPeriod(name);
+          updateTitle(name, formatTimeRemaining(remaining));
+        } else {
+          // Check if we're between periods, before school, or after school
+          const nextPeriod = todaySchedule.find(period => {
+            const startTime = parseTime(period.split(' - ')[1].split('-')[0].trim());
+            return startTime && now < startTime;
+          });
+          
+          if (nextPeriod) {
+            // Between periods or before school
+            const [nextPeriodName, nextPeriodTime] = nextPeriod.split(' - ');
+            const nextPeriodStart = parseTime(nextPeriodTime.split('-')[0].trim());
+            const timeUntilNext = nextPeriodStart - now;
+            
+            if (todaySchedule.indexOf(nextPeriod) === 0) {
+              // Before first period (school hasn't started)
+              setCurrentPeriod("Before School");
+              updateTitle('School starts in', formatTimeRemaining(timeUntilNext));
+            } else {
+              // Between periods
+              setCurrentPeriod(`Next: ${nextPeriodName}`);
+              updateTitle(`Next: ${nextPeriodName}`, formatTimeRemaining(timeUntilNext));
+            }
+          } else {
+            // After school
+            const nextDay = getNextSchoolDay(currentDay);
+            setCurrentPeriod("After School");
+            
+            if (nextDay) {
+              updateTitle('Next school day', nextDay);
+            } else {
+              updateTitle('No School', '');
+            }
+          }
+        }
       } else {
-        setCurrentPeriod("Unknown");
-        setProgressPercent(0);
+        // Non-school day
+        const nextDay = getNextSchoolDay(currentDay);
+        
+        if (nextDay) {
+          setCurrentPeriod("No school today");
+          updateTitle('Next school day', nextDay);
+        } else {
+          setCurrentPeriod("No School");
+          updateTitle('No School', '');
+        }
       }
     }, 1000);
     
-    return () => clearInterval(timer);
-  }, []);
+    return () => {
+      clearInterval(timer);
+      document.title = "ScheduleSPX";
+    };
+  }, [weekSchedule]);
 
   // Format time as HH:MM AM/PM
   const formatTime = (date) => {
@@ -377,8 +456,16 @@ const MarchMadness = () => {
               className={`${currentTheme.secondary} p-4 rounded-lg border-2 
                 ${isInCrunchTime ? 'border-red-500 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.7)]' : currentTheme.border} 
                 shadow-lg hover:scale-[1.02] transition-transform cursor-pointer
-                ${game.status === 'post' ? 'opacity-80' : ''}`}
+                ${game.status === 'post' ? 'opacity-80' : ''} relative group`}
             >
+              {/* Hover tooltip */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out z-10">
+                <div className="text-white text-center">
+                  <p className="font-bold">Click to open on ESPN.com</p>
+                  <p className="text-xs mt-1">View detailed stats and play-by-play</p>
+                </div>
+              </div>
+              
               <div className="flex justify-between items-center mb-2">
                 <div className="font-bold text-sm">
                   {game.status === 'in' ? (
@@ -395,6 +482,12 @@ const MarchMadness = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
+                    {/* Add seed for away team */}
+                    {game.awayTeam.seed && (
+                      <span className="font-bold text-xs bg-gray-200 text-gray-800 rounded-full w-5 h-5 flex items-center justify-center">
+                        {game.awayTeam.seed}
+                      </span>
+                    )}
                     <img 
                       src={game.awayTeam.team.logo} 
                       alt={game.awayTeam.team.location}
@@ -412,6 +505,12 @@ const MarchMadness = () => {
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
+                    {/* Add seed for home team */}
+                    {game.homeTeam.seed && (
+                      <span className="font-bold text-xs bg-gray-200 text-gray-800 rounded-full w-5 h-5 flex items-center justify-center">
+                        {game.homeTeam.seed}
+                      </span>
+                    )}
                     <img 
                       src={game.homeTeam.team.logo} 
                       alt={game.homeTeam.team.location}
@@ -497,7 +596,7 @@ const MarchMadness = () => {
           <div className={`${currentTheme.secondary} rounded-lg p-6 max-w-md shadow-lg border-2 ${currentTheme.border}`}>
             <h3 className="text-xl font-bold mb-4">Entertainment Content Warning</h3>
             <p className="mb-6">
-              By Proceding you agree that you are either in lunch, out of school, or have teacher permission to procede to the March Madness live game and understand ScheduleSPX has no responsibility in you getting introuble for being on entertainment instead of schoolwork.
+              By Proceeding you agree that you are either in lunch, out of school, or have teacher permission to proceed to the March Madness live game and understand ScheduleSPX has no responsibility in you getting in trouble for being on entertainment instead of schoolwork.
             </p>
             <div className="flex justify-end space-x-4">
               <button 
@@ -518,6 +617,8 @@ const MarchMadness = () => {
       )}
       
       <div className="container mx-auto py-4 px-4">
+        {/* Removed Period Progress Bar visual element */}
+
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}
