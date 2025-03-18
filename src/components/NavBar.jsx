@@ -124,6 +124,15 @@ const NavBar = () => {
                     News
                   </Link>
                 </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Link to="/march-madness" className={`text-sm font-medium ${currentTheme.text}`}>
+                    March Madness
+                  </Link>
+                </motion.div>
               </div>
             </div>
 
@@ -218,7 +227,7 @@ const NavBar = () => {
       </div>
 
       {/* Shine Animation Keyframes */}
-      <style jsx>{`
+      <style>{`
         @keyframes shine {
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }

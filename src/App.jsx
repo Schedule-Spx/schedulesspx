@@ -25,6 +25,7 @@ const News = lazy(() => import('./pages/News'));
 const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
 const BoardMode = lazy(() => import('./pages/BoardMode')); // Import the BoardMode page
+const MarchMadness = lazy(() => import('./pages/MarchMadness'));
 
 function AppContent() {
   const { user, isAuthorized, isAdmin, isStudent } = useAuth();
@@ -158,6 +159,7 @@ function AppContent() {
             <Route path="/terms" element={<TermsAndConditions />} />
             <Route path="/news" element={<News />} />
             <Route path="/changelog" element={<ChangeLog />} />
+            <Route path="/march-madness" element={<MarchMadness />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>
