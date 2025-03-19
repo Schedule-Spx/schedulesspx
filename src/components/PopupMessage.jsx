@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import ReactMarkdown from 'react-markdown';
 
 const PopupMessage = () => {
   const { currentTheme } = useTheme();
@@ -40,7 +41,9 @@ const PopupMessage = () => {
       <div className="absolute inset-0 bg-black opacity-50" onClick={handleClose}></div>
       <div className={`rounded-lg shadow-xl p-6 max-w-md w-full mx-4 z-10 ${currentTheme.main} ${currentTheme.border}`}>
         <h2 className={`text-2xl font-bold mb-4 ${currentTheme.text}`}>{popup.title}</h2>
-        <p className={`mb-6 whitespace-pre-wrap ${currentTheme.text}`}>{popup.message}</p>
+        <div className={`mb-6 ${currentTheme.text} markdown-content`}>
+          <ReactMarkdown>{popup.message}</ReactMarkdown>
+        </div>
         <p className={`text-sm mb-4 ${currentTheme.text}`}>- {popup.author}</p>
         <button 
           onClick={handleClose}

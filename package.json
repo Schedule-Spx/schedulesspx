@@ -23,6 +23,7 @@
     "react-color": "*",
     "react-colorful": "*",
     "react-dom": "*",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "*",
     "react-transition-group": "*",
     "rimraf": "^6.0.1",

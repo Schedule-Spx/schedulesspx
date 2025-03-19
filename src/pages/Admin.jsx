@@ -126,6 +126,61 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
     }
   };
 
+  // Add functions for markdown formatting
+  const insertMarkdown = (syntax, placeholder) => {
+    // Get the textarea element for popup message
+    const textarea = document.getElementById('popup-message');
+    if (!textarea) return;
+    
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = popup.message;
+    const selectedText = text.substring(start, end);
+    
+    let newText;
+    if (selectedText) {
+      // If text is selected, wrap it with syntax
+      if (syntax === '[](url)') {
+        newText = text.substring(0, start) + 
+                 `[${selectedText}](url)` + 
+                 text.substring(end);
+      } else {
+        newText = text.substring(0, start) + 
+                 syntax.replace('text', selectedText) + 
+                 text.substring(end);
+      }
+    } else {
+      // If no text is selected, insert syntax with placeholder
+      if (syntax === '[](url)') {
+        newText = text.substring(0, start) + 
+                 `[${placeholder}](url)` + 
+                 text.substring(end);
+      } else {
+        newText = text.substring(0, start) + 
+                 syntax.replace('text', placeholder) + 
+                 text.substring(end);
+      }
+    }
+    
+    setPopup(prev => ({ ...prev, message: newText }));
+    
+    // After state update, set the selection range for better UX
+    setTimeout(() => {
+      textarea.focus();
+      if (selectedText) {
+        if (syntax === '[](url)') {
+          // Position cursor in the URL section
+          textarea.selectionStart = start + selectedText.length + 2;
+          textarea.selectionEnd = start + selectedText.length + 5;
+        }
+      } else {
+        // Position cursor to write over placeholder text
+        textarea.selectionStart = start + syntax.indexOf('text');
+        textarea.selectionEnd = start + syntax.indexOf('text') + placeholder.length;
+      }
+    }, 0);
+  };
+
   const inputStyle = `w-full p-2 mb-2 border rounded ${currentTheme.input} text-gray-900`;
 
   if (!user || !isAuthorized() || !isAdmin()) {
@@ -162,12 +217,88 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
                   onChange={(e) => setPopup(prev => ({ ...prev, title: e.target.value }))}
                   className={inputStyle}
                 />
+                {/* Add Markdown formatting toolbar */}
+                <div className="flex flex-wrap gap-2 mb-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('**text**', 'bold text')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 font-medium`}
+                    title="Bold"
+                  >
+                    B
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('*text*', 'italic text')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 italic`}
+                    title="Italic"
+                  >
+                    I
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('# text', 'Heading')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Heading 1"
+                  >
+                    H1
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('## text', 'Subheading')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Heading 2"
+                  >
+                    H2
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('[](url)', 'link text')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Link"
+                  >
+                    🔗
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('- text', 'list item')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Bullet List"
+                  >
+                    •
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('1. text', 'list item')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Numbered List"
+                  >
+                    1.
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('`text`', 'code')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 font-mono`}
+                    title="Inline Code"
+                  >
+                    &lt;/&gt;
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('> text', 'blockquote')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Quote"
+                  >
+                    "
+                  </button>
+                </div>
                 <textarea
+                  id="popup-message"
                   placeholder="Popup Message"
                   value={popup.message}
                   onChange={(e) => setPopup(prev => ({ ...prev, message: e.target.value }))}
                   className={inputStyle}
-                  rows="3"
+                  rows="5"
                 />
                 <input
                   type="text"
