@@ -15,6 +15,7 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import TeacherTools from './pages/TeacherTools';
 import News from './pages/News';
 import ChangeLog from './pages/ChangeLog';
+import MarchMadness from './pages/MarchMadness';
 import './styles/App.css';
 
 const PrivateRoute = ({ children }) => {
@@ -48,6 +49,7 @@ function AppContent() {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsAndConditions />} />
             <Route path="/news" element={<News />} />
+            <Route path="/march-madness" element={<MarchMadness />} />
             <Route path="/changelog" element={<ChangeLog />} />
             <Route path="*" element={<Navigate to="/landing" replace />} />
           </Routes>
