@@ -424,6 +424,13 @@ export const themes = {
     text: 'text-white',
     border: 'border-[#C99700]',
     },
+  ashleytwiner: {
+    name: 'Ashley Twiner',
+    main: 'bg-[#FF1493]', // Deep Pink
+    accent: 'bg-[#FF69B4]', // Hot Pink
+    text: 'text-white',
+    border: 'border-[#FF00FF]', // Fuchsia
+  },
 };
 
 export const ThemeProvider = ({ children }) => {
