@@ -1,4 +1,3 @@
-// src/context/WeekScheduleContext.jsx
 import React, { createContext, useState, useContext, useCallback } from 'react';
 
 const WeekScheduleContext = createContext();
@@ -19,8 +18,20 @@ export const WeekScheduleProvider = ({ children }) => {
     }
   }, []);
 
+  const fetchLeaderboard = useCallback(async () => {
+    try {
+      const response = await fetch('https://schedule-api.devs4u.workers.dev/api/leaderboard');
+      if (!response.ok) throw new Error('Failed to fetch leaderboard');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      return [];
+    }
+  }, []);
+
   return (
-    <WeekScheduleContext.Provider value={{ weekSchedule, setWeekSchedule, fetchSchedule }}>
+    <WeekScheduleContext.Provider value={{ weekSchedule, setWeekSchedule, fetchSchedule, fetchLeaderboard }}>
       {children}
     </WeekScheduleContext.Provider>
   );

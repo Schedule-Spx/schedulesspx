@@ -8,7 +8,7 @@ import './styles/App.css';
 import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
-import SnakeGamePopup from './components/SnakeGamePopup';
+import GamblingPopup from './components/GamblingPopup';
 import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import AttendanceReminderPopup from './components/AttendanceReminderPopup';
@@ -31,8 +31,8 @@ function AppContent() {
   const { user, isAuthorized, isAdmin, isStudent } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
 
-  // State to manage showing the Snake game
-  const [showSnakeGame, setShowSnakeGame] = useState(false);
+  // State to manage showing the Gambling popup
+  const [showGamblingPopup, setShowGamblingPopup] = useState(false);
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
   let pressedKeys = [];
 
@@ -44,7 +44,7 @@ function AppContent() {
     const handleKeyDown = (event) => {
       pressedKeys.push(event.key);
       if (pressedKeys.join().includes(konamiCode.join())) {
-        setShowSnakeGame(true);
+        setShowGamblingPopup(true);
       }
       if (pressedKeys.length > konamiCode.length) {
         pressedKeys.shift();
@@ -62,7 +62,7 @@ function AppContent() {
   useEffect(() => {
     const timer = setInterval(() => {
       if (user?.isTeacher && reminderPreference) {
-        setShowSnakeGame(true);
+        setShowGamblingPopup(true);
       }
     }, 8 * 60 * 1000); // 8 minutes
 
@@ -164,8 +164,8 @@ function AppContent() {
         </Suspense>
       </ErrorBoundary>
 
-      {/* Conditionally render the SnakeGamePopup */}
-      {showSnakeGame && <SnakeGamePopup />}
+      {/* Conditionally render the GamblingPopup */}
+      {showGamblingPopup && <GamblingPopup />}
       {/* Conditionally render the AttendanceReminderPopup */}
       {reminderPreference && <AttendanceReminderPopup onClose={() => setReminderPreference(false)} />}
     </Router>

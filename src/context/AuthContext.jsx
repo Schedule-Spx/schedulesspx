@@ -7,6 +7,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [reminderPreference, setReminderPreference] = useState(true);
+  const [scheduleBucks, setScheduleBucks] = useState(25);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     'etewolde27@spxstudent.org'
   ];
 
-  const login = (userData) => {
+  const login = async (userData) => {
     const authorizedUser = {
       ...userData,
       isAuthorized: isAuthorizedEmail(userData.email),
@@ -69,6 +70,17 @@ export const AuthProvider = ({ children }) => {
     const expiry = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
     localStorage.setItem('sessionExpiry', expiry.toString());
     localStorage.setItem('isBanned', authorizedUser.isBanned.toString());
+
+    // Fetch schedule-bucks from the server
+    try {
+      const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/schedule-bucks?email=${userData.email}`);
+      if (response.ok) {
+        const data = await response.json();
+        setScheduleBucks(data.scheduleBucks);
+      }
+    } catch (error) {
+      console.error('Error fetching schedule-bucks:', error);
+    }
   };
 
   const logout = () => {
@@ -131,6 +143,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateScheduleBucks = async (newScheduleBucks) => {
+    setScheduleBucks(newScheduleBucks);
+    if (user) {
+      try {
+        const response = await fetch(`https://schedule-api.devs4u.workers.dev/api/update-schedule-bucks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            scheduleBucks: newScheduleBucks,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update schedule-bucks on the server');
+        }
+      } catch (error) {
+        console.error('Error updating schedule-bucks:', error);
+      }
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -143,6 +179,8 @@ export const AuthProvider = ({ children }) => {
         isStudent,
         reminderPreference,
         updateReminderPreference,
+        scheduleBucks,
+        updateScheduleBucks,
       }}
     >
       {children}

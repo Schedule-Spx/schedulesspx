@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SnakeGame from './Snake';
+import GamblingPopup from './GamblingPopup';
 
 const GamePopup = () => {
   const [showGames, setShowGames] = useState(false);
@@ -15,15 +15,11 @@ const GamePopup = () => {
 
   const games = [
     {
-      id: 'snake',
-      title: 'Snake',
-      description: 'Classic Snake Game',
-      component: SnakeGame,
-      props: {
-        color1: "#248ec2",
-        color2: "#1d355e",
-        backgroundColor: "#ff0000"
-      }
+      id: 'gambling',
+      title: 'Gambling',
+      description: 'Gambling Game',
+      component: GamblingPopup,
+      props: {}
     },
     // Add more games here following the same structure
   ];
