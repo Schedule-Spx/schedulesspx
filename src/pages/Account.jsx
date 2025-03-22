@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PeriodRenamer from '../components/PeriodRenamer';
+import logger from '../utils/logger';
 import '../styles/carousel.css';
 
 const Account = ({ weekSchedule }) => {
@@ -11,28 +12,28 @@ const Account = ({ weekSchedule }) => {
   const { user, isLoggedIn, reminderPreference, updateReminderPreference } = useAuth();
   const [filteredThemes, setFilteredThemes] = useState('Featured Themes');
   const [reminderEnabled, setReminderEnabled] = useState(reminderPreference);
-
-  console.log("Account - user:", user);
-  console.log("Account - isLoggedIn:", isLoggedIn());
+  
+  // Remove excessive console logs
+  logger.debug("Account - Component initialized", { isLoggedIn: isLoggedIn() });
 
   const themeCategories = {
     'Featured Themes': ['Default', 'Dark', 'Light', 'ValentinesDay'],
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee', 'Retro',],
     'Holiday Themes': ['candycane', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
-    'People Themes': ['legoat', 'ashleytwiner', 'StJoseph', 'StPeter', /*'StPaul', */ 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', /* 'StCatherine',*/ 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
+    'People Themes': ['legoat', 'ashleytwiner', 'marrybruster', 'StJoseph', 'StPeter', /*'StPaul', */ 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', /* 'StCatherine',*/ 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
      'Sports Themes': ['bills', 'braves', 'uga', 'gatech']
   };
 
   useEffect(() => {
     setFilteredThemes('Featured Themes');
-    console.log("Account - Component mounted");
+    logger.debug("Account - Component mounted");
   }, []);
 
   const handleThemeChange = (themeName) => {
     if (themes[themeName.toLowerCase()]) {
       changeTheme(themeName.toLowerCase());
     } else {
-      console.error(`Attempted to change to undefined theme: ${themeName}`);
+      logger.error(new Error(`Theme not found: ${themeName}`), { availableThemes: Object.keys(themes) });
       changeTheme('Default');
     }
   };
@@ -52,7 +53,7 @@ const Account = ({ weekSchedule }) => {
     return themesToRender.map((themeName) => {
       const theme = themes[themeName.toLowerCase()];
       if (!theme) {
-        console.error(`Theme not found: ${themeName}`);
+        logger.error(new Error(`Theme not found: ${themeName}`), { availableThemes: Object.keys(themes) });
         return null;
       }
       return (
@@ -65,7 +66,7 @@ const Account = ({ weekSchedule }) => {
 
   const ThemePreview = ({ themeName, theme }) => {
     if (!theme) {
-      console.error(`Attempted to render undefined theme: ${themeName}`);
+      logger.error(new Error(`Attempted to render undefined theme`), { themeName });
       return null;
     }
 
@@ -89,7 +90,7 @@ const Account = ({ weekSchedule }) => {
   };
 
   if (!isLoggedIn()) {
-    console.log("Account - User not logged in");
+    logger.debug("Account - User not logged in");
     return (
       <div className={`container mx-auto mt-8 p-4 ${currentTheme.main} ${currentTheme.text}`}>
         <p className="text-center text-xl drop-shadow-md">Please log in to view your account information.</p>
@@ -97,7 +98,7 @@ const Account = ({ weekSchedule }) => {
     );
   }
 
-  console.log("Account - Rendering account information");
+  logger.debug("Account - Rendering account information");
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text} p-4`} style={{ overflowY: 'auto', height: 'calc(100vh - 64px)' }}>
       <div className="max-w-4xl mx-auto pb-16">

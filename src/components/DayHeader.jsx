@@ -1,42 +1,84 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, memo } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
+import Weather from './Weather';
 
-const DayHeader = () => {
+// Constants
+const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const UPDATE_INTERVAL = 1000; // 1 second
+
+// Precomputed background style for better performance
+const gradientOverlayStyle = {
+  background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+  zIndex: 0
+};
+
+// Memoized time component to reduce re-renders - smaller size
+const TimeDisplay = memo(({ time, theme }) => (
+  <div className={`${theme.accent} ${theme.text} px-2 py-0.5 rounded text-sm font-medium`}>
+    {time}
+  </div>
+));
+
+// Main component
+const DayHeader = memo(() => {
   const { currentTheme } = useTheme();
-  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const { user } = useAuth();
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
-
+  
+  // Setup timer
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
-    }, 1000);
-
+    }, UPDATE_INTERVAL);
+    
     return () => clearInterval(timer);
   }, []);
+  
+  // Calculate date strings only when the time changes
+  const dateInfo = useMemo(() => {
+    const day = currentDateTime.getDay();
+    const options = { weekday: 'long', month: 'long', day: 'numeric' };
+    const formattedDate = currentDateTime.toLocaleDateString('en-US', options);
+    
+    return {
+      formattedDate,
+      timeString: currentDateTime.toLocaleTimeString()
+    };
+  }, [currentDateTime]);
 
-  const dayName = daysOfWeek[currentDateTime.getDay()];
-  const dateString = currentDateTime.toLocaleDateString();
-  const timeString = currentDateTime.toLocaleTimeString();
+  // Get user's name for welcome message
+  const userName = useMemo(() => {
+    return user?.name || user?.displayName || 'Guest';
+  }, [user]);
 
   return (
-    <div className={`rounded-lg shadow-md w-full border-2 ${currentTheme.border} ${currentTheme.main} relative`}>
+    <div className={`h-full rounded-lg shadow-md w-full border-2 ${currentTheme.border} ${currentTheme.main} relative overflow-hidden`}>
       {/* Gradient Overlay */}
-      <div 
-        className="absolute inset-0 rounded-lg"
-        style={{
-          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
-          zIndex: 0
-        }}
-      ></div>
-      <div className="p-5 flex flex-col items-center justify-center relative z-10">
-        <div className={`text-2xl font-bold ${currentTheme.text} mb-2`}>{dayName}</div>
-        <div className={`text-xl ${currentTheme.text} mb-2`}>{dateString}</div>
-        <div className={`${currentTheme.accent} ${currentTheme.text} text-lg px-4 py-2 rounded`}>
-          {timeString}
+      <div className="absolute inset-0 rounded-lg" style={gradientOverlayStyle}></div>
+      
+      <div className="p-3 flex flex-col h-full relative z-10">
+        {/* Header with welcome message across top */}
+        <div className="mb-1">
+          <div className={`text-2xl font-bold tracking-wide ${currentTheme.text} text-center`}>
+            Welcome {userName}!
+          </div>
+          
+          <div className="flex justify-between items-center mt-1">
+            <div className={`text-sm tracking-wide ${currentTheme.text}`}>
+              {dateInfo.formattedDate}
+            </div>
+            <TimeDisplay time={dateInfo.timeString} theme={currentTheme} />
+          </div>
+        </div>
+        
+        {/* Weather section - unchanged */}
+        <div className="flex-grow mt-1 pt-1.5 border-t border-opacity-20">
+          <Weather />
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default DayHeader;

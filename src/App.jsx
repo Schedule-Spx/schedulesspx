@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, memo, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
@@ -13,9 +13,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import AttendanceReminderPopup from './components/AttendanceReminderPopup';
 
+// Lazy load components to reduce initial bundle size
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
 const Admin = lazy(() => import('./pages/Admin'));
-const Banned = lazy(() => import('./pages/Banned')); // Ensure Banned page is imported
+const Banned = lazy(() => import('./pages/Banned'));
 const Account = lazy(() => import('./pages/Account'));
 const About = lazy(() => import('./pages/About'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
@@ -24,51 +25,53 @@ const TeacherTools = lazy(() => import('./pages/TeacherTools'));
 const News = lazy(() => import('./pages/News'));
 const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
-const BoardMode = lazy(() => import('./pages/BoardMode')); // Import the BoardMode page
+const BoardMode = lazy(() => import('./pages/BoardMode'));
 const MarchMadness = lazy(() => import('./pages/MarchMadness'));
+
+// Loading fallback component
+const LoadingFallback = memo(() => <div>Loading...</div>);
+
+// Konami code sequence for easter egg
+const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
 
 function AppContent() {
   const { user, isAuthorized, isAdmin, isStudent } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
-
-  // State to manage showing the Snake game
   const [showSnakeGame, setShowSnakeGame] = useState(false);
-  const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
-  let pressedKeys = [];
-
-  // State to manage the reminder preference
+  const [pressedKeys, setPressedKeys] = useState([]);
   const [reminderPreference, setReminderPreference] = useState(user?.reminderPreference);
 
-  // Listen for the Konami code input
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      pressedKeys.push(event.key);
-      if (pressedKeys.join().includes(konamiCode.join())) {
+  // Create memoized handler for the key event
+  const handleKeyDown = useCallback((event) => {
+    setPressedKeys(prev => {
+      const updated = [...prev, event.key];
+      // Check for Konami code
+      if (updated.join().includes(KONAMI_CODE.join())) {
         setShowSnakeGame(true);
       }
-      if (pressedKeys.length > konamiCode.length) {
-        pressedKeys.shift();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+      // Keep only the last N keys where N is the length of the Konami code
+      return updated.slice(-KONAMI_CODE.length);
+    });
   }, []);
 
-  // Use useEffect to trigger the reminder 8 minutes into every period
+  // Setup key event listener
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (user?.isTeacher && reminderPreference) {
-        setShowSnakeGame(true);
-      }
-    }, 8 * 60 * 1000); // 8 minutes
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
+  // Teacher reminder timer
+  useEffect(() => {
+    if (!user?.isTeacher || !reminderPreference) return;
+    
+    const timer = setInterval(() => {
+      setShowSnakeGame(true);
+    }, 8 * 60 * 1000); // 8 minutes
+    
     return () => clearInterval(timer);
   }, [user, reminderPreference]);
 
+  // Handle banned users
   if (user?.isBanned) {
     return (
       <Router>
@@ -85,7 +88,7 @@ function AppContent() {
       <NavBar />
       <ServiceWorkerWrapper />
       <ErrorBoundary>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/banned" element={<Banned />} />
@@ -97,7 +100,6 @@ function AppContent() {
                 </PrivateRoute>
               } 
             />
-            {/* Add Board Mode route */}
             <Route 
               path="/board" 
               element={
@@ -163,27 +165,29 @@ function AppContent() {
           </Routes>
         </Suspense>
       </ErrorBoundary>
-
-      {/* Conditionally render the SnakeGamePopup */}
+      
+      {/* Conditionally render popups */}
       {showSnakeGame && <SnakeGamePopup />}
-      {/* Conditionally render the AttendanceReminderPopup */}
       {reminderPreference && <AttendanceReminderPopup onClose={() => setReminderPreference(false)} />}
     </Router>
   );
 }
 
-function App() {
+// Memoize the App component to prevent unnecessary re-renders
+const App = memo(() => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <ThemeProvider>
-          <WeekScheduleProvider>
-            <AppContent />
-          </WeekScheduleProvider>
-        </ThemeProvider>
-      </AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <ThemeProvider>
+            <WeekScheduleProvider>
+              <AppContent />
+            </WeekScheduleProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </ErrorBoundary>
     </GoogleOAuthProvider>
   );
-}
+});
 
 export default App;

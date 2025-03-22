@@ -4,19 +4,34 @@ import ReactDOM from 'react-dom/client'
 import './styles/index.css'
 import App from './App.jsx'
 import { registerSW } from 'virtual:pwa-register'
+import logger from './utils/logger'
 
-const updateSW = registerSW({
+// Initialize the updateSW function immediately with optimized handler
+window.updateSW = registerSW({
   onNeedRefresh() {
-    if (confirm('New content available. Reload?')) {
-      updateSW(true)
+    // Only log if in development to save resources
+    if (import.meta.env.MODE !== 'production') {
+      logger.info('New content available')
     }
+    // Signal to the ServiceWorkerWrapper that an update is available
+    window.dispatchEvent(new CustomEvent('swUpdateAvailable'))
   },
   onOfflineReady() {
-    console.log('App is ready for offline use')
+    if (import.meta.env.MODE !== 'production') {
+      logger.info('App is ready for offline use')
+    }
   },
+  // Immediate registration
+  immediate: true
 })
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+// Create root once
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+const root = ReactDOM.createRoot(rootElement);
+
+// Render app
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

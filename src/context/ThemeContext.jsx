@@ -1,7 +1,9 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 
+// Create context
 const ThemeContext = createContext();
 
+// Optimize theme definitions with memoization
 export const themes = {
   default: {
     name: 'Default',
@@ -388,6 +390,13 @@ export const themes = {
     text: 'text-white',
     border: 'border-red-500',
   },
+  marrybruster: {
+    name: 'Marry Bruster',
+    main: 'bg-pink-200',
+    accent: 'bg-blue-200',
+    text: 'text-gray-800',
+    border: 'border-pink-300',
+  },
   legoat: {
     name: 'Le 🐐',
     main: 'bg-[#552583]', 
@@ -435,62 +444,94 @@ export const themes = {
 
 export const ThemeProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(themes.default);
-
+  
+  // Load theme from localStorage only once on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      try {
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
         const parsedTheme = JSON.parse(savedTheme);
         setCurrentTheme(parsedTheme);
-      } catch (error) {
-        const fallbackTheme = themes[savedTheme.toLowerCase()] || themes.default;
-        setCurrentTheme(fallbackTheme);
       }
+    } catch (error) {
+      console.error('Error loading theme:', error);
+      // Fallback to default theme if there's an error
+      setCurrentTheme(themes.default);
     }
   }, []);
-
-  const adjustBrightness = (hex, percent) => {
-    const num = parseInt(hex.slice(1), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = (num >> 16) + amt;
-    const G = ((num >> 8) & 0x00FF) + amt;
-    const B = (num & 0x0000FF) + amt;
-    return `#${(
-      0x1000000 +
-      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-      (B < 255 ? (B < 1 ? 0 : B) : 255)
-    )
-      .toString(16)
-      .slice(1)}`;
-  };
-
+  
+  // Memoize the color adjustment helper function
+  const adjustBrightness = useCallback((hex, percent) => {
+    if (!hex || typeof hex !== 'string' || !hex.startsWith('#')) {
+      return hex;
+    }
+    
+    try {
+      const num = parseInt(hex.slice(1), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = ((num >> 8) & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      
+      return `#${(
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)
+      )
+        .toString(16)
+        .slice(1)}`;
+    } catch (e) {
+      console.error('Error adjusting brightness:', e);
+      return hex;
+    }
+  }, []);
+  
+  // Apply background gradient effect when theme changes
   useEffect(() => {
-    const root = document.documentElement;
-
-    const mainColor = getComputedStyle(root)
-      .getPropertyValue(`--${currentTheme.main.slice(3)}`)
-      .trim();
-
-    const darkerColor = adjustBrightness(mainColor, -20);
-
-    document.body.style.background = `linear-gradient(to bottom left, ${mainColor}, ${darkerColor})`;
-  }, [currentTheme]);
-
-  const changeTheme = (themeName) => {
-    const normalizedThemeName = themeName.toLowerCase().replace(/\s+/g, '');
-    const newTheme = themes[normalizedThemeName] || themes.default;
-    setCurrentTheme(newTheme);
-    localStorage.setItem('theme', JSON.stringify(newTheme));
-  };
-
+    try {
+      const root = document.documentElement;
+      const mainColor = getComputedStyle(root)
+        .getPropertyValue(`--${currentTheme.main.slice(3)}`)
+        .trim();
+      
+      if (mainColor) {
+        const darkerColor = adjustBrightness(mainColor, -20);
+        document.body.style.background = `linear-gradient(to bottom left, ${mainColor}, ${darkerColor})`;
+      }
+    } catch (error) {
+      console.error('Error applying theme gradient:', error);
+    }
+  }, [currentTheme, adjustBrightness]);
+  
+  // Memoize the theme change function
+  const changeTheme = useCallback((themeName) => {
+    try {
+      const normalizedThemeName = themeName.toLowerCase().replace(/\s+/g, '');
+      const newTheme = themes[normalizedThemeName] || themes.default;
+      
+      setCurrentTheme(newTheme);
+      localStorage.setItem('theme', JSON.stringify(newTheme));
+    } catch (error) {
+      console.error('Error changing theme:', error);
+    }
+  }, []);
+  
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    currentTheme,
+    changeTheme,
+    themes
+  }), [currentTheme, changeTheme]);
+  
   return (
-    <ThemeContext.Provider value={{ currentTheme, changeTheme, themes }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
+// Create a custom hook with error handling
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {

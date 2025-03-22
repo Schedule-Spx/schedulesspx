@@ -2,19 +2,70 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/src/assets/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Schedule-SPX - Your school schedule management app" />
-    <title>Schedule-SPX</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://apis.google.com">
+    <meta name="theme-color" content="#001F3F" />
+    <meta name="description" content="Schedule-SPX - A comprehensive school schedule management application for St. Pius X students and faculty. Track classes, events, and activities in one place." />
+    
+    <!-- SEO Enhancements -->
+    <meta name="keywords" content="school schedule, St. Pius X, class schedule, Catholic school, education management, scheduling app" />
+    <meta name="author" content="St. Pius X School" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Canonical URL to prevent duplicate content issues -->
+    <link rel="canonical" href="https://schedule-spx.web.app" />
+    
+    <!-- Open Graph Protocol for better social media sharing -->
+    <meta property="og:title" content="Schedule-SPX | School Schedule Management" />
+    <meta property="og:description" content="A comprehensive school schedule management application for St. Pius X students and faculty." />
+    <meta property="og:image" content="/public/apple-touch-icon.png" />
+    <meta property="og:url" content="https://schedule-spx.web.app" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Schedule-SPX" />
+    
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Schedule-SPX | School Schedule Management" />
+    <meta name="twitter:description" content="A comprehensive school schedule management application for St. Pius X students and faculty." />
+    <meta name="twitter:image" content="/public/apple-touch-icon.png" />
+    
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Structured Data for Rich Results in search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Schedule-SPX",
+      "url": "https://schedule-spx.web.app",
+      "description": "A comprehensive school schedule management application for St. Pius X students and faculty.",
+      "applicationCategory": "Education",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "St. Pius X School"
+      }
+    }
+    </script>
+    
+    <title>Schedule-SPX | School Schedule Management</title>
+    <style>
+      /* Animation for update notification */
+      @keyframes slide-up {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+      .animate-slide-up {
+        animation: slide-up 0.3s ease-out forwards;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
