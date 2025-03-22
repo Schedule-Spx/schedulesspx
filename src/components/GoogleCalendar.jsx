@@ -1,20 +1,112 @@
 // src/components/GoogleCalendar.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
 
+// Constants for better maintainability
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const CALENDAR_ID = 'spxstudent.org_ndugje9uqtb8hqdm9s2qkpi2k4@group.calendar.google.com';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-const GoogleCalendar = () => {
+// Memoized components for better performance
+const EventItem = memo(({ event, theme, formatTime }) => (
+  <li 
+    className={`${theme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
+    onClick={() => window.open(event.htmlLink, '_blank')}
+  >
+    <div className={`font-semibold ${theme.text}`}>{event.summary}</div>
+    {event.start.dateTime && (
+      <div className={`text-sm ${theme.text} opacity-80`}>
+        {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
+      </div>
+    )}
+  </li>
+));
+
+const DayEvents = memo(({ date, events, theme, formatDate, formatTime }) => {
+  if (!events || events.length === 0) return null;
+  
+  return (
+    <div className="mb-4">
+      <h3 
+        className={`text-md font-semibold ${theme.text} mb-2 text-center`} 
+        style={{ fontSize: '0.85rem', opacity: 0.8 }}
+      >
+        {formatDate(date)}
+      </h3>
+      <ul className="space-y-2">
+        {events.map((event) => (
+          <EventItem 
+            key={event.id} 
+            event={event} 
+            theme={theme} 
+            formatTime={formatTime} 
+          />
+        ))}
+      </ul>
+    </div>
+  );
+});
+
+// Loading and error states as memoized components
+const CalendarState = memo(({ message, theme }) => (
+  <div className={`p-4 ${theme.text} text-center h-full flex items-center justify-center ${theme.main} ${theme.border} border-2 rounded-lg`}>
+    {message}
+  </div>
+));
+
+// Gradient overlay as a memoized component
+const GradientOverlay = memo(() => (
+  <div 
+    className="absolute inset-0 rounded-lg"
+    style={{
+      background: `linear-gradient(to top right, rgba(0, 0, 0, 0.2), transparent)`,
+      zIndex: 0,
+    }}
+  />
+));
+
+// Main component
+const GoogleCalendar = memo(() => {
   const { currentTheme } = useTheme();
   const [events, setEvents] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [lastFetched, setLastFetched] = useState(0);
 
+  // Helper functions memoized to prevent recreations
+  const formatDate = useMemo(() => (
+    (dateString) => {
+      const options = { weekday: 'long', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+  ), []);
+
+  const formatTime = useMemo(() => (
+    (dateTimeString) => {
+      const options = { hour: 'numeric', minute: '2-digit' };
+      return new Date(dateTimeString).toLocaleTimeString(undefined, options);
+    }
+  ), []);
+
+  // Filter events function - memoized based on events
+  const filterEvents = useMemo(() => (
+    (eventsArray) => eventsArray?.filter(event => event.summary !== '8:00 am Start') || []
+  ), []);
+
+  // Fetch events from the API
   useEffect(() => {
     const fetchEvents = async () => {
+      const now = Date.now();
+      
+      // Don't fetch if we've fetched recently (caching)
+      if (now - lastFetched < CACHE_DURATION && Object.keys(events).length > 0) {
+        setLoading(false);
+        return;
+      }
+      
       try {
+        setLoading(true);
         const response = await axios.get(
           `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events`,
           {
@@ -28,6 +120,7 @@ const GoogleCalendar = () => {
           }
         );
         
+        // Group events by date
         const groupedEvents = response.data.items.reduce((acc, event) => {
           const eventDate = new Date(event.start.dateTime || event.start.date);
           const localDate = new Date(eventDate.getTime() + eventDate.getTimezoneOffset() * 60000);
@@ -39,8 +132,9 @@ const GoogleCalendar = () => {
           acc[dateString].push(event);
           return acc;
         }, {});
-
+        
         setEvents(groupedEvents);
+        setLastFetched(now);
       } catch (error) {
         console.error('Error fetching events:', error.response?.data || error.message);
         setError(`Failed to fetch events: ${error.response?.data?.error?.message || error.message}`);
@@ -48,71 +142,37 @@ const GoogleCalendar = () => {
         setLoading(false);
       }
     };
-
+    
     fetchEvents();
-  }, []);
+    
+    // Set up a timer to refresh events periodically
+    const refreshTimer = setInterval(fetchEvents, CACHE_DURATION);
+    
+    return () => clearInterval(refreshTimer);
+  }, [lastFetched, events]);
 
-  const formatDate = (dateString) => {
-    const options = { weekday: 'long', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const formatTime = (dateTimeString) => {
-    const options = { hour: 'numeric', minute: '2-digit' };
-    return new Date(dateTimeString).toLocaleTimeString(undefined, options);
-  };
-
-  const filterEvents = (events) => {
-    return events.filter(event => event.summary !== '8:00 am Start');
-  };
-
-  if (loading) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center ${currentTheme.main} ${currentTheme.border} border-2 rounded-lg`}>Loading events...</div>;
-  if (error) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center ${currentTheme.main} ${currentTheme.border} border-2 rounded-lg`}>Error: {error}</div>;
-  if (Object.keys(events).length === 0) return <div className={`p-4 ${currentTheme.text} text-center h-full flex items-center justify-center ${currentTheme.main} ${currentTheme.border} border-2 rounded-lg`}>No upcoming events</div>;
+  // Early returns for loading and error states
+  if (loading) return <CalendarState message="Loading events..." theme={currentTheme} />;
+  if (error) return <CalendarState message={`Error: ${error}`} theme={currentTheme} />;
+  if (Object.keys(events).length === 0) return <CalendarState message="No upcoming events" theme={currentTheme} />;
 
   return (
-    <div 
-      className={`${currentTheme.main} rounded-lg shadow-lg w-full h-full border-2 ${currentTheme.border} relative overflow-hidden`}
-    >
-      <div 
-        className="absolute inset-0 rounded-lg"
-        style={{
-          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.2), transparent)`,
-          zIndex: 0,
-        }}
-      ></div>
+    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full h-full border-2 ${currentTheme.border} relative overflow-hidden`}>
+      <GradientOverlay />
       <div className="p-4 overflow-y-auto relative z-10 h-full">
-        {Object.entries(events).map(([date, dayEvents]) => {
-          const filteredEvents = filterEvents(dayEvents);
-          return (
-            <div key={date} className="mb-4">
-              {filteredEvents.length > 0 && (
-                <>
-                  <h3 className={`text-md font-semibold ${currentTheme.text} mb-2 text-center`} style={{ fontSize: '0.85rem', opacity: 0.8 }}>{formatDate(date)}</h3>
-                  <ul className="space-y-2">
-                    {filteredEvents.map((event) => (
-                      <li 
-                        key={event.id} 
-                        className={`${currentTheme.accent} p-2 rounded shadow cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
-                        onClick={() => window.open(event.htmlLink, '_blank')}
-                      >
-                        <div className={`font-semibold ${currentTheme.text}`}>{event.summary}</div>
-                        {event.start.dateTime && (
-                          <div className={`text-sm ${currentTheme.text} opacity-80`}>
-                            {formatTime(event.start.dateTime)} - {formatTime(event.end.dateTime)}
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-          );
-        })}
+        {Object.entries(events).map(([date, dayEvents]) => (
+          <DayEvents 
+            key={date}
+            date={date}
+            events={filterEvents(dayEvents)}
+            theme={currentTheme}
+            formatDate={formatDate}
+            formatTime={formatTime}
+          />
+        ))}
       </div>
     </div>
   );
-};
+});
 
 export default GoogleCalendar;

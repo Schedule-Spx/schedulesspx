@@ -1,25 +1,38 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, memo, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../ThemeContext';
 
-const AgreementPopup = ({ onAgree }) => {
+// Memoized link button component to reduce re-renders
+const LinkButton = memo(({ onClick, children, theme }) => (
+  <button 
+    onClick={onClick}
+    className={`${theme.text} relative inline-block after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-current after:transform after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100`}
+  >
+    {children}
+  </button>
+));
+
+// Main component memoized to prevent unnecessary re-renders
+const AgreementPopup = memo(({ onAgree }) => {
   const { currentTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [hasViewedDocs, setHasViewedDocs] = useState(false);
 
-  const handleLinkClick = (path) => {
+  // Memoize handlers to prevent recreation on each render
+  const handleLinkClick = useCallback((path) => {
     setHasViewedDocs(true);
     navigate(path);
-  };
+  }, [navigate]);
 
-  const handleAgree = () => {
+  const handleAgree = useCallback(() => {
     onAgree();
     if (hasViewedDocs) {
       navigate('/');
     }
-  };
+  }, [onAgree, hasViewedDocs, navigate]);
 
+  // Early return for certain paths
   if (location.pathname === '/privacy' || location.pathname === '/terms') {
     return null;
   }
@@ -30,19 +43,13 @@ const AgreementPopup = ({ onAgree }) => {
         <h2 className={`text-2xl font-bold mb-4 ${currentTheme.text}`}>Welcome to Schedule-SPX</h2>
         <p className={`mb-4 ${currentTheme.text}`}>
           Please read our{' '}
-          <button 
-            onClick={() => handleLinkClick('/terms')}
-            className={`${currentTheme.text} relative inline-block after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-current after:transform after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100`}
-          >
+          <LinkButton onClick={() => handleLinkClick('/terms')} theme={currentTheme}>
             Terms and Conditions
-          </button>{' '}
+          </LinkButton>{' '}
           and{' '}
-          <button 
-            onClick={() => handleLinkClick('/privacy')}
-            className={`${currentTheme.text} relative inline-block after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-current after:transform after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100`}
-          >
+          <LinkButton onClick={() => handleLinkClick('/privacy')} theme={currentTheme}>
             Privacy Policy
-          </button>
+          </LinkButton>
           .
         </p>
         {hasViewedDocs && (
@@ -59,6 +66,6 @@ const AgreementPopup = ({ onAgree }) => {
       </div>
     </div>
   );
-};
+});
 
 export default AgreementPopup;
