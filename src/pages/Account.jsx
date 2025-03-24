@@ -20,7 +20,7 @@ const Account = ({ weekSchedule }) => {
     'Featured Themes': ['Default', 'Dark', 'Light', 'ValentinesDay'],
     'General Themes': ['Forest', 'Ocean', 'Sunset', 'Lavender', 'Mint', 'Cherry', 'Coffee', 'Retro',],
     'Holiday Themes': ['candycane', 'Halloween', 'ValentinesDay', 'StPatricksDay', 'Easter', 'IndependenceDay', 'Thanksgiving'],
-    'People Themes': ['legoat', 'ashleytwiner', 'marrybruster', 'StJoseph', 'StPeter', /*'StPaul', */ 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', /* 'StCatherine',*/ 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
+    'People Themes': ['legoat', 'ashleytwiner', 'mary brewster', 'StJoseph', 'StPeter', /*'StPaul', */ 'StMichael', 'StTherese', 'StFrancisAssisi', 'StMary', 'StAugustine', 'StBenedict', 'StJohn', 'StClare', 'StIgnatius', /* 'StCatherine',*/ 'StThereseAvila', 'StSimon', 'StVincent', 'StLucy', 'StPatrick', 'StAnthony', 'StJames'],
      'Sports Themes': ['bills', 'braves', 'uga', 'gatech']
   };
 

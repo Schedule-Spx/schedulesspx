@@ -390,8 +390,8 @@ export const themes = {
     text: 'text-white',
     border: 'border-red-500',
   },
-  marrybruster: {
-    name: 'Marry Bruster',
+  marybrewster: {
+    name: 'Mary Brewster',
     main: 'bg-pink-200',
     accent: 'bg-blue-200',
     text: 'text-gray-800',
