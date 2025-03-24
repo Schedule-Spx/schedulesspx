@@ -8,11 +8,9 @@ export const useAuth = () => useContext(AuthContext);
 
 // Precompute banned emails for faster lookup
 const BANNED_EMAILS = new Set([
-  'ccrosby25@spxstudent.org',
   'dedwards25@spxstudent.org',
   'achenault25@spxstudent.org',
   'wfreeman25@spxstudent.org',
-  'guebelacker25@spxstudent.org',
   'etewolde27@spxstudent.org'
 ]);
 
