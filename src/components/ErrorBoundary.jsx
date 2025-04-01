@@ -8,14 +8,12 @@ class ErrorBoundaryFallback extends React.Component {
   static getDerivedStateFromError = () => ({ hasError: true });
 
   componentDidCatch(error, errorInfo) {
-    logger.error(error, { componentStack: errorInfo.componentStack });
-    this.setState({ errorInfo });
-  }
-
-  render() {
-    if (!this.state.hasError) return this.props.children;
-    
-    this.setState({ errorInfo });
+    this.setState({
+      hasError: true,
+      error: error,
+      errorInfo: errorInfo
+    });
+    logger.error('ErrorBoundary caught an error', { error, errorInfo });
   }
 
   render() {
