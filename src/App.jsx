@@ -12,7 +12,6 @@ import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import AttendanceReminderPopup from './components/AttendanceReminderPopup';
-import { initGravityEffect } from './utils/aprilFools';
 
 // Lazy load components to reduce initial bundle size
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
@@ -176,83 +175,47 @@ function AppContent() {
 
 // Memoize the App component to prevent unnecessary re-renders
 const App = memo(() => {
-  const [rotation, setRotation] = useState(180); // Start upside down
-  const [mouseMovement, setMouseMovement] = useState(0);
+  // April Fools state
   const [showContent, setShowContent] = useState(false);
-  const [buttonTimer, setButtonTimer] = useState(10);
-  const [buttonsLocked, setButtonsLocked] = useState(true);
-  const [currentVideo, setCurrentVideo] = useState(Math.random() < 0.5 ? 'shimmy' : 'letitgrow');
-  const videoRef = useRef(null);
-  const [currentLang, setCurrentLang] = useState('en');
-  const [isInverted, setIsInverted] = useState(true);
   const [showAprilFools, setShowAprilFools] = useState(false);
-
+  const [isInverted, setIsInverted] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [buttonTimer, setButtonTimer] = useState(5);
+  const [buttonsLocked, setButtonsLocked] = useState(true);
+  const [currentVideo, setCurrentVideo] = useState('shimmy');
+  const [currentLang, setCurrentLang] = useState('en');
+  const videoRef = useRef(null);
   const isMainPage = window.location.pathname === '/main';
 
+  // Handle click for rotation
+  const handleClick = useCallback(() => {
+    setRotation(prev => prev + 15);
+    setIsInverted(prev => !prev);
+    setCurrentVideo(prev => prev === 'shimmy' ? 'grow' : 'shimmy');
+    setCurrentLang(prev => {
+      const langs = ['en', 'es', 'fr', 'de', 'ja', 'zh', 'ru', 'ar'];
+      const currentIndex = langs.indexOf(prev);
+      const nextIndex = (currentIndex + 1) % langs.length;
+      return langs[nextIndex];
+    });
+  }, []);
+
+  // Button timer effect
   useEffect(() => {
-    const rotationInterval = setInterval(() => {
-      setRotation(prev => prev + 67);
-    }, 2000);
-
-    const timerInterval = setInterval(() => {
-      setButtonTimer(prev => {
-        if (prev <= 1) {
-          setButtonsLocked(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    // All other intervals remain the same
-    const videoSwitchInterval = setInterval(() => {
-      setCurrentVideo(prev => prev === 'shimmy' ? 'letitgrow' : 'shimmy');
-    }, 120000); // 2 minutes
-
-    // Add language rotation interval
-    const languageInterval = setInterval(() => {
-      const languages = ['ar', 'zh', 'ja', 'ko', 'ru', 'hi', 'he', 'th'];
-      const randomLang = languages[Math.floor(Math.random() * languages.length)];
-      document.documentElement.lang = randomLang;
-      document.documentElement.dir = ['ar', 'he'].includes(randomLang) ? 'rtl' : 'ltr';
-      setCurrentLang(randomLang);
-    }, 4000);
-
-    const handleMouseMove = (e) => {
-      if (showContent) { // Only handle mouse movement after initial message
-        const speed = Math.abs(e.movementX);
-        const multiplier = Math.min(5, 1 + (speed / 20));
-        const newRotation = rotation + (-67 * multiplier * Math.sign(e.movementX));
-        setRotation(newRotation);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      clearInterval(rotationInterval);
-      clearInterval(timerInterval);
-      clearInterval(videoSwitchInterval);
-      clearInterval(languageInterval);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [rotation, showContent]); // Add dependencies
-
-  // Fix invert toggle interval - separated from other effects for clarity
-  useEffect(() => {
-    const invertInterval = setInterval(() => {
-      setIsInverted(prev => !prev);
-    }, 4000); // Changed from 5000 to 4000 ms
-
-    return () => {
-      clearInterval(invertInterval);
-    };
-  }, []); // Remove rotation and showContent dependencies for invert effect
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    window.open('https://www.youtube.com/watch?v=xvFZjo5PgG0', '_blank');
-  };
+    if (buttonsLocked) {
+      const timer = setInterval(() => {
+        setButtonTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setButtonsLocked(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [buttonsLocked]);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

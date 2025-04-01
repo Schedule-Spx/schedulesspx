@@ -8,7 +8,6 @@ import Schedule from '../components/Schedule';
 import GoogleCalendar from '../components/GoogleCalendar';
 import PopupMessage from '../components/PopupMessage';
 import { useWeekSchedule } from '../context/WeekScheduleContext';
-import { initGravityEffect } from '../utils/aprilFools';
 
 // Memoized grid item component to reduce re-rendering
 const GridItem = memo(({ children, className, animationClass = '' }) => (
@@ -27,26 +26,10 @@ const MainDashboard = memo(() => {
   useEffect(() => {
     fetchSchedule();
   }, [fetchSchedule]);
-
-  useEffect(() => {
-    const cleanup = initGravityEffect();
-    return () => cleanup();
-  }, []);
   
   return (
-    <div 
-      className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}
-      style={{
-        filter: 'invert(1)',
-        transform: 'rotate(180deg)',
-        minHeight: '100vh'
-      }}
-    >
-      <div 
-        ref={contentRef} 
-        className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4"
-        style={{ transform: 'rotate(180deg)' }} // Flip content back so text is readable
-      >
+    <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
+      <div ref={contentRef} className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left Column */}
         <div className="flex flex-col space-y-4">
           <GridItem 
