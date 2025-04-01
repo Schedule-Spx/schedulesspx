@@ -15,7 +15,7 @@
     "@tanstack/react-query": "*",
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
-    "axios": "^1.8.2",
+    "axios": "^1.8.4",
     "framer-motion": "*",
     "glob": "^11.0.0",
     "jwt-decode": "*",
