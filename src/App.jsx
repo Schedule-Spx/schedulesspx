@@ -186,36 +186,57 @@ const App = memo(() => {
   const [currentLang, setCurrentLang] = useState('en');
   const videoRef = useRef(null);
   const isMainPage = window.location.pathname === '/main';
+  const [mouseRotation, setMouseRotation] = useState(0);
 
-  // Handle click for rotation
-  const handleClick = useCallback(() => {
-    setRotation(prev => prev + 15);
-    setIsInverted(prev => !prev);
-    setCurrentVideo(prev => prev === 'shimmy' ? 'grow' : 'shimmy');
-    setCurrentLang(prev => {
-      const langs = ['en', 'es', 'fr', 'de', 'ja', 'zh', 'ru', 'ar'];
-      const currentIndex = langs.indexOf(prev);
-      const nextIndex = (currentIndex + 1) % langs.length;
-      return langs[nextIndex];
-    });
+  // Add automatic rotation effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotation(prev => prev + 15);
+      setIsInverted(prev => !prev);
+      setCurrentVideo(prev => prev === 'shimmy' ? 'grow' : 'shimmy');
+      setCurrentLang(prev => {
+        const langs = ['en', 'es', 'fr', 'de', 'ja', 'zh', 'ru', 'ar'];
+        const currentIndex = langs.indexOf(prev);
+        const nextIndex = (currentIndex + 1) % langs.length;
+        return langs[nextIndex];
+      });
+    }, 6000);
+    
+    return () => clearInterval(interval);
   }, []);
 
-  // Button timer effect
+  // Add mouse movement tracking
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+      const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+      setMouseRotation(angle);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Button timer effect - Modified to ignore mouse movement
   useEffect(() => {
     if (buttonsLocked) {
+      const startTime = Date.now();
       const timer = setInterval(() => {
-        setButtonTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            setButtonsLocked(false);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const remaining = Math.max(5 - elapsed, 0);
+        
+        if (remaining === 0) {
+          clearInterval(timer);
+          setButtonsLocked(false);
+        }
+        setButtonTimer(remaining);
+      }, 100);
       return () => clearInterval(timer);
     }
-  }, [buttonsLocked]);
+  }, [buttonsLocked]); // Only depend on buttonsLocked, not any other state
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
@@ -369,13 +390,14 @@ const App = memo(() => {
                         height: '100vh',
                         objectFit: 'cover',
                         zIndex: -1,
-                        pointerEvents: 'none'
+                        pointerEvents: 'none',
+                        filter: isInverted ? 'invert(1)' : 'none'
                       }}
                     >
                       <source 
                         src={currentVideo === 'shimmy' 
                           ? "/shimmy shimmy ay shimmy ay shimmy ya.mp4" 
-                          : "/Let it grow But it's deep fried.mp4"} 
+                          : "/Let it grow But its deep fried.mp4"} 
                         type="video/mp4" 
                       />
                     </video>
@@ -469,12 +491,10 @@ const App = memo(() => {
                     </style>
 
                     <div 
-                      onClick={handleClick}
                       style={{ 
-                        transform: `rotate(${rotation}deg)`, 
+                        transform: `rotate(${rotation + mouseRotation}deg)`, 
                         minHeight: '100vh',
                         transition: 'transform 2s ease-in-out',
-                        cursor: 'pointer'
                       }}
                     >
                       <div lang={currentLang}>

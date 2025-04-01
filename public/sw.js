@@ -39,7 +39,7 @@ if (!self.define) {
       .then(() => {
         let promise = registry[uri];
         if (!promise) {
-          throw new Error(`Module ${uri} didn't register its module`);
+          throw new Error(`Module ${uri} didn’t register its module`);
         }
         return promise;
       })
@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-d6af67a1'], (function (workbox) { 'use strict';
+define(['./workbox-76217345'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -78,6 +78,9 @@ define(['./workbox-d6af67a1'], (function (workbox) { 'use strict';
    * See https://goo.gl/S9QRab
    */
   workbox.precacheAndRoute([{
+    "url": "67.png",
+    "revision": "59facf8bd84aac8272fa5d33cfb1e558"
+  }, {
     "url": "android-chrome-192x192.png",
     "revision": "b015b9cd7a113514b0faaa204e5366c7"
   }, {
@@ -97,7 +100,7 @@ define(['./workbox-d6af67a1'], (function (workbox) { 'use strict';
     "revision": "2427a59e3e06eb6811bcab507044cee1"
   }, {
     "url": "index.html",
-    "revision": "0.rjkj48r3gp4"
+    "revision": "0.gu3ipvvrovo"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
