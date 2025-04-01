@@ -130,11 +130,11 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist', // Output directory for build
       target: 'esnext', // JavaScript target
-      minify: mode === 'production' ? 'terser' : false, // Minification settings
+      minify: 'terser', // Minification settings
       terserOptions: {
         compress: {
-          drop_console: mode === 'production', // Remove console logs in production
-          drop_debugger: mode === 'production' // Remove debugger statements in production
+          drop_console: true, // Remove console logs
+          drop_debugger: true // Remove debugger statements
         }
       },
       rollupOptions: {
@@ -144,6 +144,20 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
+      assetsDir: 'assets',
+      copyPublicDir: true,
+      emptyOutDir: true, // Add this to ensure clean builds
+      // Add these settings for Cloudflare compatibility
+      sourcemap: false,
+      cssCodeSplit: true,
+      modulePreload: {
+        polyfill: true
+      },
+      // Remove dynamic imports that might cause issues
+      dynamicImportVarsOptions: {
+        warnOnError: true,
+        exclude: [/node_modules/]
+      }
     },
     publicDir: 'public', // Directory for static assets
     css: {
