@@ -3,7 +3,6 @@ import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import Timer from '../components/TeacherTools/Timer';
 import NamePicker from '../components/TeacherTools/NamePicker';
-import GameSelector from '../components/TeacherTools/GameSelector';
 import DiceRoller from '../components/TeacherTools/DiceRoller';
 import GroupDivider from '@/components/TeacherTools/GroupDivider';
 import { motion } from 'framer-motion';
@@ -24,12 +23,6 @@ const TeacherTools = () => {
       name: 'Name Picker', 
       component: NamePicker,
       icon: '👥',
-      gradient: `${currentTheme.accent}`
-    },
-    { 
-      name: 'Game Selector', 
-      component: GameSelector,
-      icon: '🎮',
       gradient: `${currentTheme.accent}`
     },
     { 
