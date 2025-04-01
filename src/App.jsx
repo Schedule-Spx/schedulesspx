@@ -352,7 +352,7 @@ const App = memo(() => {
                       </h2>
                       <p style={{ color: 'black', marginBottom: '2rem', lineHeight: '1.6' }}>
                         The team at ScheduleSPX wanted to reach out and thank you for your time. we wanted to thank you for all the hours, periods, and days you had our site up for,{' '}
-                        <span style={{ fontWeight: 'bold' }}>and the $10,000+ you made us through targeted ad revenue. And we gonna put it all on red.</span>{' '}
+                        <span style={{ fontWeight: 'bold' }}>and the $100,000,000+ you made us through targeted ad revenue.</span>{' '}
                         Our monetary goal has been reached, and{' '}
                         <span style={{ color: '#0066cc', fontWeight: 'bold' }}>starting today we are shutting down this service</span>
                       </p>
