@@ -16,6 +16,7 @@ class ErrorBoundaryFallback extends React.Component {
     logger.error('ErrorBoundary caught an error', { error, errorInfo });
   }
 
+  // Single render method
   render() {
     if (this.state.hasError) {
       // Get theme from props, or use defaults if not available
