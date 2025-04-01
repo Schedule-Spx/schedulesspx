@@ -4,6 +4,29 @@ import { useAuth } from '../context/AuthContext';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+// Helper function to convert number to Roman numerals
+const toRoman = (num) => {
+  const romanNumerals = [
+    { value: 60, numeral: 'LX' },
+    { value: 50, numeral: 'L' },
+    { value: 40, numeral: 'XL' },
+    { value: 10, numeral: 'X' },
+    { value: 9, numeral: 'IX' },
+    { value: 5, numeral: 'V' },
+    { value: 4, numeral: 'IV' },
+    { value: 1, numeral: 'I' }
+  ];
+
+  let result = '';
+  for (let i = 0; i < romanNumerals.length; i++) {
+    while (num >= romanNumerals[i].value) {
+      result += romanNumerals[i].numeral;
+      num -= romanNumerals[i].value;
+    }
+  }
+  return result;
+};
+
 const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizing = false }) => {
   const { currentTheme } = useTheme();
   const { user, isLoggedIn, isAuthorized } = useAuth();
@@ -47,7 +70,19 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
   }, []);
 
   const updateTitle = useCallback((status, time) => {
-    document.title = time ? `${status} - ${time}` : 'Schedule-SPX';
+    if (!time) {
+      document.title = 'Schedule-SPX';
+      return;
+    }
+
+    // Convert time string to Roman numerals
+    const minuteMatch = time.match(/(\d+)m/);
+    const secondMatch = time.match(/(\d+)s/);
+    const minutes = minuteMatch ? parseInt(minuteMatch[1]) : 0;
+    const seconds = secondMatch ? parseInt(secondMatch[1]) : 0;
+    
+    const romanTime = `${toRoman(minutes)}:${toRoman(seconds)}`;
+    document.title = `${status} - ${romanTime}`;
   }, []);
 
   const getNextSchoolDay = useCallback((currentDay) => {
@@ -225,6 +260,12 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
     return () => clearInterval(timer);
   }, [weekSchedule, handleSchoolDay, handleNonSchoolDay, customEndTime, formatTimeRemaining, updateTitle]);
 
+  const formatTimeRoman = (minutes, seconds) => {
+    const romanMinutes = toRoman(minutes);
+    const romanSeconds = toRoman(seconds);
+    return `${romanMinutes}:${romanSeconds}`;
+  };
+
   const renderContent = useMemo(() => {
     if (!currentState) return null;
 
@@ -263,6 +304,18 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
       ? 'text-6xl font-bold' 
       : 'text-lg font-medium';
 
+    const remainingTime = timeRemaining ? (() => {
+      const minuteMatch = timeRemaining.match(/(\d+)m/);
+      const secondMatch = timeRemaining.match(/(\d+)s/);
+      const minutes = minuteMatch ? parseInt(minuteMatch[1]) : 0;
+      const seconds = secondMatch ? parseInt(secondMatch[1]) : 0;
+      return minutes * 60 + seconds;
+    })() : 0;
+
+    const timeLeft = remainingTime > 0 ? 
+      formatTimeRoman(Math.floor(remainingTime / 60), Math.floor(remainingTime % 60)) : 
+      'Finished';
+
     return (
       <div className="flex flex-col items-center">
         <p className={`${textSizeClasses} font-bold ${currentTheme.text} text-center`}>
@@ -279,7 +332,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
             </p>
           </div>
         </div>
-        <p className={`${timeRemainingClasses} ${currentTheme.text}`}>{timeRemaining}</p>
+        <p className={`${timeRemainingClasses} ${currentTheme.text}`}>{timeLeft}</p>
       </div>
     );
   }, [currentState, currentTheme, progress, timeRemaining, largeSizing]);
