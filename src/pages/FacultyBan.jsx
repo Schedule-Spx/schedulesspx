@@ -18,33 +18,6 @@ const FacultyBanPage = () => {
     const { user, isLoggedIn, getBanStatus } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const [countdown, setCountdown] = useState('');
-
-    useEffect(() => {
-        const targetDate = new Date();
-        targetDate.setHours(12, 15, 0, 0);
-        
-        // If current time is past 12:15 PM, set target to next Friday
-        if (targetDate < new Date()) {
-            targetDate.setDate(targetDate.getDate() + (12 - targetDate.getDay()));
-        } else {
-            // Set to this Friday if we haven't passed 12:15 PM
-            targetDate.setDate(targetDate.getDate() + (5 - targetDate.getDay()));
-        }
-
-        const timer = setInterval(() => {
-            const now = new Date();
-            const diff = targetDate - now;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            
-            setCountdown(`${days}d ${hours}h ${minutes}m`);
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
 
     // Check if an email should go to faculty ban page
     const isFacultyBanned = (email) => {
@@ -118,7 +91,7 @@ const FacultyBanPage = () => {
             `}</style>
             
             <h1 className="text-6xl font-bold text-red-600 mb-12 text-center">
-                {countdown} until the faculty will fall.
+                This Friday the faculty will fall.
             </h1>
             
             <p className="text-2xl mb-12 text-center text-red-400">
