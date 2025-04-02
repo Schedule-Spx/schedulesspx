@@ -47,9 +47,10 @@ const DayHeader = memo(() => {
     };
   }, [currentDateTime]);
 
-  // Get user's name for welcome message
+  // Get user's first name for welcome message
   const userName = useMemo(() => {
-    return user?.name || user?.displayName || 'Guest';
+    const fullName = user?.name || user?.displayName || 'Guest';
+    return fullName.split(' ')[0]; // Extract first name only
   }, [user]);
 
   return (

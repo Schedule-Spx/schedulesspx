@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect, memo, useCallback } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -12,6 +12,7 @@ import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import AttendanceReminderPopup from './components/AttendanceReminderPopup';
+import FacultyBanPage from './pages/FacultyBan';
 
 // Lazy load components to reduce initial bundle size
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
@@ -34,13 +35,45 @@ const LoadingFallback = memo(() => <div>Loading...</div>);
 // Konami code sequence for easter egg
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
 
+// Ban checker component to handle redirects smoothly
+function BanChecker({ children }) {
+  const { getBanStatus, shouldCheckBan } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  useEffect(() => {
+    if (!shouldCheckBan) return;
+    
+    const { isBanned, type } = getBanStatus();
+    if (!isBanned) return;
+    
+    // If already on the correct ban page, don't redirect
+    if (
+      (type === 'faculty' && location.pathname === '/facultyban') ||
+      (type === 'student' && location.pathname === '/banned')
+    ) {
+      return;
+    }
+    
+    // Redirect to appropriate ban page
+    if (type === 'faculty') {
+      navigate('/facultyban', { replace: true });
+    } else {
+      navigate('/banned', { replace: true });
+    }
+  }, [shouldCheckBan, getBanStatus, navigate, location.pathname]);
+  
+  return children;
+}
+
 function AppContent() {
-  const { user, isAuthorized, isAdmin, isStudent } = useAuth();
+  const { user, getBanStatus } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
   const [showSnakeGame, setShowSnakeGame] = useState(false);
   const [pressedKeys, setPressedKeys] = useState([]);
   const [reminderPreference, setReminderPreference] = useState(user?.reminderPreference);
-
+  const location = useLocation();
+  
   // Create memoized handler for the key event
   const handleKeyDown = useCallback((event) => {
     setPressedKeys(prev => {
@@ -71,27 +104,24 @@ function AppContent() {
     return () => clearInterval(timer);
   }, [user, reminderPreference]);
 
-  // Handle banned users
-  if (user?.isBanned) {
-    return (
-      <Router>
-        <Routes>
-          <Route path="/banned" element={<Banned />} />
-          <Route path="*" element={<Navigate to="/banned" replace />} />
-        </Routes>
-      </Router>
-    );
-  }
+  // Get ban status
+  const { isBanned, type } = getBanStatus();
+  
+  // Only show nav bar if user is not banned
+  const showNavBar = !isBanned || 
+    (location.pathname === '/banned' && type === 'student') ||
+    (location.pathname === '/facultyban' && type === 'faculty');
 
   return (
-    <Router>
-      <NavBar />
+    <>
+      {showNavBar && <NavBar />}
       <ServiceWorkerWrapper />
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/banned" element={<Banned />} />
+            <Route path="/facultyban" element={<FacultyBanPage />} />
             <Route 
               path="/main" 
               element={
@@ -147,7 +177,7 @@ function AppContent() {
             <Route 
               path="/student-tools" 
               element={
-                <PrivateRoute requireAuth={isStudent() || isAdmin()}>
+                <PrivateRoute requireAuth={user?.isStudent || user?.isAdmin}>
                   <ErrorBoundary>
                     <Suspense fallback={<div>Loading Student Tools...</div>}>
                       <StudentTools />
@@ -169,7 +199,7 @@ function AppContent() {
       {/* Conditionally render popups */}
       {showSnakeGame && <SnakeGamePopup />}
       {reminderPreference && <AttendanceReminderPopup onClose={() => setReminderPreference(false)} />}
-    </Router>
+    </>
   );
 }
 
@@ -181,7 +211,11 @@ const App = memo(() => {
         <AuthProvider>
           <ThemeProvider>
             <WeekScheduleProvider>
-              <AppContent />
+              <Router>
+                <BanChecker>
+                  <AppContent />
+                </BanChecker>
+              </Router>
             </WeekScheduleProvider>
           </ThemeProvider>
         </AuthProvider>

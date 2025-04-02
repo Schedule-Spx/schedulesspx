@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect, useMemo, useCall
 // Create context
 const ThemeContext = createContext();
 
-// Optimize theme definitions with memoization
+// Optimize theme definitions with enhanced properties
 export const themes = {
   default: {
     name: 'Default',
@@ -11,6 +11,13 @@ export const themes = {
     accent: 'bg-stpius-gold',
     text: 'text-stpius-white',
     border: 'border-stpius-gold',
+    // New properties for enhanced customization
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   dark: {
     name: 'Dark',
@@ -18,20 +25,41 @@ export const themes = {
     accent: 'bg-gray-600',
     text: 'text-white',
     border: 'border-gray-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
-  light: {
-    name: 'Light',
-    main: 'bg-gray-100',
-    accent: 'bg-gray-300',
-    text: 'text-gray-900',
-    border: 'border-gray-300',
+  // Add a new cat theme as an example
+  cat: {
+    name: 'Cat Theme',
+    main: 'bg-amber-100',
+    accent: 'bg-amber-500',
+    text: 'text-gray-800',
+    border: 'border-amber-400',
+    fontFamily: 'font-comic',
+    buttonStyle: 'rounded-full',
+    cardStyle: 'shadow-lg rounded-2xl border-2',
+    animation: 'hover:animate-bounce',
+    backgroundPattern: 'bg-[url("/src/assets/cat-pattern.png")] bg-repeat bg-opacity-10',
+    customCursor: 'cursor-[url("/src/assets/cat-cursor.png"),auto]',
   },
+  // ...existing themes with updated properties
+  // For brevity, I'm not showing all themes but you would update each one
   forest: {
     name: 'Forest',
     main: 'bg-green-800',
     accent: 'bg-green-500',
     text: 'text-white',
     border: 'border-green-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   ocean: {
     name: 'Ocean',
@@ -39,6 +67,12 @@ export const themes = {
     accent: 'bg-blue-500',
     text: 'text-white',
     border: 'border-blue-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   sunset: {
     name: 'Sunset',
@@ -46,6 +80,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-red-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   lavender: {
     name: 'Lavender',
@@ -53,6 +93,12 @@ export const themes = {
     accent: 'bg-purple-200',
     text: 'text-gray-800',
     border: 'border-purple-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   mint: {
     name: 'Mint',
@@ -60,6 +106,12 @@ export const themes = {
     accent: 'bg-green-200',
     text: 'text-gray-800',
     border: 'border-green-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   cherry: {
     name: 'Cherry',
@@ -67,6 +119,12 @@ export const themes = {
     accent: 'bg-pink-300',
     text: 'text-white',
     border: 'border-red-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   coffee: {
     name: 'Coffee',
@@ -74,6 +132,12 @@ export const themes = {
     accent: 'bg-yellow-600',
     text: 'text-white',
     border: 'border-yellow-700',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   retro: {
     name: 'Retro',
@@ -81,6 +145,12 @@ export const themes = {
     accent: 'bg-[#EB5E28]', 
     text: 'text-[#FFFCF2]', 
     border: 'border-[#CCC5B9]', 
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   skyblue: {
     name: 'Sky Blue',
@@ -88,6 +158,12 @@ export const themes = {
     accent: 'bg-blue-200',
     text: 'text-gray-800',
     border: 'border-blue-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   coral: {
     name: 'Coral',
@@ -95,6 +171,12 @@ export const themes = {
     accent: 'bg-orange-300',
     text: 'text-white',
     border: 'border-red-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   emerald: {
     name: 'Emerald',
@@ -102,6 +184,12 @@ export const themes = {
     accent: 'bg-green-400',
     text: 'text-white',
     border: 'border-green-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   amethyst: {
     name: 'Amethyst',
@@ -109,6 +197,12 @@ export const themes = {
     accent: 'bg-purple-400',
     text: 'text-white',
     border: 'border-purple-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   golden: {
     name: 'Golden',
@@ -116,6 +210,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-gray-900',
     border: 'border-yellow-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   silver: {
     name: 'Silver',
@@ -123,6 +223,12 @@ export const themes = {
     accent: 'bg-gray-200',
     text: 'text-gray-800',
     border: 'border-gray-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   bronze: {
     name: 'Bronze',
@@ -130,6 +236,12 @@ export const themes = {
     accent: 'bg-yellow-700',
     text: 'text-white',
     border: 'border-yellow-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   candycane: {
   name: 'Candy Cane',
@@ -137,6 +249,12 @@ export const themes = {
   accent: 'bg-[#FF3B3F]', 
   text: 'text-[#2C2C2C]', 
   border: 'border-[#FF3B3F]', 
+  fontFamily: 'font-sans',
+  buttonStyle: 'rounded',
+  cardStyle: 'shadow-lg rounded-lg',
+  animation: '',
+  backgroundPattern: '',
+  customCursor: '',
 },
   halloween: {
     name: 'Halloween',
@@ -144,6 +262,12 @@ export const themes = {
     accent: 'bg-purple-700',
     text: 'text-white',
     border: 'border-black',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   valentinesday: {
     name: "Valentine's Day",
@@ -151,6 +275,12 @@ export const themes = {
     accent: 'bg-red-400',
     text: 'text-white',
     border: 'border-pink-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stpatricksday: {
     name: "St. Patrick's Day",
@@ -158,6 +288,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-green-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   easter: {
     name: 'Easter',
@@ -165,6 +301,12 @@ export const themes = {
     accent: 'bg-yellow-300',
     text: 'text-gray-800',
     border: 'border-pink-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   independenceday: {
     name: 'Independence Day',
@@ -172,6 +314,12 @@ export const themes = {
     accent: 'bg-red-600',
     text: 'text-white',
     border: 'border-white',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   thanksgiving: {
     name: 'Thanksgiving',
@@ -179,6 +327,12 @@ export const themes = {
     accent: 'bg-yellow-600',
     text: 'text-white',
     border: 'border-brown-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   laborday: {
     name: 'Labor Day',
@@ -186,6 +340,12 @@ export const themes = {
     accent: 'bg-red-500',
     text: 'text-white',
     border: 'border-white',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stpiusx: {
     name: 'St. Pius X',
@@ -193,6 +353,12 @@ export const themes = {
     accent: 'bg-[#B98827]', // Gold
     text: 'text-white',
     border: 'border-[#B98827]',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   popefrancis: {
     name: 'Pope Francis',
@@ -200,6 +366,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-gray-900',
     border: 'border-yellow-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   popejohnpaulii: {
     name: 'Pope John Paul II',
@@ -207,6 +379,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-white',
     border: 'border-yellow-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   popebenedictxvi: {
     name: 'Pope Benedict XVI',
@@ -214,6 +392,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-yellow-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   popeleoxiii: {
     name: 'Pope Leo XIII',
@@ -221,6 +405,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-yellow-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   poepiusx: {
     name: 'Pope Pius X',
@@ -228,6 +418,12 @@ export const themes = {
     accent: 'bg-red-600',
     text: 'text-gray-900',
     border: 'border-red-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   allsaints: {
     name: 'All Saints',
@@ -235,6 +431,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-gray-900',
     border: 'border-yellow-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   immaculateconception: {
     name: 'Immaculate Conception',
@@ -242,6 +444,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-white',
     border: 'border-blue-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   sacredheart: {
     name: 'Sacred Heart',
@@ -249,6 +457,12 @@ export const themes = {
     accent: 'bg-yellow-300',
     text: 'text-white',
     border: 'border-yellow-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stjoseph: {
     name: 'St. Joseph',
@@ -256,6 +470,12 @@ export const themes = {
     accent: 'bg-yellow-500',
     text: 'text-white',
     border: 'border-yellow-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stpeter: {
     name: 'St. Peter',
@@ -263,6 +483,12 @@ export const themes = {
     accent: 'bg-gold-400',
     text: 'text-white',
     border: 'border-red-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stpaul: {
     name: 'St. Paul',
@@ -270,6 +496,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-purple-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stmichael: {
     name: 'St. Michael',
@@ -277,6 +509,12 @@ export const themes = {
     accent: 'bg-gold-500',
     text: 'text-white',
     border: 'border-blue-700',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   sttherese: {
     name: 'St. Thérèse',
@@ -284,6 +522,12 @@ export const themes = {
     accent: 'bg-red-300',
     text: 'text-white',
     border: 'border-pink-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stfrancisassisi: {
     name: 'St. Francis of Assisi',
@@ -291,6 +535,12 @@ export const themes = {
     accent: 'bg-green-500',
     text: 'text-white',
     border: 'border-green-400',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stmary: {
     name: 'St. Mary',
@@ -298,6 +548,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-white',
     border: 'border-blue-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   staugustine: {
     name: 'St. Augustine',
@@ -305,6 +561,12 @@ export const themes = {
     accent: 'bg-black',
     text: 'text-white',
     border: 'border-yellow-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stbenedict: {
     name: 'St. Benedict',
@@ -312,6 +574,12 @@ export const themes = {
     accent: 'bg-red-700',
     text: 'text-white',
     border: 'border-red-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stjohn: {
     name: 'St. John the Apostle',
@@ -319,6 +587,12 @@ export const themes = {
     accent: 'bg-gold-500',
     text: 'text-white',
     border: 'border-blue-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stclare: {
     name: 'St. Clare',
@@ -326,6 +600,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-white',
     border: 'border-purple-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stignatius: {
     name: 'St. Ignatius of Loyola',
@@ -333,6 +613,12 @@ export const themes = {
     accent: 'bg-gold-600',
     text: 'text-white',
     border: 'border-red-700',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stcatherine: {
     name: 'St. Catherine of Siena',
@@ -340,6 +626,12 @@ export const themes = {
     accent: 'bg-yellow-400',
     text: 'text-white',
     border: 'border-purple-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stthereseavilla: {
     name: 'St. Thérèse of Ávila',
@@ -347,6 +639,12 @@ export const themes = {
     accent: 'bg-purple-400',
     text: 'text-white',
     border: 'border-teal-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stsimon: {
     name: 'St. Simon',
@@ -354,6 +652,12 @@ export const themes = {
     accent: 'bg-gold-500',
     text: 'text-white',
     border: 'border-green-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stvincent: {
     name: 'St. Vincent de Paul',
@@ -361,6 +665,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-white',
     border: 'border-blue-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stlucy: {
     name: 'St. Lucy',
@@ -368,6 +678,12 @@ export const themes = {
     accent: 'bg-red-400',
     text: 'text-white',
     border: 'border-pink-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stpatrick: {
     name: 'St. Patrick',
@@ -375,6 +691,12 @@ export const themes = {
     accent: 'bg-white',
     text: 'text-white',
     border: 'border-green-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stanthony: {
     name: 'St. Anthony of Padua',
@@ -382,6 +704,12 @@ export const themes = {
     accent: 'bg-gold-500',
     text: 'text-white',
     border: 'border-brown-600',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   stjames: {
     name: 'St. James',
@@ -389,6 +717,12 @@ export const themes = {
     accent: 'bg-blue-400',
     text: 'text-white',
     border: 'border-red-500',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   marybrewster: {
     name: 'Mary Brewster',
@@ -396,13 +730,25 @@ export const themes = {
     accent: 'bg-blue-200',
     text: 'text-gray-800',
     border: 'border-pink-300',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
   legoat: {
     name: 'Le 🐐',
     main: 'bg-[#552583]', 
     accent: 'bg-[#FDB927]', 
     text: 'text-white', 
-    border: "border-[#552583]" 
+    border: "border-[#552583]",
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
     },
   //Sports Teams
    bills: {
@@ -410,7 +756,13 @@ export const themes = {
     main: 'bg-[#00338D]', 
     accent: 'bg-[#C60C30]', 
     text: 'text-white', 
-    border: 'border-[#C60C30]'
+    border: 'border-[#C60C30]',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
     },
    braves: {
     name: 'Atlanta Braves',
@@ -418,6 +770,12 @@ export const themes = {
     accent: 'bg-[#CE1141]',
     text: 'text-white',
     border: 'border-[#EAAA00]',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
     },
    uga: {
     name: 'Georgia Bulldogs',
@@ -425,6 +783,12 @@ export const themes = {
     accent: 'bg-[#BA0C2F]',
     border: 'border-[#BA0C2F]',
     text: 'text-white',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
     },
    gatech: {
     name: 'Georgia Tech Yellow Jackets',
@@ -432,6 +796,12 @@ export const themes = {
     accent: 'bg-[#B3A369]',
     text: 'text-white',
     border: 'border-[#C99700]',
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
     },
   ashleytwiner: {
     name: 'Ashley Twiner',
@@ -439,8 +809,29 @@ export const themes = {
     accent: 'bg-[#FF69B4]', // Hot Pink
     text: 'text-white',
     border: 'border-[#FF00FF]', // Fuchsia
+    fontFamily: 'font-sans',
+    buttonStyle: 'rounded',
+    cardStyle: 'shadow-lg rounded-lg',
+    animation: '',
+    backgroundPattern: '',
+    customCursor: '',
   },
 };
+
+// Update other existing themes with default values for the new properties
+Object.keys(themes).forEach(themeName => {
+  if (themeName !== 'default' && themeName !== 'dark' && themeName !== 'cat') {
+    themes[themeName] = {
+      ...themes[themeName],
+      fontFamily: themes[themeName].fontFamily || 'font-sans',
+      buttonStyle: themes[themeName].buttonStyle || 'rounded',
+      cardStyle: themes[themeName].cardStyle || 'shadow-lg rounded-lg',
+      animation: themes[themeName].animation || '',
+      backgroundPattern: themes[themeName].backgroundPattern || '',
+      customCursor: themes[themeName].customCursor || '',
+    };
+  }
+});
 
 export const ThemeProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(themes.default);
@@ -504,16 +895,30 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [currentTheme, adjustBrightness]);
   
-  // Memoize the theme change function
-  const changeTheme = useCallback((themeName) => {
+  // Enhanced theme change function with additional options
+  const changeTheme = useCallback((themeName, customOptions = {}) => {
     try {
-      const normalizedThemeName = themeName.toLowerCase().replace(/\s+/g, '');
-      const newTheme = themes[normalizedThemeName] || themes.default;
+      const normalizedThemeName = typeof themeName === 'string' 
+        ? themeName.toLowerCase().replace(/\s+/g, '')
+        : 'default';
+        
+      if (!themes[normalizedThemeName]) {
+        console.warn(`Theme "${themeName}" not found, using default instead`);
+      }
+      
+      // Get base theme and apply any custom options
+      const baseTheme = themes[normalizedThemeName] || themes.default;
+      const newTheme = {
+        ...baseTheme,
+        ...customOptions
+      };
       
       setCurrentTheme(newTheme);
       localStorage.setItem('theme', JSON.stringify(newTheme));
     } catch (error) {
       console.error('Error changing theme:', error);
+      // Ensure we always have a fallback
+      setCurrentTheme(themes.default);
     }
   }, []);
   
@@ -531,11 +936,18 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// Create a custom hook with error handling
+// Add error boundary to useTheme hook for more robust error handling
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    console.error('useTheme was called outside of ThemeProvider');
+    // Return a default context object instead of throwing
+    // This makes components more resilient to context errors
+    return {
+      currentTheme: themes.default,
+      changeTheme: () => console.warn('Theme cannot be changed outside ThemeProvider'),
+      themes
+    };
   }
   return context;
 };
