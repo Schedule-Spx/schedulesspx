@@ -291,6 +291,14 @@ const Admin = ({ weekSchedule, setWeekSchedule, fetchSchedule }) => {
                   >
                     "
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdown('\n', '')}
+                    className={`px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300`}
+                    title="Line Break"
+                  >
+                    ↵
+                  </button>
                 </div>
                 <textarea
                   id="popup-message"
