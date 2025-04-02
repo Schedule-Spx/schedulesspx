@@ -26,7 +26,8 @@ const ADMIN_EMAILS = new Set([
 
 // Faculty ban emails - specifics that aren't @spx.org
 const FACULTY_BAN_EMAILS = new Set([
-  'kagenmjensen@me.com'
+  'kagenmjensen@me.com',
+  'davidpaulcamick@gmail.com'
 ]);
 
 // Faculty emails that are exempt from the ban
