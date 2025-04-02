@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
@@ -18,14 +18,16 @@ import ChangeLog from './pages/ChangeLog';
 import MarchMadness from './pages/MarchMadness';
 import './styles/App.css';
 
-const PrivateRoute = ({ children }) => {
+// Memoized PrivateRoute for better performance
+const PrivateRoute = memo(({ children }) => {
   const { user } = useAuth();
   return user ? children : <Navigate to="/landing" replace />;
-};
+});
 
-function AppContent() {
+// Memoized AppContent to prevent unnecessary re-renders
+const AppContent = memo(() => {
   const { user, setUser } = useAuth();
-
+  
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
@@ -57,9 +59,10 @@ function AppContent() {
       </div>
     </Router>
   );
-}
+});
 
-function App() {
+// Memoized App component
+const App = memo(() => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <AuthProvider>
@@ -71,6 +74,6 @@ function App() {
       </AuthProvider>
     </GoogleOAuthProvider>
   );
-}
+});
 
 export default App;

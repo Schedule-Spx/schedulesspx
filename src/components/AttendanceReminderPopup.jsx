@@ -1,30 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const AttendanceReminderPopup = ({ onClose }) => {
+// Constants
+const REMINDER_DELAY = 8 * 60 * 1000; // 8 minutes in milliseconds
+
+// Memoized button component for better performance
+const Button = memo(({ onClick, className, children }) => (
+  <button
+    onClick={onClick}
+    className={className}
+  >
+    {children}
+  </button>
+));
+
+// Main component
+const AttendanceReminderPopup = memo(({ onClose }) => {
   const { user, updateReminderPreference } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
+  // Setup timer only once when component mounts
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (user?.isTeacher && user?.reminderPreference) {
+    // Only set timer if user is a teacher with reminder preference enabled
+    if (user?.isTeacher && user?.reminderPreference) {
+      const timer = setTimeout(() => {
         setIsVisible(true);
-      }
-    }, 8 * 60 * 1000); // 8 minutes
-
-    return () => clearTimeout(timer);
+      }, REMINDER_DELAY);
+      
+      // Clean up timer when component unmounts
+      return () => clearTimeout(timer);
+    }
   }, [user]);
 
-  const handleClose = () => {
+  // Memoize handlers to prevent recreation on each render
+  const handleClose = useCallback(() => {
     setIsVisible(false);
     onClose();
-  };
+  }, [onClose]);
 
-  const handleTurnOffReminder = () => {
+  const handleTurnOffReminder = useCallback(() => {
     updateReminderPreference(false);
     setIsVisible(false);
-  };
+  }, [updateReminderPreference]);
 
+  // Early return for performance
   if (!isVisible) return null;
 
   return (
@@ -34,21 +53,21 @@ const AttendanceReminderPopup = ({ onClose }) => {
         <h2 className="text-xl font-bold mb-4">Attendance Reminder</h2>
         <p className="mb-4">You have 2 minutes to submit your attendance.</p>
         <p className="mb-4">If you want to turn off this reminder, you can do so on the account page.</p>
-        <button
+        <Button
           onClick={handleClose}
           className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
         >
           Close
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleTurnOffReminder}
           className="bg-red-500 text-white px-4 py-2 rounded"
         >
           Turn Off Reminder
-        </button>
+        </Button>
       </div>
     </div>
   );
-};
+});
 
 export default AttendanceReminderPopup;

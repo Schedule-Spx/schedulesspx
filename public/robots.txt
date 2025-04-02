@@ -1,3 +1,10 @@
-# https://www.robotstxt.org/robotstxt.html
+# Allow all web crawlers
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap location
+Sitemap: https://schedule-spx.web.app/sitemap.xml
+
+# Specify areas that don't need to be crawled
+Disallow: /api/
+Disallow: /auth/

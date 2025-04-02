@@ -78,26 +78,8 @@ define(['./workbox-d6af67a1'], (function (workbox) { 'use strict';
    * See https://goo.gl/S9QRab
    */
   workbox.precacheAndRoute([{
-    "url": "android-chrome-192x192.png",
-    "revision": "b015b9cd7a113514b0faaa204e5366c7"
-  }, {
-    "url": "android-chrome-512x512.png",
-    "revision": "e1ff038bf992de44ef9a06ce469a600f"
-  }, {
-    "url": "apple-touch-icon.png",
-    "revision": "6f5baed9a5a628cde1ade5fae560c5a6"
-  }, {
-    "url": "favicon-16x16.png",
-    "revision": "6e1a701717c69c73f9d31112aadf5098"
-  }, {
-    "url": "favicon-32x32.png",
-    "revision": "4132ab3983a93c0fd55913913d90c184"
-  }, {
-    "url": "favicon.ico",
-    "revision": "2427a59e3e06eb6811bcab507044cee1"
-  }, {
     "url": "index.html",
-    "revision": "0.rcgl7e48f34"
+    "revision": "0.jhvg7833fg4"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
