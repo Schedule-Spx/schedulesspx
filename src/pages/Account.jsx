@@ -185,6 +185,21 @@ const Account = ({ weekSchedule }) => {
     return null; // Return nothing as we're handling the redirect in useEffect
   }
   
+  // Change Log section - fixing the syntax errors in the JSX
+  const renderChangeLogSection = () => (
+    <div className={`${currentTheme.main} border ${currentTheme.border} ${currentTheme.cardStyle} p-6`}>
+      <h2 className={`text-xl font-bold mb-4 text-center ${currentTheme.fontFamily}`}>Change Log</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center">
+        <Link 
+          to="/changelog" 
+          className={`${currentTheme.accent} text-white font-bold py-2 px-4 ${currentTheme.buttonStyle} w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200 ${currentTheme.animation}`}
+        >
+          View Change Log
+        </Link>
+      </div>
+    </div>
+  );
+  
   logger.debug("Account - Rendering account information");
   return (
     <div 
@@ -314,18 +329,8 @@ const Account = ({ weekSchedule }) => {
           </div>
         </div>
         
-        {/* Change Log section */}
-        <div className={`${currentTheme.main} border ${currentTheme.border} ${currentTheme.cardStyle} p-6`}>
-          <h2 className={`text-xl font-bold mb-4 text-center ${currentTheme.fontFamily}`}>Change Log</h2>
-          <div className="flex flex-col sm:flex-row justify-between items-center">
-            <Link 
-              to="/changelog" 
-              className={`${currentTheme.accent} text-white font-bold py-2 px-4 ${currentTheme.buttonStyle} w-full sm:w-auto text-center hover:opacity-80 transition-opacity duration-200 ${currentTheme.animation}`}
-            ></Link>
-              View Change Log
-            </Link>
-          </div>
-        </div>
+        {/* Change Log section - Fixed version */}
+        {renderChangeLogSection()}
       </div>
     </div>
   );
