@@ -62,7 +62,7 @@ const DayHeader = memo(() => {
         {/* Header with welcome message across top */}
         <div className="mb-1">
           <div className={`text-2xl font-bold tracking-wide ${currentTheme.text} text-center`}>
-            Welcome {userName}!
+            Welcome, {userName}!
           </div>
           
           <div className="flex justify-between items-center mt-1">
