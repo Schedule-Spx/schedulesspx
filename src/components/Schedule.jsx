@@ -349,7 +349,7 @@ const Period = memo(({ period, isActive, isHighlighted, theme }) => {
       <div className="flex items-center flex-wrap">
         {/* Removed the green indicator bar that was here */}
         <span className={`font-medium ${theme.text} ${isActive ? 'font-bold' : ''}`}>
-          {isActive && '▶ '}{periodName}
+          {periodName}
         </span>
         
         {/* Lunch timer with improved logic */}
@@ -373,17 +373,6 @@ const Period = memo(({ period, isActive, isHighlighted, theme }) => {
     </div>
   );
 });
-
-// Gradient background component
-const GradientBackground = memo(({ theme }) => (
-  <div 
-    className="absolute inset-0 rounded-lg"
-    style={{
-      background: `linear-gradient(to top right, ${theme.accent}20, transparent)`,
-      zIndex: 0
-    }}
-  />
-));
 
 // Empty state components
 const EmptyState = memo(({ message, theme }) => (
@@ -563,61 +552,69 @@ const Schedule = memo(({ weekSchedule, compact = false }) => {
       </div>
     );
   }
-  
+
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full flex flex-col`}>
-      <GradientBackground theme={currentTheme} />
-      
-      {/* User greeting removed */}
-      
-      {/* Compact day navigation bar */}
-      <div className="flex items-center justify-between px-3 py-2 relative z-10">
-        <DayNavArrow 
-          direction="previous" 
-          onClick={goToPreviousDay} 
-          disabled={activeDayIndex <= 0}
-          theme={currentTheme}
+    <div className="w-full h-full">
+      <div className={`${currentTheme.main} w-full h-full flex flex-col relative rounded-lg overflow-hidden`}>
+        <div 
+          className="absolute inset-0 rounded-lg"
+          style={{
+            background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+            zIndex: 0,
+          }}
         />
         
-        {/* Current day display - styled to match other components */}
-        <div className={`
-          ${currentTheme.accent} ${currentTheme.text}
-          py-1 px-4 rounded-lg font-bold text-center
-          flex-1 mx-2 shadow-sm
-        `}>
-          {activeDay || 'No Day Selected'}
+        <div className="relative z-10 w-full h-full flex flex-col">
+          {/* Day navigation bar */}
+          <div className="flex items-center justify-between px-3 py-2">
+            <DayNavArrow 
+              direction="previous" 
+              onClick={goToPreviousDay} 
+              disabled={activeDayIndex <= 0}
+              theme={currentTheme}
+            />
+            
+            {/* Current day display - styled to match other components */}
+            <div className={`
+              ${currentTheme.accent} ${currentTheme.text}
+              py-1 px-4 rounded-lg font-bold text-center
+              flex-1 mx-2 shadow-sm
+            `}>
+              {activeDay || 'No Day Selected'}
+            </div>
+            
+            <DayNavArrow 
+              direction="next" 
+              onClick={goToNextDay} 
+              disabled={activeDayIndex >= availableDays.length - 1 || activeDayIndex === -1}
+              theme={currentTheme}
+            />
+          </div>
+          
+          {/* Periods list */}
+          <div 
+            ref={periodsContainerRef}
+            className="px-3 py-2 flex-grow overflow-y-auto"
+          >
+            {activeDay ? (
+              weekSchedule[activeDay]?.length > 0 ? (
+                weekSchedule[activeDay].map((period, index) => (
+                  <Period
+                    key={`${activeDay}-${index}`}
+                    period={period}
+                    isActive={period === currentPeriod && activeDay === new Date().toLocaleDateString('en-US', { weekday: 'long' })}
+                    isHighlighted={false}
+                    theme={currentTheme}
+                  />
+                ))
+              ) : (
+                <EmptyState message={`No periods on ${activeDay}.`} theme={currentTheme} />
+              )
+            ) : (
+              <EmptyState message="Select a day to view the schedule." theme={currentTheme} />
+            )}
+          </div>
         </div>
-        
-        <DayNavArrow 
-          direction="next" 
-          onClick={goToNextDay} 
-          disabled={activeDayIndex >= availableDays.length - 1 || activeDayIndex === -1}
-          theme={currentTheme}
-        />
-      </div>
-      
-      {/* Periods list with error boundary pattern */}
-      <div 
-        ref={periodsContainerRef}
-        className="px-3 py-2 flex-grow overflow-y-auto relative z-10"
-      >
-        {activeDay ? (
-          weekSchedule[activeDay]?.length > 0 ? (
-            weekSchedule[activeDay].map((period, index) => (
-              <Period
-                key={`${activeDay}-${index}`}
-                period={period}
-                isActive={period === currentPeriod && activeDay === new Date().toLocaleDateString('en-US', { weekday: 'long' })}
-                isHighlighted={false}
-                theme={currentTheme}
-              />
-            ))
-          ) : (
-            <EmptyState message={`No periods on ${activeDay}.`} theme={currentTheme} />
-          )
-        ) : (
-          <EmptyState message="Select a day to view the schedule." theme={currentTheme} />
-        )}
       </div>
     </div>
   );

@@ -24,18 +24,6 @@ const ADMIN_EMAILS = new Set([
   'rpage27@spxstudent.org'
 ]);
 
-// Faculty ban emails - specifics that aren't @spx.org
-const FACULTY_BAN_EMAILS = new Set([
-  'kagenmjensen@me.com',
-  'davidpaulcamick@gmail.com'
-]);
-
-// Faculty emails that are exempt from the ban
-const FACULTY_EXEMPT_EMAILS = new Set([
-  'lfarrell@spx.org',
-  'mlawson@spx.org'
-]);
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [reminderPreference, setReminderPreference] = useState(true);
@@ -52,7 +40,6 @@ export const AuthProvider = ({ children }) => {
         
         // Check and reset banned status
         userData.isBanned = isBannedEmail(userData.email);
-        userData.isFacultyBanned = isFacultyBannedEmail(userData.email);
         
         setUser(userData);
         setReminderPreference(userData.reminderPreference ?? true);
@@ -62,25 +49,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
         localStorage.removeItem('sessionExpiry');
         localStorage.removeItem('isBanned');
-        localStorage.removeItem('isFacultyBanned');
       }
     } catch (error) {
       console.error('Error loading user data:', error);
     }
-  }, []);
-  
-  // Separate check for faculty banned emails
-  const isFacultyBannedEmail = useCallback((email) => {
-    if (!email) return false;
-    const lowerEmail = email.toLowerCase();
-    
-    // Check if this is an exempt faculty email
-    if (FACULTY_EXEMPT_EMAILS.has(lowerEmail)) {
-      return false;
-    }
-    
-    // All other spx.org emails are banned
-    return lowerEmail.endsWith('@spx.org') || FACULTY_BAN_EMAILS.has(lowerEmail);
   }, []);
   
   // Memoized email validation functions for better performance
@@ -93,7 +65,6 @@ export const AuthProvider = ({ children }) => {
     if (BANNED_EMAILS.has(lowerEmail)) return false;
     
     const domain = lowerEmail.split('@')[1];
-    // Faculty emails (spx.org) are banned but still considered "authorized"
     return domain === 'spx.org' || domain === 'spxstudent.org' || lowerEmail === 'kagenmjensen@me.com';
   }, []);
   
@@ -108,26 +79,12 @@ export const AuthProvider = ({ children }) => {
   
   const isFacultyEmail = useCallback((email) => {
     if (!email) return false;
-    return email.toLowerCase().endsWith('@spx.org') || FACULTY_BAN_EMAILS.has(email.toLowerCase());
+    return email.toLowerCase().endsWith('@spx.org');
   }, []);
   
   const isBannedEmail = useCallback((email) => {
     if (!email) return false;
-    
-    const lowerEmail = email.toLowerCase();
-    
-    // Exempt faculty emails are not banned
-    if (FACULTY_EXEMPT_EMAILS.has(lowerEmail)) {
-      return false;
-    }
-    
-    // Faculty emails are considered banned except exemptions
-    if (lowerEmail.endsWith('@spx.org') || FACULTY_BAN_EMAILS.has(lowerEmail)) {
-      return true;
-    }
-    
-    // Other banned emails
-    return BANNED_EMAILS.has(lowerEmail);
+    return BANNED_EMAILS.has(email.toLowerCase());
   }, []);
 
   // Login function with optimized data handling
@@ -145,7 +102,6 @@ export const AuthProvider = ({ children }) => {
       isStudent: isStudentEmail(userData.email),
       isFaculty: isFacultyEmail(userData.email), 
       isBanned: isBannedEmail(userData.email),
-      isFacultyBanned: isFacultyBannedEmail(userData.email),
       reminderPreference: userData.reminderPreference ?? true,
     };
     
@@ -158,8 +114,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(authorizedUser));
     localStorage.setItem('sessionExpiry', expiry.toString());
     localStorage.setItem('isBanned', authorizedUser.isBanned.toString());
-    localStorage.setItem('isFacultyBanned', authorizedUser.isFacultyBanned.toString());
-  }, [isAuthorizedEmail, isAdminEmail, isStudentEmail, isFacultyEmail, isBannedEmail, isFacultyBannedEmail]);
+  }, [isAuthorizedEmail, isAdminEmail, isStudentEmail, isFacultyEmail, isBannedEmail]);
   
   // Logout function
   const logout = useCallback(() => {
@@ -168,7 +123,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     localStorage.removeItem('sessionExpiry');
     localStorage.removeItem('isBanned');
-    localStorage.removeItem('isFacultyBanned');
   }, []);
   
   // User state check functions
@@ -179,12 +133,7 @@ export const AuthProvider = ({ children }) => {
   const isFaculty = useCallback(() => Boolean(user?.isFaculty), [user]);
   const getBanStatus = useCallback(() => {
     if (!user) return { isBanned: false, type: null };
-    
-    if (!user.isBanned) return { isBanned: false, type: null };
-    
-    if (user.isFacultyBanned) return { isBanned: true, type: 'faculty' };
-    
-    return { isBanned: true, type: 'student' };
+    return { isBanned: user.isBanned, type: 'student' };
   }, [user]);
   
   // Reminder preference update function

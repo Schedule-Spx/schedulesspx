@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -225,6 +225,80 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
     return () => clearInterval(timer);
   }, [weekSchedule, handleSchoolDay, handleNonSchoolDay, customEndTime, formatTimeRemaining, updateTitle]);
 
+  const getProgressBar = (progress, progressBarClasses) => {
+    const containerWidth = containerRef.current?.offsetWidth || 700;
+    const containerHeight = containerRef.current?.offsetHeight || 155;
+    
+    const useCircular = containerHeight > containerWidth;
+
+    if (useCircular) {
+      const size = Math.min(containerWidth, containerHeight) * 0.8;
+      const strokeWidth = Math.max(size * 0.05, 8);
+      const radius = (size - strokeWidth) / 2;
+      const circumference = 2 * Math.PI * radius;
+      const strokeDashoffset = circumference - (progress / 100) * circumference;
+
+      return (
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className="relative" style={{ width: size, height: size }}>
+            <svg className="transform -rotate-90 w-full h-full" viewBox={`0 0 ${size} ${size}`}>
+              {/* Background circle */}
+              <circle
+                style={{
+                  stroke: 'currentColor',
+                  opacity: 0.2
+                }}
+                strokeWidth={strokeWidth}
+                fill="none"
+                r={radius}
+                cx={size / 2}
+                cy={size / 2}
+              />
+              {/* Progress circle */}
+              <circle
+                style={{
+                  stroke: 'currentColor',
+                  transition: 'stroke-dashoffset 1s ease-in-out'
+                }}
+                strokeWidth={strokeWidth}
+                fill="none"
+                r={radius}
+                cx={size / 2}
+                cy={size / 2}
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className={`${containerHeight > 300 ? 'text-4xl' : 'text-2xl'} font-bold ${currentTheme.text}`}>
+                {progress.toFixed(1)}%
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Default linear progress bar
+    return (
+      <div className={`w-full bg-opacity-20 ${currentTheme.main} rounded-full ${progressBarClasses} relative overflow-hidden`}>
+        <div 
+          className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
+          style={{width: `${progress}%`}}
+        ></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <p className={`${largeSizing ? 'text-2xl' : 'text-sm'} font-semibold ${currentTheme.text} z-10`}>
+            {progress.toFixed(1)}%
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  // Add ref to main container
+  const containerRef = useRef(null);
+
   const renderContent = useMemo(() => {
     if (!currentState) return null;
 
@@ -268,17 +342,7 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
         <p className={`${textSizeClasses} font-bold ${currentTheme.text} text-center`}>
           {getStatusText()}
         </p>
-        <div className={`w-full bg-opacity-20 ${currentTheme.main} rounded-full ${progressBarClasses} relative overflow-hidden`}>
-          <div 
-            className={`${currentTheme.accent} h-full rounded-full transition-all duration-1000 ease-in-out absolute top-0 left-0`} 
-            style={{width: `${progress}%`}}
-          ></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className={`${largeSizing ? 'text-2xl' : 'text-sm'} font-semibold ${currentTheme.text} z-10`}>
-              {progress.toFixed(1)}%
-            </p>
-          </div>
-        </div>
+        {getProgressBar(progress, progressBarClasses)}
         <p className={`${timeRemainingClasses} ${currentTheme.text}`}>{timeRemaining}</p>
       </div>
     );
@@ -304,16 +368,20 @@ const PeriodProgress = ({ weekSchedule, lastSchoolDay, customEndTime, largeSizin
 
   console.log("PeriodProgress - Rendering period progress");
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative ${largeSizing ? 'p-10' : 'p-5'}`}>
-      <div 
-        className="absolute inset-0 rounded-lg"
-        style={{
-          background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
-          zIndex: 0,
-        }}
-      ></div>
-      <div className={`relative z-10 ${largeSizing ? 'pt-4' : ''}`}>
-        {renderContent}
+    <div className="w-full h-full" ref={containerRef}>
+      <div className={`${currentTheme.main} w-full h-full flex flex-col justify-center relative rounded-lg overflow-hidden`}>
+        <div 
+          className="absolute inset-0 rounded-lg"
+          style={{
+            background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+            zIndex: 0,
+          }}
+        ></div>
+        <div className={`relative z-10 flex flex-col items-center justify-center h-full px-4`}>
+          <div className="w-full max-w-3xl">
+            {renderContent}
+          </div>
+        </div>
       </div>
     </div>
   );

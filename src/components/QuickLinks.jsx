@@ -62,21 +62,28 @@ const QuickLinks = memo(() => {
   }, [links]);
   
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full border-2 ${currentTheme.border} relative h-full`}>
-      <GradientOverlay />
-      
-      <div className="p-4 relative z-10 h-full flex flex-col">
-        <h2 className={`text-xl font-bold ${currentTheme.text} mb-3 text-center`}>Quick Links</h2>
-        <div className="space-y-2 flex-grow flex flex-col justify-center">
-          {links.map(link => (
-            <QuickLink
-              key={link.id}
-              href={link.url}
-              fadeIn={visibleLinks.includes(link.id)}
-            >
-              {link.name}
-            </QuickLink>
-          ))}
+    <div className="w-full h-full">
+      <div className={`${currentTheme.main} w-full h-full flex flex-col relative rounded-lg overflow-hidden`}>
+        <div 
+          className="absolute inset-0 rounded-lg"
+          style={{
+            background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+            zIndex: 0,
+          }}
+        />
+        <div className="p-4 relative z-10 h-full flex flex-col">
+          <h2 className={`text-xl font-bold ${currentTheme.text} mb-3 text-center`}>Quick Links</h2>
+          <div className="space-y-2 flex-grow flex flex-col justify-center">
+            {links.map(link => (
+              <QuickLink
+                key={link.id}
+                href={link.url}
+                fadeIn={visibleLinks.includes(link.id)}
+              >
+                {link.name}
+              </QuickLink>
+            ))}
+          </div>
         </div>
       </div>
     </div>

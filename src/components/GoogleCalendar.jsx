@@ -157,19 +157,36 @@ const GoogleCalendar = memo(() => {
   if (Object.keys(events).length === 0) return <CalendarState message="No upcoming events" theme={currentTheme} />;
 
   return (
-    <div className={`${currentTheme.main} rounded-lg shadow-lg w-full h-full border-2 ${currentTheme.border} relative overflow-hidden`}>
-      <GradientOverlay />
-      <div className="p-4 overflow-y-auto relative z-10 h-full">
-        {Object.entries(events).map(([date, dayEvents]) => (
-          <DayEvents 
-            key={date}
-            date={date}
-            events={filterEvents(dayEvents)}
-            theme={currentTheme}
-            formatDate={formatDate}
-            formatTime={formatTime}
-          />
-        ))}
+    <div className="w-full h-full">
+      <div className={`${currentTheme.main} w-full h-full flex flex-col relative rounded-lg overflow-hidden`}>
+        <div 
+          className="absolute inset-0 rounded-lg"
+          style={{
+            background: `linear-gradient(to top right, rgba(0, 0, 0, 0.5), transparent)`,
+            zIndex: 0,
+          }}
+        />
+        <div 
+          className="p-4 overflow-y-auto relative z-10 h-full scrollbar-hide"
+          style={{
+            scrollbarWidth: 'none',  /* Firefox */
+            msOverflowStyle: 'none',  /* IE and Edge */
+            '&::-webkit-scrollbar': {
+              display: 'none'  /* Chrome, Safari, Opera */
+            }
+          }}
+        >
+          {Object.entries(events).map(([date, dayEvents]) => (
+            <DayEvents 
+              key={date}
+              date={date}
+              events={filterEvents(dayEvents)}
+              theme={currentTheme}
+              formatDate={formatDate}
+              formatTime={formatTime}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
