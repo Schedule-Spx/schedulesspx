@@ -145,9 +145,6 @@ const NavBar = () => {
                 <NavLink to="/news" className={`text-sm font-medium ${currentTheme.text}`}>
                   News
                 </NavLink>
-                <NavLink to="/march-madness" className={`text-sm font-medium ${currentTheme.text}`}>
-                  March Madness
-                </NavLink>
               </div>
             </div>
             
