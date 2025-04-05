@@ -130,8 +130,20 @@ const V3 = memo(() => {
   const calendarRef = useRef(null);
   const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, component: null });
   const [visibleComponents, setVisibleComponents] = useState(() => {
+    // First check template visibility
+    const currentTemplateName = Cookies.get('currentTemplate') || 'default';
+    const template = TEMPLATES[currentTemplateName];
+    
+    // Then check saved visibility, falling back to template defaults
     const saved = Cookies.get('componentVisibility');
-    return saved ? JSON.parse(saved) : DEFAULT_VISIBILITY;
+    if (saved) {
+      return {
+        ...template.visibility, // Use template as base
+        ...JSON.parse(saved)   // Override with any saved preferences
+      };
+    }
+    
+    return template.visibility;
   });
   const [showComponentList, setShowComponentList] = useState(false);
   const [announcement, setAnnouncement] = useState(null);
@@ -171,6 +183,12 @@ const V3 = memo(() => {
   const headerRef = useRef(null);
   const [headerDragging, setHeaderDragging] = useState(false);
 
+  // Add new state to control animation timing
+  const [startAnimations, setStartAnimations] = useState(false);
+
+  // Add specific state for weather animation
+  const [weatherMounted, setWeatherMounted] = useState(false);
+
   useEffect(() => {
     fetchSchedule();
   }, [fetchSchedule]);
@@ -185,6 +203,27 @@ const V3 = memo(() => {
     window.addEventListener('showPopup', handlePopupTrigger);
     return () => window.removeEventListener('showPopup', handlePopupTrigger);
   }, []);
+
+  // Add useEffect to trigger animations after a small delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setStartAnimations(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Modify useEffect to handle weather animation
+  useEffect(() => {
+    if (visibleComponents.weather) {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        setWeatherMounted(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setWeatherMounted(false);
+    }
+  }, [visibleComponents.weather]);
 
   const handleDragStart = (e) => {
     if (!editMode) return;
@@ -1076,6 +1115,25 @@ const V3 = memo(() => {
     }
   }, []);
 
+  const handleTemplateSwitch = (name, config) => {
+    setSize(config.sizes.progress || DEFAULT_PROGRESS_SIZE);
+    setPosition(config.positions.progress || DEFAULT_POSITIONS.progress);
+    setScheduleSize(config.sizes.schedule || DEFAULT_SCHEDULE_SIZE);
+    setSchedulePosition(config.positions.schedule || DEFAULT_POSITIONS.schedule);
+    setCalendarSize(config.sizes.calendar || DEFAULT_CALENDAR_SIZE);
+    setCalendarPosition(config.positions.calendar || DEFAULT_POSITIONS.calendar);
+    setWeatherSize(config.sizes.weather || DEFAULT_WEATHER_SIZE);
+    setWeatherPosition(config.positions.weather || DEFAULT_POSITIONS.weather);
+    setHeaderSize(config.sizes.header || DEFAULT_HEADER_SIZE);
+    setHeaderPosition(config.positions.header || DEFAULT_POSITIONS.header);
+    setVisibleComponents(config.visibility);
+    setCurrentTemplate(name);
+    setShowTemplates(false);
+            
+    Cookies.set('currentTemplate', name, { expires: 365 });
+    Cookies.set('componentVisibility', JSON.stringify(config.visibility), { expires: 365 });
+  };
+
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {/* Remove existing toolbar from top-right */}
@@ -1087,7 +1145,7 @@ const V3 = memo(() => {
           style={getTransformStyle()}
           onMouseDown={handleDragStart}
           onContextMenu={(e) => handleContextMenu(e, 'progress')}
-          className={`select-none relative rounded-lg overflow-hidden
+          className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-1
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
           <div 
@@ -1133,7 +1191,7 @@ const V3 = memo(() => {
           style={getScheduleStyle()}
           onMouseDown={handleScheduleDragStart}
           onContextMenu={(e) => handleContextMenu(e, 'schedule')}
-          className={`select-none relative rounded-lg overflow-hidden
+          className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-2
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
           <div 
@@ -1179,7 +1237,7 @@ const V3 = memo(() => {
           style={getCalendarStyle()}
           onMouseDown={handleCalendarDragStart}
           onContextMenu={(e) => handleContextMenu(e, 'calendar')}
-          className={`select-none relative rounded-lg overflow-hidden
+          className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-3
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
           <div 
@@ -1225,7 +1283,7 @@ const V3 = memo(() => {
           style={getWeatherStyle()}
           onMouseDown={handleWeatherDragStart}
           onContextMenu={(e) => handleContextMenu(e, 'weather')}
-          className={`select-none relative rounded-lg overflow-hidden
+          className={`select-none relative rounded-lg overflow-hidden ${weatherMounted ? 'fade-in-scale delay-4' : 'opacity-0'}
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
           <div 
@@ -1271,7 +1329,7 @@ const V3 = memo(() => {
           style={getHeaderStyle()}
           onMouseDown={handleHeaderDragStart}
           onContextMenu={(e) => handleContextMenu(e, 'header')}
-          className={`select-none relative rounded-lg overflow-hidden
+          className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-0
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
           <div className="relative z-10 w-full h-full">
@@ -1347,28 +1405,7 @@ const V3 = memo(() => {
                       {Object.entries(TEMPLATES).map(([name, config]) => (
                         <button
                           key={name}
-                          onClick={() => {
-                            setSize(config.sizes.progress || DEFAULT_PROGRESS_SIZE);
-                            setPosition(config.positions.progress || DEFAULT_POSITIONS.progress);
-                            setScheduleSize(config.sizes.schedule || DEFAULT_SCHEDULE_SIZE);
-                            setSchedulePosition(config.positions.schedule || DEFAULT_POSITIONS.schedule);
-                            setCalendarSize(config.sizes.calendar || DEFAULT_CALENDAR_SIZE);
-                            setCalendarPosition(config.positions.calendar || DEFAULT_POSITIONS.calendar);
-                            setWeatherSize(config.sizes.weather || DEFAULT_WEATHER_SIZE);
-                            setWeatherPosition(config.positions.weather || DEFAULT_POSITIONS.weather);
-                            setHeaderSize(config.sizes.header || DEFAULT_HEADER_SIZE);
-                            setHeaderPosition(config.positions.header || DEFAULT_POSITIONS.header);
-                            setVisibleComponents(config.visibility);
-                            setCurrentTemplate(name);
-                            setShowTemplates(false);
-                            
-                            Cookies.set('currentTemplate', name, { expires: 365 });
-                            
-                            // Save to cookies
-                            Object.entries(config.visibility).forEach(([key, value]) => {
-                              Cookies.set(`${key}Visibility`, value, { expires: 365 });
-                            });
-                          }}
+                          onClick={() => handleTemplateSwitch(name, config)}
                           className={`w-full text-left px-4 py-2 rounded ${currentTheme.accent} ${currentTheme.text} hover:opacity-80 transition-opacity flex items-center justify-between`}
                         >
                           <span className="capitalize">{config.name}</span>
@@ -1459,6 +1496,37 @@ const V3 = memo(() => {
           </div>
         </div>
       )}
+
+      {/* Context Menu */}
+      {contextMenu.show && (
+        <div 
+          className={`fixed z-50 ${currentTheme.main} rounded-lg shadow-xl border-2 ${currentTheme.border}`}
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          <div className="flex flex-col p-2 min-w-[200px]">
+            <button
+              onClick={() => hideComponent(contextMenu.component)}
+              className={`${currentTheme.accent} p-2 rounded mb-1 text-left hover:opacity-80`}
+            >
+              Remove Component
+            </button>
+            <button
+              onClick={() => resetComponentScale(contextMenu.component)}
+              className={`${currentTheme.accent} p-2 rounded mb-1 text-left hover:opacity-80`}
+            >
+              Reset Size
+            </button>
+            <button
+              onClick={() => resetComponentPosition(contextMenu.component)}
+              className={`${currentTheme.accent} p-2 rounded text-left hover:opacity-80`}
+            >
+              Reset Position
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Keep existing ending code */}
     </div>
   );
 });
