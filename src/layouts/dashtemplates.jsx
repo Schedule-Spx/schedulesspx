@@ -1,3 +1,7 @@
+export const EDGE_PADDING = 20;
+export const SNAP_THRESHOLD = 10;
+export const COMPONENT_PADDING = 20;
+
 export const DEFAULT_PROGRESS_SIZE = { width: 700, height: 155 };
 export const DEFAULT_SCHEDULE_SIZE = { width: 400, height: 484 };
 export const DEFAULT_CALENDAR_SIZE = { width: 400, height: 484 };

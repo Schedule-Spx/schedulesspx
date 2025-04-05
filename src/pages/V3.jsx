@@ -18,8 +18,134 @@ import {
   DEFAULT_HEADER_SIZE,
   DEFAULT_POSITIONS,
   DEFAULT_VISIBILITY,
-  TEMPLATES
+  TEMPLATES,
+  EDGE_PADDING,
+  SNAP_THRESHOLD
 } from '../layouts/dashtemplates';
+
+// Add these helper functions after imports
+const snapToComponentSizes = (newWidth, newHeight, currentComponent, allComponents) => {
+  let snappedWidth = newWidth;
+  let snappedHeight = newHeight;
+  
+  const components = allComponents.filter(comp => comp.component !== currentComponent);
+  
+  components.forEach(({width, height}) => {
+    // Snap widths
+    if (Math.abs(newWidth - width) < SNAP_THRESHOLD) {
+      snappedWidth = width;
+    }
+    // Snap heights
+    if (Math.abs(newHeight - height) < SNAP_THRESHOLD) {
+      snappedHeight = height;
+    }
+  });
+  
+  return { width: snappedWidth, height: snappedHeight };
+};
+
+// Add this new component after imports, before V3
+const SnapGuides = ({ activeGuides }) => {
+  if (!activeGuides) return null;
+  
+  return (
+    <>
+      {activeGuides.vertical.map((x, i) => (
+        <div
+          key={`v-${i}`}
+          className="fixed top-0 bottom-0 w-[1px] border-l border-dashed border-blue-400 pointer-events-none z-50"
+          style={{ left: `${x}px` }}
+        />
+      ))}
+      {activeGuides.horizontal.map((y, i) => (
+        <div
+          key={`h-${i}`}
+          className="fixed left-0 right-0 h-[1px] border-t border-dashed border-blue-400 pointer-events-none z-50"
+          style={{ top: `${y}px` }}
+        />
+      ))}
+    </>
+  );
+};
+
+const snapToComponents = (newX, newY, width, height, currentComponent, allComponents) => {
+  let snappedX = newX;
+  let snappedY = newY;
+  const guides = { vertical: [], horizontal: [] };
+
+  // Window edge snapping
+  if (Math.abs(newX - EDGE_PADDING) < SNAP_THRESHOLD) {
+    snappedX = EDGE_PADDING;
+    guides.vertical.push(EDGE_PADDING);
+  }
+  if (Math.abs((newX + width) - (window.innerWidth - EDGE_PADDING)) < SNAP_THRESHOLD) {
+    snappedX = window.innerWidth - width - EDGE_PADDING;
+    guides.vertical.push(window.innerWidth - EDGE_PADDING);
+  }
+  // Window vertical center
+  const windowCenterX = window.innerWidth / 2;
+  if (Math.abs((newX + width/2) - windowCenterX) < SNAP_THRESHOLD) {
+    snappedX = windowCenterX - width/2;
+    guides.vertical.push(windowCenterX);
+  }
+
+  // Window top/bottom snapping
+  if (Math.abs(newY - EDGE_PADDING) < SNAP_THRESHOLD) {
+    snappedY = EDGE_PADDING;
+    guides.horizontal.push(EDGE_PADDING);
+  }
+  if (Math.abs((newY + height) - (window.innerHeight - EDGE_PADDING)) < SNAP_THRESHOLD) {
+    snappedY = window.innerHeight - height - EDGE_PADDING;
+    guides.horizontal.push(window.innerHeight - EDGE_PADDING);
+  }
+  // Window horizontal center
+  const windowCenterY = window.innerHeight / 2;
+  if (Math.abs((newY + height/2) - windowCenterY) < SNAP_THRESHOLD) {
+    snappedY = windowCenterY - height/2;
+    guides.horizontal.push(windowCenterY);
+  }
+  
+  // Component snapping
+  const components = allComponents.filter(comp => comp.component !== currentComponent);
+  
+  components.forEach(({x, y, width: compWidth, height: compHeight}) => {
+    // Vertical alignment lines (left, center, right)
+    if (Math.abs(newX - x) < SNAP_THRESHOLD) {
+      snappedX = x;
+      guides.vertical.push(x);
+    }
+    const componentCenterX = x + compWidth/2;
+    if (Math.abs((newX + width/2) - componentCenterX) < SNAP_THRESHOLD) {
+      snappedX = componentCenterX - width/2;
+      guides.vertical.push(componentCenterX);
+    }
+    if (Math.abs((newX + width) - (x + compWidth)) < SNAP_THRESHOLD) {
+      snappedX = x + compWidth - width;
+      guides.vertical.push(x + compWidth);
+    }
+    
+    // Horizontal alignment lines (top, middle, bottom)
+    if (Math.abs(newY - y) < SNAP_THRESHOLD) {
+      snappedY = y;
+      guides.horizontal.push(y);
+    }
+    const componentCenterY = y + compHeight/2;
+    if (Math.abs((newY + height/2) - componentCenterY) < SNAP_THRESHOLD) {
+      snappedY = componentCenterY - height/2;
+      guides.horizontal.push(componentCenterY);
+    }
+    if (Math.abs((newY + height) - (y + compHeight)) < SNAP_THRESHOLD) {
+      snappedY = y + compHeight - height;
+      guides.horizontal.push(y + compHeight);
+    }
+  });
+
+  // Ensure we don't exceed window bounds
+  snappedX = Math.max(EDGE_PADDING, Math.min(snappedX, window.innerWidth - width - EDGE_PADDING));
+  snappedY = Math.max(EDGE_PADDING, Math.min(snappedY, window.innerHeight - height - EDGE_PADDING));
+
+  return { x: snappedX, y: snappedY, guides };
+};
 
 const V3 = memo(() => {
   const { currentTheme } = useTheme();
@@ -115,6 +241,8 @@ const V3 = memo(() => {
   // Add specific state for weather animation
   const [weatherMounted, setWeatherMounted] = useState(false);
 
+  const [activeGuides, setActiveGuides] = useState({ vertical: [], horizontal: [] });
+
   useEffect(() => {
     fetchSchedule();
   }, [fetchSchedule]);
@@ -161,25 +289,43 @@ const V3 = memo(() => {
     });
   };
 
+  // Add this function to get all visible component positions
+  const getVisibleComponents = () => {
+    const components = [];
+    if (visibleComponents.progress) {
+      components.push({ x: position.x, y: position.y, width: size.width, height: size.height, component: 'progress' });
+    }
+    if (visibleComponents.schedule) {
+      components.push({ x: schedulePosition.x, y: schedulePosition.y, width: scheduleSize.width, height: scheduleSize.height, component: 'schedule' });
+    }
+    if (visibleComponents.calendar) {
+      components.push({ x: calendarPosition.x, y: calendarPosition.y, width: calendarSize.width, height: calendarSize.height, component: 'calendar' });
+    }
+    if (visibleComponents.weather) {
+      components.push({ x: weatherPosition.x, y: weatherPosition.y, width: weatherSize.width, height: weatherSize.height, component: 'weather' });
+    }
+    if (visibleComponents.header) {
+      components.push({ x: headerPosition.x, y: headerPosition.y, width: headerSize.width, height: headerSize.height, component: 'header' });
+    }
+    return components;
+  };
+
+  // Modify drag handlers to use guides
   const handleDragMove = (e) => {
     if (!progressDragging || !editMode) return;
     
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
     
-    // Constrain to window bounds
-    const maxX = window.innerWidth - size.width; // Use dynamic width
-    const maxY = window.innerHeight - size.height; // Use dynamic height
-    
-    setPosition({
-      x: Math.max(0, Math.min(newX, maxX)),
-      y: Math.max(0, Math.min(newY, maxY))
-    });
+    const { x, y, guides } = snapToComponents(newX, newY, size.width, size.height, 'progress', getVisibleComponents());
+    setPosition({ x, y });
+    setActiveGuides(guides);
   };
 
   const handleDragEnd = () => {
     if (!editMode) return;
     setProgressDragging(false);
+    setActiveGuides({ vertical: [], horizontal: [] });
     Cookies.set('progressBarPosition', JSON.stringify(position), { expires: 365 });
   };
 
@@ -250,17 +396,26 @@ const V3 = memo(() => {
     const minWidth = 300;
     const minHeight = 100;
     
-    if (newWidth >= minWidth) {
-      setSize(prev => ({ ...prev, width: newWidth }));
+    // Add size snapping
+    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
+      newWidth,
+      newHeight,
+      'progress',
+      getVisibleComponents()
+    );
+    
+    // Update with snapped values
+    if (snappedWidth >= minWidth) {
+      setSize(prev => ({ ...prev, width: snappedWidth }));
       if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setPosition(prev => ({ ...prev, x: newX }));
+        setPosition(prev => ({ ...prev, x: position.x + (newWidth - snappedWidth) }));
       }
     }
     
-    if (newHeight >= minHeight) {
-      setSize(prev => ({ ...prev, height: newHeight }));
+    if (snappedHeight >= minHeight) {
+      setSize(prev => ({ ...prev, height: snappedHeight }));
       if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setPosition(prev => ({ ...prev, y: newY }));
+        setPosition(prev => ({ ...prev, y: position.y + (newHeight - snappedHeight) }));
       }
     }
 
@@ -289,19 +444,15 @@ const V3 = memo(() => {
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
     
-    // Constrain to window bounds
-    const maxX = window.innerWidth - scheduleSize.width; // Use dynamic width
-    const maxY = window.innerHeight - scheduleSize.height; // Use dynamic height
-    
-    setSchedulePosition({
-      x: Math.max(0, Math.min(newX, maxX)),
-      y: Math.max(0, Math.min(newY, maxY))
-    });
+    const { x, y, guides } = snapToComponents(newX, newY, scheduleSize.width, scheduleSize.height, 'schedule', getVisibleComponents());
+    setSchedulePosition({ x, y });
+    setActiveGuides(guides);
   };
 
   const handleScheduleDragEnd = () => {
     if (!editMode) return;
     setScheduleDragging(false);
+    setActiveGuides({ vertical: [], horizontal: [] });
     Cookies.set('schedulePosition', JSON.stringify(schedulePosition), { expires: 365 });
   };
 
@@ -372,17 +523,26 @@ const V3 = memo(() => {
     const minWidth = 300;
     const minHeight = 400;
     
-    if (newWidth >= minWidth) {
-      setScheduleSize(prev => ({ ...prev, width: newWidth }));
+    // Add size snapping
+    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
+      newWidth,
+      newHeight,
+      'schedule',
+      getVisibleComponents()
+    );
+    
+    // Update with snapped values
+    if (snappedWidth >= minWidth) {
+      setScheduleSize(prev => ({ ...prev, width: snappedWidth }));
       if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setSchedulePosition(prev => ({ ...prev, x: newX }));
+        setSchedulePosition(prev => ({ ...prev, x: schedulePosition.x + (newWidth - snappedWidth) }));
       }
     }
     
-    if (newHeight >= minHeight) {
-      setScheduleSize(prev => ({ ...prev, height: newHeight }));
+    if (snappedHeight >= minHeight) {
+      setScheduleSize(prev => ({ ...prev, height: snappedHeight }));
       if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setSchedulePosition(prev => ({ ...prev, y: newY }));
+        setSchedulePosition(prev => ({ ...prev, y: schedulePosition.y + (newHeight - snappedHeight) }));
       }
     }
 
@@ -410,15 +570,15 @@ const V3 = memo(() => {
     if (!calendarDragging || !editMode) return;
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
-    setCalendarPosition({
-      x: Math.max(0, Math.min(newX, window.innerWidth - calendarSize.width)),
-      y: Math.max(0, Math.min(newY, window.innerHeight - calendarSize.height))
-    });
+    const { x, y, guides } = snapToComponents(newX, newY, calendarSize.width, calendarSize.height, 'calendar', getVisibleComponents());
+    setCalendarPosition({ x, y });
+    setActiveGuides(guides);
   };
 
   const handleCalendarDragEnd = () => {
     if (!editMode) return;
     setCalendarDragging(false);
+    setActiveGuides({ vertical: [], horizontal: [] });
     Cookies.set('calendarPosition', JSON.stringify(calendarPosition), { expires: 365 });
   };
 
@@ -489,17 +649,26 @@ const V3 = memo(() => {
     const minWidth = 300;
     const minHeight = 400;
     
-    if (newWidth >= minWidth) {
-      setCalendarSize(prev => ({ ...prev, width: newWidth }));
+    // Add size snapping
+    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
+      newWidth,
+      newHeight,
+      'calendar',
+      getVisibleComponents()
+    );
+    
+    // Update with snapped values
+    if (snappedWidth >= minWidth) {
+      setCalendarSize(prev => ({ ...prev, width: snappedWidth }));
       if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setCalendarPosition(prev => ({ ...prev, x: newX }));
+        setCalendarPosition(prev => ({ ...prev, x: calendarPosition.x + (newWidth - snappedWidth) }));
       }
     }
     
-    if (newHeight >= minHeight) {
-      setCalendarSize(prev => ({ ...prev, height: newHeight }));
+    if (snappedHeight >= minHeight) {
+      setCalendarSize(prev => ({ ...prev, height: snappedHeight }));
       if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setCalendarPosition(prev => ({ ...prev, y: newY }));
+        setCalendarPosition(prev => ({ ...prev, y: calendarPosition.y + (newHeight - snappedHeight) }));
       }
     }
 
@@ -527,15 +696,15 @@ const V3 = memo(() => {
     if (!weatherDragging || !editMode) return;
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
-    setWeatherPosition({
-      x: Math.max(0, Math.min(newX, window.innerWidth - weatherSize.width)),
-      y: Math.max(0, Math.min(newY, window.innerHeight - weatherSize.height))
-    });
+    const { x, y, guides } = snapToComponents(newX, newY, weatherSize.width, weatherSize.height, 'weather', getVisibleComponents());
+    setWeatherPosition({ x, y });
+    setActiveGuides(guides);
   };
 
   const handleWeatherDragEnd = () => {
     if (!editMode) return;
     setWeatherDragging(false);
+    setActiveGuides({ vertical: [], horizontal: [] });
     Cookies.set('weatherPosition', JSON.stringify(weatherPosition), { expires: 365 });
   };
 
@@ -606,17 +775,26 @@ const V3 = memo(() => {
     const minWidth = 300;
     const minHeight = 150;
     
-    if (newWidth >= minWidth) {
-      setWeatherSize(prev => ({ ...prev, width: newWidth }));
+    // Add size snapping
+    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
+      newWidth,
+      newHeight,
+      'weather',
+      getVisibleComponents()
+    );
+    
+    // Update with snapped values
+    if (snappedWidth >= minWidth) {
+      setWeatherSize(prev => ({ ...prev, width: snappedWidth }));
       if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setWeatherPosition(prev => ({ ...prev, x: newX }));
+        setWeatherPosition(prev => ({ ...prev, x: weatherPosition.x + (newWidth - snappedWidth) }));
       }
     }
     
-    if (newHeight >= minHeight) {
-      setWeatherSize(prev => ({ ...prev, height: newHeight }));
+    if (snappedHeight >= minHeight) {
+      setWeatherSize(prev => ({ ...prev, height: snappedHeight }));
       if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setWeatherPosition(prev => ({ ...prev, y: newY }));
+        setWeatherPosition(prev => ({ ...prev, y: weatherPosition.y + (newHeight - snappedHeight) }));
       }
     }
 
@@ -644,15 +822,15 @@ const V3 = memo(() => {
     if (!headerDragging || !editMode) return;
     const newX = e.clientX - dragOffset.x;
     const newY = e.clientY - dragOffset.y;
-    setHeaderPosition({
-      x: Math.max(0, Math.min(newX, window.innerWidth - headerSize.width)),
-      y: Math.max(0, Math.min(newY, window.innerHeight - headerSize.height))
-    });
+    const { x, y, guides } = snapToComponents(newX, newY, headerSize.width, headerSize.height, 'header', getVisibleComponents());
+    setHeaderPosition({ x, y });
+    setActiveGuides(guides);
   };
 
   const handleHeaderDragEnd = () => {
     if (!editMode) return;
     setHeaderDragging(false);
+    setActiveGuides({ vertical: [], horizontal: [] });
     Cookies.set('headerPosition', JSON.stringify(headerPosition), { expires: 365 });
   };
 
@@ -723,17 +901,26 @@ const V3 = memo(() => {
     const minWidth = 300;
     const minHeight = 150;
     
-    if (newWidth >= minWidth) {
-      setHeaderSize(prev => ({ ...prev, width: newWidth }));
+    // Add size snapping
+    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
+      newWidth,
+      newHeight,
+      'header',
+      getVisibleComponents()
+    );
+    
+    // Update with snapped values
+    if (snappedWidth >= minWidth) {
+      setHeaderSize(prev => ({ ...prev, width: snappedWidth }));
       if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setHeaderPosition(prev => ({ ...prev, x: newX }));
+        setHeaderPosition(prev => ({ ...prev, x: headerPosition.x + (newWidth - snappedWidth) }));
       }
     }
     
-    if (newHeight >= minHeight) {
-      setHeaderSize(prev => ({ ...prev, height: newHeight }));
+    if (snappedHeight >= minHeight) {
+      setHeaderSize(prev => ({ ...prev, height: snappedHeight }));
       if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setHeaderPosition(prev => ({ ...prev, y: newY }));
+        setHeaderPosition(prev => ({ ...prev, y: headerPosition.y + (newHeight - snappedHeight) }));
       }
     }
 
@@ -1074,6 +1261,9 @@ const V3 = memo(() => {
 
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
+      {/* Add SnapGuides at the top level */}
+      <SnapGuides activeGuides={activeGuides} />
+      
       {/* Remove existing toolbar from top-right */}
       
       {/* Components section - keep existing code */}
