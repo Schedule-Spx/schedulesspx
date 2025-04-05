@@ -1,18 +1,20 @@
 export const EDGE_PADDING = 20;
 export const SNAP_THRESHOLD = 10;
-export const COMPONENT_PADDING = 20;
+export const COMPONENT_PADDING = 5;
 
+// Default sizes
 export const DEFAULT_PROGRESS_SIZE = { width: 700, height: 155 };
 export const DEFAULT_SCHEDULE_SIZE = { width: 400, height: 484 };
 export const DEFAULT_CALENDAR_SIZE = { width: 400, height: 484 };
 export const DEFAULT_WEATHER_SIZE = { 
   width: DEFAULT_PROGRESS_SIZE.width,
-  height: 315
+  height: 275
 };
 export const DEFAULT_HEADER_SIZE = { 
   width: DEFAULT_PROGRESS_SIZE.width,
   height: 283
 };
+export const DEFAULT_QUICK_LINKS_SIZE = { width: 300, height: 400 };
 
 export const DEFAULT_POSITIONS = {
   progress: {
@@ -34,6 +36,10 @@ export const DEFAULT_POSITIONS = {
   header: {
     x: window.innerWidth / 2 - DEFAULT_HEADER_SIZE.width / 2,
     y: window.innerHeight / 2 - DEFAULT_PROGRESS_SIZE.height / 2 - DEFAULT_HEADER_SIZE.height - 20
+  },
+  quickLinks: {
+    x: window.innerWidth / 2 - 150, // Half of DEFAULT_QUICK_LINKS_SIZE.width
+    y: window.innerHeight / 2 - 200  // Half of DEFAULT_QUICK_LINKS_SIZE.height
   }
 };
 
@@ -42,7 +48,8 @@ export const DEFAULT_VISIBILITY = {
   schedule: true,
   calendar: true,
   weather: true,
-  header: true
+  header: true,
+  quickLinks: false  // Start hidden by default
 };
 
 export const JUST_PERIODS = {
@@ -68,7 +75,8 @@ export const TEMPLATES = {
       schedule: DEFAULT_SCHEDULE_SIZE,
       calendar: DEFAULT_CALENDAR_SIZE,
       weather: DEFAULT_WEATHER_SIZE,
-      header: DEFAULT_HEADER_SIZE
+      header: DEFAULT_HEADER_SIZE,
+      quickLinks: DEFAULT_QUICK_LINKS_SIZE
     },
     visibility: DEFAULT_VISIBILITY,
     name: 'Default Layout'
@@ -82,7 +90,8 @@ export const TEMPLATES = {
       schedule: DEFAULT_POSITIONS.schedule,
       calendar: DEFAULT_POSITIONS.calendar,
       weather: DEFAULT_POSITIONS.weather,
-      header: DEFAULT_POSITIONS.header
+      header: DEFAULT_POSITIONS.header,
+      quickLinks: DEFAULT_POSITIONS.quickLinks
     },
     sizes: {
       progress: {
@@ -92,14 +101,16 @@ export const TEMPLATES = {
       schedule: DEFAULT_SCHEDULE_SIZE,
       calendar: DEFAULT_CALENDAR_SIZE,
       weather: DEFAULT_WEATHER_SIZE,
-      header: DEFAULT_HEADER_SIZE
+      header: DEFAULT_HEADER_SIZE,
+      quickLinks: DEFAULT_QUICK_LINKS_SIZE
     },
     visibility: {
       progress: true,
       schedule: false,
       calendar: false,
       weather: false,
-      header: false
+      header: false,
+      quickLinks: false
     },
     name: 'Board Mode'
   },
@@ -115,7 +126,8 @@ export const TEMPLATES = {
       },
       calendar: DEFAULT_POSITIONS.calendar,
       weather: DEFAULT_POSITIONS.weather,
-      header: DEFAULT_POSITIONS.header
+      header: DEFAULT_POSITIONS.header,
+      quickLinks: DEFAULT_POSITIONS.quickLinks
     },
     sizes: {
       progress: {
@@ -128,14 +140,16 @@ export const TEMPLATES = {
       },
       calendar: DEFAULT_CALENDAR_SIZE,
       weather: DEFAULT_WEATHER_SIZE,
-      header: DEFAULT_HEADER_SIZE
+      header: DEFAULT_HEADER_SIZE,
+      quickLinks: DEFAULT_QUICK_LINKS_SIZE
     },
     visibility: {
       progress: true,
       schedule: true,
       calendar: false,
       weather: false,
-      header: false
+      header: false,
+      quickLinks: false
     },
     name: 'Just Periods'
   },

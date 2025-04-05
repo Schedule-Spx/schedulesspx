@@ -10,12 +10,14 @@ import WeatherDashboard from '../components/WeatherDashboard';  // Updated impor
 import DayHeader from '../components/DayHeader';
 import PopupMessage from '../components/PopupMessage';
 import { useAuth } from '../context/AuthContext';
+import QuickLinks from '../components/QuickLinks';
 import {
   DEFAULT_PROGRESS_SIZE,
   DEFAULT_SCHEDULE_SIZE,
   DEFAULT_CALENDAR_SIZE,
   DEFAULT_WEATHER_SIZE,
   DEFAULT_HEADER_SIZE,
+  DEFAULT_QUICK_LINKS_SIZE,
   DEFAULT_POSITIONS,
   DEFAULT_VISIBILITY,
   TEMPLATES,
@@ -45,23 +47,35 @@ const snapToComponentSizes = (newWidth, newHeight, currentComponent, allComponen
 };
 
 // Add this new component after imports, before V3
-const SnapGuides = ({ activeGuides }) => {
-  if (!activeGuides) return null;
+const SnapGuides = ({ activeGuides, collisions }) => {
+  if (!activeGuides && !collisions) return null;
   
   return (
     <>
-      {activeGuides.vertical.map((x, i) => (
+      {activeGuides?.vertical.map((x, i) => (
         <div
           key={`v-${i}`}
           className="fixed top-0 bottom-0 w-[1px] border-l border-dashed border-blue-400 pointer-events-none z-50"
           style={{ left: `${x}px` }}
         />
       ))}
-      {activeGuides.horizontal.map((y, i) => (
+      {activeGuides?.horizontal.map((y, i) => (
         <div
           key={`h-${i}`}
           className="fixed left-0 right-0 h-[1px] border-t border-dashed border-blue-400 pointer-events-none z-50"
           style={{ top: `${y}px` }}
+        />
+      ))}
+      {collisions?.map((collision, i) => (
+        <div
+          key={`c-${i}`}
+          className="fixed w-full h-full border-2 border-red-500 rounded-lg pointer-events-none z-40 animate-pulse"
+          style={{
+            left: `${collision.x}px`,
+            top: `${collision.y}px`,
+            width: `${collision.width}px`,
+            height: `${collision.height}px`,
+          }}
         />
       ))}
     </>
@@ -73,6 +87,8 @@ const snapToComponents = (newX, newY, width, height, currentComponent, allCompon
   let snappedY = newY;
   const guides = { vertical: [], horizontal: [] };
 
+  const components = allComponents.filter(comp => comp.component !== currentComponent);
+  
   // Window edge snapping
   if (Math.abs(newX - EDGE_PADDING) < SNAP_THRESHOLD) {
     snappedX = EDGE_PADDING;
@@ -82,14 +98,14 @@ const snapToComponents = (newX, newY, width, height, currentComponent, allCompon
     snappedX = window.innerWidth - width - EDGE_PADDING;
     guides.vertical.push(window.innerWidth - EDGE_PADDING);
   }
-  // Window vertical center
+  
+  // Window center snapping
   const windowCenterX = window.innerWidth / 2;
   if (Math.abs((newX + width/2) - windowCenterX) < SNAP_THRESHOLD) {
     snappedX = windowCenterX - width/2;
     guides.vertical.push(windowCenterX);
   }
 
-  // Window top/bottom snapping
   if (Math.abs(newY - EDGE_PADDING) < SNAP_THRESHOLD) {
     snappedY = EDGE_PADDING;
     guides.horizontal.push(EDGE_PADDING);
@@ -98,51 +114,46 @@ const snapToComponents = (newX, newY, width, height, currentComponent, allCompon
     snappedY = window.innerHeight - height - EDGE_PADDING;
     guides.horizontal.push(window.innerHeight - EDGE_PADDING);
   }
-  // Window horizontal center
   const windowCenterY = window.innerHeight / 2;
   if (Math.abs((newY + height/2) - windowCenterY) < SNAP_THRESHOLD) {
     snappedY = windowCenterY - height/2;
     guides.horizontal.push(windowCenterY);
   }
-  
-  // Component snapping
-  const components = allComponents.filter(comp => comp.component !== currentComponent);
-  
+
+  // Component alignment snapping
   components.forEach(({x, y, width: compWidth, height: compHeight}) => {
-    // Vertical alignment lines (left, center, right)
+    // Left/right edges
     if (Math.abs(newX - x) < SNAP_THRESHOLD) {
       snappedX = x;
       guides.vertical.push(x);
-    }
-    const componentCenterX = x + compWidth/2;
-    if (Math.abs((newX + width/2) - componentCenterX) < SNAP_THRESHOLD) {
-      snappedX = componentCenterX - width/2;
-      guides.vertical.push(componentCenterX);
     }
     if (Math.abs((newX + width) - (x + compWidth)) < SNAP_THRESHOLD) {
       snappedX = x + compWidth - width;
       guides.vertical.push(x + compWidth);
     }
-    
-    // Horizontal alignment lines (top, middle, bottom)
+    // Vertical center alignment
+    const centerX = x + compWidth/2;
+    if (Math.abs((newX + width/2) - centerX) < SNAP_THRESHOLD) {
+      snappedX = centerX - width/2;
+      guides.vertical.push(centerX);
+    }
+
+    // Top/bottom edges
     if (Math.abs(newY - y) < SNAP_THRESHOLD) {
       snappedY = y;
       guides.horizontal.push(y);
-    }
-    const componentCenterY = y + compHeight/2;
-    if (Math.abs((newY + height/2) - componentCenterY) < SNAP_THRESHOLD) {
-      snappedY = componentCenterY - height/2;
-      guides.horizontal.push(componentCenterY);
     }
     if (Math.abs((newY + height) - (y + compHeight)) < SNAP_THRESHOLD) {
       snappedY = y + compHeight - height;
       guides.horizontal.push(y + compHeight);
     }
+    // Horizontal center alignment
+    const centerY = y + compHeight/2;
+    if (Math.abs((newY + height/2) - centerY) < SNAP_THRESHOLD) {
+      snappedY = centerY - height/2;
+      guides.horizontal.push(centerY);
+    }
   });
-
-  // Ensure we don't exceed window bounds
-  snappedX = Math.max(EDGE_PADDING, Math.min(snappedX, window.innerWidth - width - EDGE_PADDING));
-  snappedY = Math.max(EDGE_PADDING, Math.min(snappedY, window.innerHeight - height - EDGE_PADDING));
 
   return { x: snappedX, y: snappedY, guides };
 };
@@ -242,6 +253,21 @@ const V3 = memo(() => {
   const [weatherMounted, setWeatherMounted] = useState(false);
 
   const [activeGuides, setActiveGuides] = useState({ vertical: [], horizontal: [] });
+  const [collisions, setCollisions] = useState([]);
+
+  // Add new state for QuickLinks
+  const [quickLinksSize, setQuickLinksSize] = useState(() => {
+    const saved = Cookies.get('quickLinksSize');
+    return saved ? JSON.parse(saved) : DEFAULT_QUICK_LINKS_SIZE;
+  });
+
+  const [quickLinksPosition, setQuickLinksPosition] = useState(() => {
+    const saved = Cookies.get('quickLinksPosition');
+    return saved ? JSON.parse(saved) : DEFAULT_POSITIONS.quickLinks;
+  });
+
+  const quickLinksRef = useRef(null);
+  const [quickLinksDragging, setQuickLinksDragging] = useState(false);
 
   useEffect(() => {
     fetchSchedule();
@@ -307,6 +333,9 @@ const V3 = memo(() => {
     if (visibleComponents.header) {
       components.push({ x: headerPosition.x, y: headerPosition.y, width: headerSize.width, height: headerSize.height, component: 'header' });
     }
+    if (visibleComponents.quickLinks) {
+      components.push({ x: quickLinksPosition.x, y: quickLinksPosition.y, width: quickLinksSize.width, height: quickLinksSize.height, component: 'quickLinks' });
+    }
     return components;
   };
 
@@ -326,6 +355,7 @@ const V3 = memo(() => {
     if (!editMode) return;
     setProgressDragging(false);
     setActiveGuides({ vertical: [], horizontal: [] });
+    setCollisions([]);
     Cookies.set('progressBarPosition', JSON.stringify(position), { expires: 365 });
   };
 
@@ -343,82 +373,62 @@ const V3 = memo(() => {
 
   const handleProgressResize = (e) => {
     if (!resizing || !editMode || resizing !== 'progress') return;
-
+    
     const deltaX = e.clientX - dragOffset.x;
     const deltaY = e.clientY - dragOffset.y;
     
-    let newWidth = size.width;
-    let newHeight = size.height;
-    let newX = position.x;
-    let newY = position.y;
+    // Store original values
+    const originalWidth = size.width;
+    const originalHeight = size.height;
+    const originalX = position.x;
+    const originalY = position.y;
+    
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+    let newX = originalX;
+    let newY = originalY;
 
-    // Handle different resize directions
-    if (resizing === 'progress') {
-      switch (dragOffset.direction) {
-        case 'right':
-          newWidth += deltaX;
-          break;
-        case 'left':
-          newWidth -= deltaX;
-          newX += deltaX;
-          break;
-        case 'bottom':
-          newHeight += deltaY;
-          break;
-        case 'top':
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'bottom-right':
-          newWidth += deltaX;
-          newHeight += deltaY;
-          break;
-        case 'bottom-left':
-          newWidth -= deltaX;
-          newHeight += deltaY;
-          newX += deltaX;
-          break;
-        case 'top-right':
-          newWidth += deltaX;
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'top-left':
-          newWidth -= deltaX;
-          newHeight -= deltaY;
-          newX += deltaX;
-          newY += deltaY;
-          break;
-      }
+    switch (dragOffset.direction) {
+      case 'right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        break;
+      case 'left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'bottom':
+        newHeight = Math.max(100, originalHeight + deltaY);
+        break;
+      case 'top':
+        newHeight = Math.max(100, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'bottom-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(100, originalHeight + deltaY);
+        break;
+      case 'bottom-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(100, originalHeight + deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'top-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(100, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'top-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(100, originalHeight - deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        newY = originalY + (originalHeight - newHeight);
+        break;
     }
 
-    // Enforce minimum sizes
-    const minWidth = 300;
-    const minHeight = 100;
+    // Update both position and size atomically
+    setSize({ width: newWidth, height: newHeight });
+    setPosition({ x: newX, y: newY });
     
-    // Add size snapping
-    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
-      newWidth,
-      newHeight,
-      'progress',
-      getVisibleComponents()
-    );
-    
-    // Update with snapped values
-    if (snappedWidth >= minWidth) {
-      setSize(prev => ({ ...prev, width: snappedWidth }));
-      if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setPosition(prev => ({ ...prev, x: position.x + (newWidth - snappedWidth) }));
-      }
-    }
-    
-    if (snappedHeight >= minHeight) {
-      setSize(prev => ({ ...prev, height: snappedHeight }));
-      if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setPosition(prev => ({ ...prev, y: position.y + (newHeight - snappedHeight) }));
-      }
-    }
-
     setDragOffset({ x: e.clientX, y: e.clientY, direction: dragOffset.direction });
   };
 
@@ -453,6 +463,7 @@ const V3 = memo(() => {
     if (!editMode) return;
     setScheduleDragging(false);
     setActiveGuides({ vertical: [], horizontal: [] });
+    setCollisions([]);
     Cookies.set('schedulePosition', JSON.stringify(schedulePosition), { expires: 365 });
   };
 
@@ -474,78 +485,58 @@ const V3 = memo(() => {
     const deltaX = e.clientX - dragOffset.x;
     const deltaY = e.clientY - dragOffset.y;
     
-    let newWidth = scheduleSize.width;
-    let newHeight = scheduleSize.height;
-    let newX = schedulePosition.x;
-    let newY = schedulePosition.y;
+    // Store original values
+    const originalWidth = scheduleSize.width;
+    const originalHeight = scheduleSize.height;
+    const originalX = schedulePosition.x;
+    const originalY = schedulePosition.y;
+    
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+    let newX = originalX;
+    let newY = originalY;
 
-    // Handle different resize directions
-    if (resizing === 'schedule') {
-      switch (dragOffset.direction) {
-        case 'right':
-          newWidth += deltaX;
-          break;
-        case 'left':
-          newWidth -= deltaX;
-          newX += deltaX;
-          break;
-        case 'bottom':
-          newHeight += deltaY;
-          break;
-        case 'top':
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'bottom-right':
-          newWidth += deltaX;
-          newHeight += deltaY;
-          break;
-        case 'bottom-left':
-          newWidth -= deltaX;
-          newHeight += deltaY;
-          newX += deltaX;
-          break;
-        case 'top-right':
-          newWidth += deltaX;
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'top-left':
-          newWidth -= deltaX;
-          newHeight -= deltaY;
-          newX += deltaX;
-          newY += deltaY;
-          break;
-      }
+    switch (dragOffset.direction) {
+      case 'right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        break;
+      case 'left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'bottom':
+        newHeight = Math.max(400, originalHeight + deltaY);
+        break;
+      case 'top':
+        newHeight = Math.max(400, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'bottom-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(400, originalHeight + deltaY);
+        break;
+      case 'bottom-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(400, originalHeight + deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'top-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(400, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'top-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(400, originalHeight - deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        newY = originalY + (originalHeight - newHeight);
+        break;
     }
 
-    // Enforce minimum sizes
-    const minWidth = 300;
-    const minHeight = 400;
+    // Update both position and size atomically
+    setScheduleSize({ width: newWidth, height: newHeight });
+    setSchedulePosition({ x: newX, y: newY });
     
-    // Add size snapping
-    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
-      newWidth,
-      newHeight,
-      'schedule',
-      getVisibleComponents()
-    );
-    
-    // Update with snapped values
-    if (snappedWidth >= minWidth) {
-      setScheduleSize(prev => ({ ...prev, width: snappedWidth }));
-      if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setSchedulePosition(prev => ({ ...prev, x: schedulePosition.x + (newWidth - snappedWidth) }));
-      }
-    }
-    
-    if (snappedHeight >= minHeight) {
-      setScheduleSize(prev => ({ ...prev, height: snappedHeight }));
-      if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setSchedulePosition(prev => ({ ...prev, y: schedulePosition.y + (newHeight - snappedHeight) }));
-      }
-    }
-
     setDragOffset({ x: e.clientX, y: e.clientY, direction: dragOffset.direction });
   };
 
@@ -579,6 +570,7 @@ const V3 = memo(() => {
     if (!editMode) return;
     setCalendarDragging(false);
     setActiveGuides({ vertical: [], horizontal: [] });
+    setCollisions([]);
     Cookies.set('calendarPosition', JSON.stringify(calendarPosition), { expires: 365 });
   };
 
@@ -600,78 +592,58 @@ const V3 = memo(() => {
     const deltaX = e.clientX - dragOffset.x;
     const deltaY = e.clientY - dragOffset.y;
     
-    let newWidth = calendarSize.width;
-    let newHeight = calendarSize.height;
-    let newX = calendarPosition.x;
-    let newY = calendarPosition.y;
+    // Store original values
+    const originalWidth = calendarSize.width;
+    const originalHeight = calendarSize.height;
+    const originalX = calendarPosition.x;
+    const originalY = calendarPosition.y;
+    
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+    let newX = originalX;
+    let newY = originalY;
 
-    // Handle different resize directions
-    if (resizing === 'calendar') {
-      switch (dragOffset.direction) {
-        case 'right':
-          newWidth += deltaX;
-          break;
-        case 'left':
-          newWidth -= deltaX;
-          newX += deltaX;
-          break;
-        case 'bottom':
-          newHeight += deltaY;
-          break;
-        case 'top':
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'bottom-right':
-          newWidth += deltaX;
-          newHeight += deltaY;
-          break;
-        case 'bottom-left':
-          newWidth -= deltaX;
-          newHeight += deltaY;
-          newX += deltaX;
-          break;
-        case 'top-right':
-          newWidth += deltaX;
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'top-left':
-          newWidth -= deltaX;
-          newHeight -= deltaY;
-          newX += deltaX;
-          newY += deltaY;
-          break;
-      }
+    switch (dragOffset.direction) {
+      case 'right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        break;
+      case 'left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'bottom':
+        newHeight = Math.max(400, originalHeight + deltaY);
+        break;
+      case 'top':
+        newHeight = Math.max(400, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'bottom-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(400, originalHeight + deltaY);
+        break;
+      case 'bottom-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(400, originalHeight + deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'top-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(400, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'top-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(400, originalHeight - deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        newY = originalY + (originalHeight - newHeight);
+        break;
     }
 
-    // Enforce minimum sizes
-    const minWidth = 300;
-    const minHeight = 400;
+    // Update both position and size atomically
+    setCalendarSize({ width: newWidth, height: newHeight });
+    setCalendarPosition({ x: newX, y: newY });
     
-    // Add size snapping
-    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
-      newWidth,
-      newHeight,
-      'calendar',
-      getVisibleComponents()
-    );
-    
-    // Update with snapped values
-    if (snappedWidth >= minWidth) {
-      setCalendarSize(prev => ({ ...prev, width: snappedWidth }));
-      if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setCalendarPosition(prev => ({ ...prev, x: calendarPosition.x + (newWidth - snappedWidth) }));
-      }
-    }
-    
-    if (snappedHeight >= minHeight) {
-      setCalendarSize(prev => ({ ...prev, height: snappedHeight }));
-      if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setCalendarPosition(prev => ({ ...prev, y: calendarPosition.y + (newHeight - snappedHeight) }));
-      }
-    }
-
     setDragOffset({ x: e.clientX, y: e.clientY, direction: dragOffset.direction });
   };
 
@@ -705,6 +677,7 @@ const V3 = memo(() => {
     if (!editMode) return;
     setWeatherDragging(false);
     setActiveGuides({ vertical: [], horizontal: [] });
+    setCollisions([]);
     Cookies.set('weatherPosition', JSON.stringify(weatherPosition), { expires: 365 });
   };
 
@@ -726,78 +699,58 @@ const V3 = memo(() => {
     const deltaX = e.clientX - dragOffset.x;
     const deltaY = e.clientY - dragOffset.y;
     
-    let newWidth = weatherSize.width;
-    let newHeight = weatherSize.height;
-    let newX = weatherPosition.x;
-    let newY = weatherPosition.y;
+    // Store original values
+    const originalWidth = weatherSize.width;
+    const originalHeight = weatherSize.height;
+    const originalX = weatherPosition.x;
+    const originalY = weatherPosition.y;
+    
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+    let newX = originalX;
+    let newY = originalY;
 
-    // Handle different resize directions
-    if (resizing === 'weather') {
-      switch (dragOffset.direction) {
-        case 'right':
-          newWidth += deltaX;
-          break;
-        case 'left':
-          newWidth -= deltaX;
-          newX += deltaX;
-          break;
-        case 'bottom':
-          newHeight += deltaY;
-          break;
-        case 'top':
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'bottom-right':
-          newWidth += deltaX;
-          newHeight += deltaY;
-          break;
-        case 'bottom-left':
-          newWidth -= deltaX;
-          newHeight += deltaY;
-          newX += deltaX;
-          break;
-        case 'top-right':
-          newWidth += deltaX;
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'top-left':
-          newWidth -= deltaX;
-          newHeight -= deltaY;
-          newX += deltaX;
-          newY += deltaY;
-          break;
-      }
+    switch (dragOffset.direction) {
+      case 'right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        break;
+      case 'left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'bottom':
+        newHeight = Math.max(150, originalHeight + deltaY);
+        break;
+      case 'top':
+        newHeight = Math.max(150, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'bottom-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(150, originalHeight + deltaY);
+        break;
+      case 'bottom-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(150, originalHeight + deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'top-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(150, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'top-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(150, originalHeight - deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        newY = originalY + (originalHeight - newHeight);
+        break;
     }
 
-    // Enforce minimum sizes
-    const minWidth = 300;
-    const minHeight = 150;
+    // Update both position and size atomically
+    setWeatherSize({ width: newWidth, height: newHeight });
+    setWeatherPosition({ x: newX, y: newY });
     
-    // Add size snapping
-    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
-      newWidth,
-      newHeight,
-      'weather',
-      getVisibleComponents()
-    );
-    
-    // Update with snapped values
-    if (snappedWidth >= minWidth) {
-      setWeatherSize(prev => ({ ...prev, width: snappedWidth }));
-      if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setWeatherPosition(prev => ({ ...prev, x: weatherPosition.x + (newWidth - snappedWidth) }));
-      }
-    }
-    
-    if (snappedHeight >= minHeight) {
-      setWeatherSize(prev => ({ ...prev, height: snappedHeight }));
-      if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setWeatherPosition(prev => ({ ...prev, y: weatherPosition.y + (newHeight - snappedHeight) }));
-      }
-    }
-
     setDragOffset({ x: e.clientX, y: e.clientY, direction: dragOffset.direction });
   };
 
@@ -831,6 +784,7 @@ const V3 = memo(() => {
     if (!editMode) return;
     setHeaderDragging(false);
     setActiveGuides({ vertical: [], horizontal: [] });
+    setCollisions([]);
     Cookies.set('headerPosition', JSON.stringify(headerPosition), { expires: 365 });
   };
 
@@ -852,78 +806,58 @@ const V3 = memo(() => {
     const deltaX = e.clientX - dragOffset.x;
     const deltaY = e.clientY - dragOffset.y;
     
-    let newWidth = headerSize.width;
-    let newHeight = headerSize.height;
-    let newX = headerPosition.x;
-    let newY = headerPosition.y;
+    // Store original values
+    const originalWidth = headerSize.width;
+    const originalHeight = headerSize.height;
+    const originalX = headerPosition.x;
+    const originalY = headerPosition.y;
+    
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+    let newX = originalX;
+    let newY = originalY;
 
-    // Handle different resize directions
-    if (resizing === 'header') {
-      switch (dragOffset.direction) {
-        case 'right':
-          newWidth += deltaX;
-          break;
-        case 'left':
-          newWidth -= deltaX;
-          newX += deltaX;
-          break;
-        case 'bottom':
-          newHeight += deltaY;
-          break;
-        case 'top':
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'bottom-right':
-          newWidth += deltaX;
-          newHeight += deltaY;
-          break;
-        case 'bottom-left':
-          newWidth -= deltaX;
-          newHeight += deltaY;
-          newX += deltaX;
-          break;
-        case 'top-right':
-          newWidth += deltaX;
-          newHeight -= deltaY;
-          newY += deltaY;
-          break;
-        case 'top-left':
-          newWidth -= deltaX;
-          newHeight -= deltaY;
-          newX += deltaX;
-          newY += deltaY;
-          break;
-      }
+    switch (dragOffset.direction) {
+      case 'right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        break;
+      case 'left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'bottom':
+        newHeight = Math.max(150, originalHeight + deltaY);
+        break;
+      case 'top':
+        newHeight = Math.max(150, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'bottom-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(150, originalHeight + deltaY);
+        break;
+      case 'bottom-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(150, originalHeight + deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'top-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(150, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'top-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(150, originalHeight - deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        newY = originalY + (originalHeight - newHeight);
+        break;
     }
 
-    // Enforce minimum sizes
-    const minWidth = 300;
-    const minHeight = 150;
+    // Update both position and size atomically
+    setHeaderSize({ width: newWidth, height: newHeight });
+    setHeaderPosition({ x: newX, y: newY });
     
-    // Add size snapping
-    const { width: snappedWidth, height: snappedHeight } = snapToComponentSizes(
-      newWidth,
-      newHeight,
-      'header',
-      getVisibleComponents()
-    );
-    
-    // Update with snapped values
-    if (snappedWidth >= minWidth) {
-      setHeaderSize(prev => ({ ...prev, width: snappedWidth }));
-      if (['left', 'top-left', 'bottom-left'].includes(dragOffset.direction)) {
-        setHeaderPosition(prev => ({ ...prev, x: headerPosition.x + (newWidth - snappedWidth) }));
-      }
-    }
-    
-    if (snappedHeight >= minHeight) {
-      setHeaderSize(prev => ({ ...prev, height: snappedHeight }));
-      if (['top', 'top-left', 'top-right'].includes(dragOffset.direction)) {
-        setHeaderPosition(prev => ({ ...prev, y: headerPosition.y + (newHeight - snappedHeight) }));
-      }
-    }
-
     setDragOffset({ x: e.clientX, y: e.clientY, direction: dragOffset.direction });
   };
 
@@ -931,6 +865,123 @@ const V3 = memo(() => {
     if (!editMode) return;
     setResizing(null);
     Cookies.set('headerSize', JSON.stringify(headerSize), { expires: 365 });
+  };
+
+  // Add QuickLinks handlers
+  const handleQuickLinksDragStart = (e) => {
+    if (!editMode) return;
+    e.preventDefault();
+    setQuickLinksDragging(true);
+    setDragOffset({
+      x: e.clientX - quickLinksPosition.x,
+      y: e.clientY - quickLinksPosition.y
+    });
+  };
+
+  const handleQuickLinksDragMove = (e) => {
+    if (!quickLinksDragging || !editMode) return;
+    const newX = e.clientX - dragOffset.x;
+    const newY = e.clientY - dragOffset.y;
+    const { x, y, guides } = snapToComponents(newX, newY, quickLinksSize.width, quickLinksSize.height, 'quickLinks', getVisibleComponents());
+    setQuickLinksPosition({ x, y });
+    setActiveGuides(guides);
+  };
+
+  const handleQuickLinksDragEnd = () => {
+    if (!editMode) return;
+    setQuickLinksDragging(false);
+    setActiveGuides({ vertical: [], horizontal: [] });
+    setCollisions([]);
+    Cookies.set('quickLinksPosition', JSON.stringify(quickLinksPosition), { expires: 365 });
+  };
+
+  const getQuickLinksStyle = () => ({
+    position: 'fixed',
+    left: quickLinksPosition.x,
+    top: quickLinksPosition.y,
+    width: `${quickLinksSize.width}px`,
+    height: `${quickLinksSize.height}px`,
+    cursor: editMode ? 'move' : 'default',
+    transform: editMode && resizing === 'quickLinks' ? 'scale(1.02)' : 'scale(1)',
+    transition: (quickLinksDragging || resizing === 'quickLinks') ? 'none' : 'all 0.3s ease',
+    zIndex: editMode ? 40 : 'auto'
+  });
+
+  // Add these handlers before the useEffect blocks
+  const handleQuickLinksResizeStart = (e, direction) => {
+    if (!editMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setResizing('quickLinks');
+    setDragOffset({
+      x: e.clientX,
+      y: e.clientY,
+      direction: direction
+    });
+  };
+
+  const handleQuickLinksResize = (e) => {
+    if (!resizing || !editMode || resizing !== 'quickLinks') return;
+
+    const deltaX = e.clientX - dragOffset.x;
+    const deltaY = e.clientY - dragOffset.y;
+    
+    const originalWidth = quickLinksSize.width;
+    const originalHeight = quickLinksSize.height;
+    const originalX = quickLinksPosition.x;
+    const originalY = quickLinksPosition.y;
+    
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+    let newX = originalX;
+    let newY = originalY;
+
+    switch (dragOffset.direction) {
+      case 'right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        break;
+      case 'left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'bottom':
+        newHeight = Math.max(300, originalHeight + deltaY);
+        break;
+      case 'top':
+        newHeight = Math.max(300, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'bottom-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(300, originalHeight + deltaY);
+        break;
+      case 'bottom-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(300, originalHeight + deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        break;
+      case 'top-right':
+        newWidth = Math.max(300, originalWidth + deltaX);
+        newHeight = Math.max(300, originalHeight - deltaY);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+      case 'top-left':
+        newWidth = Math.max(300, originalWidth - deltaX);
+        newHeight = Math.max(300, originalHeight - deltaY);
+        newX = originalX + (originalWidth - newWidth);
+        newY = originalY + (originalHeight - newHeight);
+        break;
+    }
+
+    setQuickLinksSize({ width: newWidth, height: newHeight });
+    setQuickLinksPosition({ x: newX, y: newY });
+    setDragOffset({ x: e.clientX, y: e.clientY, direction: dragOffset.direction });
+  };
+
+  const handleQuickLinksResizeEnd = () => {
+    if (!editMode) return;
+    setResizing(null);
+    Cookies.set('quickLinksSize', JSON.stringify(quickLinksSize), { expires: 365 });
   };
 
   // Update effect to handle different drag states
@@ -975,7 +1026,15 @@ const V3 = memo(() => {
         document.removeEventListener('mouseup', handleHeaderDragEnd);
       };
     }
-  }, [progressDragging, scheduleDragging, calendarDragging, weatherDragging, headerDragging]);
+    if (quickLinksDragging) {
+      document.addEventListener('mousemove', handleQuickLinksDragMove);
+      document.addEventListener('mouseup', handleQuickLinksDragEnd);
+      return () => {
+        document.removeEventListener('mousemove', handleQuickLinksDragMove);
+        document.removeEventListener('mouseup', handleQuickLinksDragEnd);
+      };
+    }
+  }, [progressDragging, scheduleDragging, calendarDragging, weatherDragging, headerDragging, quickLinksDragging]);
 
   useEffect(() => {
     if (resizing) {
@@ -983,13 +1042,15 @@ const V3 = memo(() => {
                           resizing === 'schedule' ? handleScheduleResize :
                           resizing === 'calendar' ? handleCalendarResize :
                           resizing === 'weather' ? handleWeatherResize :
-                          handleHeaderResize;
+                          resizing === 'header' ? handleHeaderResize :
+                          handleQuickLinksResize;
       
       const handleResizeEnd = resizing === 'progress' ? handleProgressResizeEnd :
                              resizing === 'schedule' ? handleScheduleResizeEnd :
                              resizing === 'calendar' ? handleCalendarResizeEnd :
                              resizing === 'weather' ? handleWeatherResizeEnd :
-                             handleHeaderResizeEnd;
+                             resizing === 'header' ? handleHeaderResizeEnd :
+                             handleQuickLinksResizeEnd;
 
       document.addEventListener('mousemove', handleResize);
       document.addEventListener('mouseup', handleResizeEnd);
@@ -1013,6 +1074,8 @@ const V3 = memo(() => {
       Cookies.set('weatherSize', JSON.stringify(weatherSize), { expires: 365 });
       Cookies.set('headerPosition', JSON.stringify(headerPosition), { expires: 365 });
       Cookies.set('headerSize', JSON.stringify(headerSize), { expires: 365 });
+      Cookies.set('quickLinksPosition', JSON.stringify(quickLinksPosition), { expires: 365 });
+      Cookies.set('quickLinksSize', JSON.stringify(quickLinksSize), { expires: 365 });
     }
   };
 
@@ -1027,6 +1090,8 @@ const V3 = memo(() => {
     setWeatherPosition(DEFAULT_POSITIONS.weather);
     setHeaderSize(DEFAULT_HEADER_SIZE);
     setHeaderPosition(DEFAULT_POSITIONS.header);
+    setQuickLinksSize(DEFAULT_QUICK_LINKS_SIZE);
+    setQuickLinksPosition(DEFAULT_POSITIONS.quickLinks);
     Cookies.set('progressBarSize', JSON.stringify(DEFAULT_PROGRESS_SIZE), { expires: 365 });
     Cookies.set('progressBarPosition', JSON.stringify(DEFAULT_POSITIONS.progress), { expires: 365 });
     Cookies.set('scheduleSize', JSON.stringify(DEFAULT_SCHEDULE_SIZE), { expires: 365 });
@@ -1037,6 +1102,8 @@ const V3 = memo(() => {
     Cookies.set('weatherPosition', JSON.stringify(DEFAULT_POSITIONS.weather), { expires: 365 });
     Cookies.set('headerSize', JSON.stringify(DEFAULT_HEADER_SIZE), { expires: 365 });
     Cookies.set('headerPosition', JSON.stringify(DEFAULT_POSITIONS.header), { expires: 365 });
+    Cookies.set('quickLinksSize', JSON.stringify(DEFAULT_QUICK_LINKS_SIZE), { expires: 365 });
+    Cookies.set('quickLinksPosition', JSON.stringify(DEFAULT_POSITIONS.quickLinks), { expires: 365 });
   };
 
   const handleContextMenu = (e, component) => {
@@ -1096,6 +1163,10 @@ const V3 = memo(() => {
         setHeaderSize(DEFAULT_HEADER_SIZE);
         Cookies.set('headerSize', JSON.stringify(DEFAULT_HEADER_SIZE), { expires: 365 });
         break;
+      case 'quickLinks':
+        setQuickLinksSize(DEFAULT_QUICK_LINKS_SIZE);
+        Cookies.set('quickLinksSize', JSON.stringify(DEFAULT_QUICK_LINKS_SIZE), { expires: 365 });
+        break;
     }
     setContextMenu({ show: false, x: 0, y: 0, component: null });
   };
@@ -1121,6 +1192,10 @@ const V3 = memo(() => {
       case 'header':
         setHeaderPosition(DEFAULT_POSITIONS.header);
         Cookies.set('headerPosition', JSON.stringify(DEFAULT_POSITIONS.header), { expires: 365 });
+        break;
+      case 'quickLinks':
+        setQuickLinksPosition(DEFAULT_POSITIONS.quickLinks);
+        Cookies.set('quickLinksPosition', JSON.stringify(DEFAULT_POSITIONS.quickLinks), { expires: 365 });
         break;
     }
     setContextMenu({ show: false, x: 0, y: 0, component: null });
@@ -1201,14 +1276,16 @@ const V3 = memo(() => {
         schedule: schedulePosition,
         calendar: calendarPosition,
         weather: weatherPosition,
-        header: headerPosition
+        header: headerPosition,
+        quickLinks: quickLinksPosition
       },
       sizes: {
         progress: size,
         schedule: scheduleSize,
         calendar: calendarSize,
         weather: weatherSize,
-        header: headerSize
+        header: headerSize,
+        quickLinks: quickLinksSize
       },
       visibility: visibleComponents,
       name: 'Custom Layout'
@@ -1239,6 +1316,8 @@ const V3 = memo(() => {
     setWeatherPosition(config.positions.weather || DEFAULT_POSITIONS.weather);
     setHeaderSize(config.sizes.header || DEFAULT_HEADER_SIZE);
     setHeaderPosition(config.positions.header || DEFAULT_POSITIONS.header);
+    setQuickLinksSize(config.sizes.quickLinks || DEFAULT_QUICK_LINKS_SIZE);
+    setQuickLinksPosition(config.positions.quickLinks || DEFAULT_POSITIONS.quickLinks);
     setVisibleComponents(config.visibility);
     setCurrentTemplate(name);
     setShowTemplates(false);
@@ -1262,7 +1341,7 @@ const V3 = memo(() => {
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {/* Add SnapGuides at the top level */}
-      <SnapGuides activeGuides={activeGuides} />
+      <SnapGuides activeGuides={activeGuides} collisions={collisions} />
       
       {/* Remove existing toolbar from top-right */}
       
@@ -1498,6 +1577,46 @@ const V3 = memo(() => {
         </div>
       )}
 
+      {visibleComponents.quickLinks && (
+        <div
+          ref={quickLinksRef}
+          style={getQuickLinksStyle()}
+          onMouseDown={handleQuickLinksDragStart}
+          onContextMenu={(e) => handleContextMenu(e, 'quickLinks')}
+          className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-5
+            ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
+        >
+          <DevOverlay component="quickLinks" position={quickLinksPosition} size={quickLinksSize} />
+          <div className="relative z-10 w-full h-full">
+            <QuickLinks editMode={editMode} />
+          </div>
+
+          {editMode && (
+            <>
+              {/* Add resize handles similar to other components */}
+              <div className="absolute right-0 bottom-0 w-4 h-4 cursor-se-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'bottom-right')} />
+              <div className="absolute left-0 bottom-0 w-4 h-4 cursor-sw-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'bottom-left')} />
+              <div className="absolute right-0 top-0 w-4 h-4 cursor-ne-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'top-right')} />
+              <div className="absolute left-0 top-0 w-4 h-4 cursor-nw-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'top-left')} />
+              
+              {/* Edge handles */}
+              <div className="absolute right-0 top-4 bottom-4 w-2 cursor-e-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'right')} />
+              <div className="absolute left-0 top-4 bottom-4 w-2 cursor-w-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'left')} />
+              <div className="absolute top-0 left-4 right-4 h-2 cursor-n-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'top')} />
+              <div className="absolute bottom-0 left-4 right-4 h-2 cursor-s-resize hover:bg-blue-500 hover:bg-opacity-20 pointer-events-auto z-50"
+                onMouseDown={(e) => handleQuickLinksResizeStart(e, 'bottom')} />
+            </>
+          )}
+        </div>
+      )}
+
       {/* Add PopupMessage at the root level */}
       {showFullAnnouncement && announcement && (
         <PopupMessage 
@@ -1628,6 +1747,14 @@ const V3 = memo(() => {
                   className={`w-full p-2 text-left ${currentTheme.accent} rounded-lg ${currentTheme.text}`}
                 >
                   Day Header
+                </button>
+              )}
+              {!visibleComponents.quickLinks && (
+                <button
+                  onClick={() => showComponent('quickLinks')}
+                  className={`w-full p-2 text-left ${currentTheme.accent} rounded-lg ${currentTheme.text}`}
+                >
+                  Quick Links
                 </button>
               )}
             </div>
