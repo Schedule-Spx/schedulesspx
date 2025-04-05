@@ -9,97 +9,22 @@ import GoogleCalendar from '../components/GoogleCalendar';
 import WeatherDashboard from '../components/WeatherDashboard';  // Updated import
 import DayHeader from '../components/DayHeader';
 import PopupMessage from '../components/PopupMessage';
-
-const DEFAULT_PROGRESS_SIZE = { width: 700, height: 155 };
-const DEFAULT_SCHEDULE_SIZE = { width: 400, height: 484 };
-const DEFAULT_CALENDAR_SIZE = { width: 400, height: 484 }; // Add calendar size
-const DEFAULT_WEATHER_SIZE = { 
-  width: DEFAULT_PROGRESS_SIZE.width, // Match progress width
-  height: 315 // Reduced by 30% from 450
-};
-const DEFAULT_HEADER_SIZE = { 
-  width: DEFAULT_PROGRESS_SIZE.width, // Match progress width
-  height: 283  // Reduced by 10% from 315
-};
-
-const DEFAULT_POSITIONS = {
-  progress: {
-    x: window.innerWidth / 2 - DEFAULT_PROGRESS_SIZE.width / 2,
-    y: window.innerHeight / 2 - DEFAULT_PROGRESS_SIZE.height / 2
-  },
-  schedule: {
-    x: window.innerWidth / 2 - DEFAULT_PROGRESS_SIZE.width / 2 - DEFAULT_SCHEDULE_SIZE.width - 20, // 20px gap
-    y: window.innerHeight / 2 - DEFAULT_SCHEDULE_SIZE.height / 2 // Centered vertically
-  },
-  calendar: {
-    x: window.innerWidth / 2 + DEFAULT_PROGRESS_SIZE.width / 2 + 20,
-    y: window.innerHeight / 2 - DEFAULT_CALENDAR_SIZE.height / 2
-  },
-  weather: {
-    x: window.innerWidth / 2 - DEFAULT_WEATHER_SIZE.width / 2, // Center horizontally
-    y: window.innerHeight / 2 + DEFAULT_PROGRESS_SIZE.height / 2 + 20 // Position below progress bar
-  },
-  header: {
-    x: window.innerWidth / 2 - DEFAULT_HEADER_SIZE.width / 2,
-    y: window.innerHeight / 2 - DEFAULT_PROGRESS_SIZE.height / 2 - DEFAULT_HEADER_SIZE.height - 20
-  }
-};
-
-const DEFAULT_VISIBILITY = {
-  progress: true,
-  schedule: true,
-  calendar: true,
-  weather: true, // Make weather visible by default
-  header: true
-};
-
-// Add template configurations after DEFAULT_POSITIONS
-const TEMPLATES = {
-  default: {
-    positions: DEFAULT_POSITIONS,
-    sizes: {
-      progress: DEFAULT_PROGRESS_SIZE,
-      schedule: DEFAULT_SCHEDULE_SIZE,
-      calendar: DEFAULT_CALENDAR_SIZE,
-      weather: DEFAULT_WEATHER_SIZE,
-      header: DEFAULT_HEADER_SIZE
-    },
-    visibility: DEFAULT_VISIBILITY,
-    name: 'Default Layout'
-  },
-  boardMode: {
-    positions: {
-      progress: {
-        x: window.innerWidth / 2 - (DEFAULT_PROGRESS_SIZE.width * 1.5) / 2,
-        y: window.innerHeight / 2 - (DEFAULT_PROGRESS_SIZE.height * 1.2) / 2
-      }
-    },
-    sizes: {
-      progress: {
-        width: DEFAULT_PROGRESS_SIZE.width * 1.5, // 50% wider
-        height: DEFAULT_PROGRESS_SIZE.height * 1.2 // 20% taller
-      }
-    },
-    visibility: {
-      progress: true,
-      schedule: false,
-      calendar: false,
-      weather: false,
-      header: false
-    },
-    name: 'Board Mode'
-  },
-  user: {
-    positions: {},
-    sizes: {},
-    visibility: {},
-    name: 'Custom Layout'
-  }
-};
+import { useAuth } from '../context/AuthContext';
+import {
+  DEFAULT_PROGRESS_SIZE,
+  DEFAULT_SCHEDULE_SIZE,
+  DEFAULT_CALENDAR_SIZE,
+  DEFAULT_WEATHER_SIZE,
+  DEFAULT_HEADER_SIZE,
+  DEFAULT_POSITIONS,
+  DEFAULT_VISIBILITY,
+  TEMPLATES
+} from '../layouts/dashtemplates';
 
 const V3 = memo(() => {
   const { currentTheme } = useTheme();
   const { weekSchedule, fetchSchedule } = useWeekSchedule();
+  const { isAdmin } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const containerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -152,6 +77,7 @@ const V3 = memo(() => {
   const [currentTemplate, setCurrentTemplate] = useState(() => {
     return Cookies.get('currentTemplate') || 'default';
   });
+  const [showDevOverlay, setShowDevOverlay] = useState(false);
   
   // Initialize position from cookies or center
   const [position, setPosition] = useState(() => {
@@ -1134,6 +1060,18 @@ const V3 = memo(() => {
     Cookies.set('componentVisibility', JSON.stringify(config.visibility), { expires: 365 });
   };
 
+  // Add DevOverlay component
+  const DevOverlay = ({ component, position, size }) => {
+    if (!showDevOverlay || !isAdmin()) return null;
+    
+    return (
+      <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white p-2 text-xs z-50 pointer-events-none">
+        <div>pos: {JSON.stringify(position)}</div>
+        <div>size: {JSON.stringify(size)}</div>
+      </div>
+    );
+  };
+
   return (
     <div className={`min-h-screen ${currentTheme.main} ${currentTheme.text}`}>
       {/* Remove existing toolbar from top-right */}
@@ -1148,6 +1086,7 @@ const V3 = memo(() => {
           className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-1
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
+          <DevOverlay component="progress" position={position} size={size} />
           <div 
             className="absolute inset-0"
             style={{
@@ -1194,6 +1133,7 @@ const V3 = memo(() => {
           className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-2
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
+          <DevOverlay component="schedule" position={schedulePosition} size={scheduleSize} />
           <div 
             className="absolute inset-0"
             style={{
@@ -1240,6 +1180,7 @@ const V3 = memo(() => {
           className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-3
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
+          <DevOverlay component="calendar" position={calendarPosition} size={calendarSize} />
           <div 
             className="absolute inset-0"
             style={{
@@ -1286,6 +1227,7 @@ const V3 = memo(() => {
           className={`select-none relative rounded-lg overflow-hidden ${weatherMounted ? 'fade-in-scale delay-4' : 'opacity-0'}
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
+          <DevOverlay component="weather" position={weatherPosition} size={weatherSize} />
           <div 
             className="absolute inset-0"
             style={{
@@ -1332,6 +1274,7 @@ const V3 = memo(() => {
           className={`select-none relative rounded-lg overflow-hidden fade-in-scale delay-0
             ${editMode ? 'ring-2 ring-blue-500 ring-opacity-50 shadow-lg' : 'border-2 border-opacity-20 border-slate-400'}`}
         >
+          <DevOverlay component="header" position={headerPosition} size={headerSize} />
           <div className="relative z-10 w-full h-full">
             <DayHeader onAnnouncementClick={(data) => {
               setAnnouncement(data);
@@ -1379,6 +1322,17 @@ const V3 = memo(() => {
         <div className={`${currentTheme.main} rounded-full shadow-lg p-2 flex items-center gap-2`}>
           {editMode ? (
             <>
+              {isAdmin() && (
+                <button
+                  onClick={() => setShowDevOverlay(!showDevOverlay)}
+                  className={`p-2 rounded-full ${currentTheme.accent} 
+                    transition-all duration-300 hover:scale-110 
+                    ${showDevOverlay ? 'bg-green-500' : ''}`}
+                  title="Toggle Dev Overlay"
+                >
+                  DEV
+                </button>
+              )}
               <button
                 onClick={() => setShowComponentList(true)}
                 className={`p-2 rounded-full ${currentTheme.accent} 
