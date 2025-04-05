@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect, memo, useCallback } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -26,7 +26,7 @@ const News = lazy(() => import('./pages/News'));
 const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
 const BoardMode = lazy(() => import('./pages/BoardMode'));
-const MarchMadness = lazy(() => import('./pages/MarchMadness');
+const MarchMadness = lazy(() => import('./pages/MarchMadness'));
 
 // Loading fallback component
 const LoadingFallback = memo(() => <div>Loading...</div>);
@@ -62,21 +62,20 @@ function AppContent() {
   const { user, getBanStatus } = useAuth();
   const { weekSchedule, setWeekSchedule, fetchSchedule } = useWeekSchedule();
   const [showSnakeGame, setShowSnakeGame] = useState(false);
-  const [pressedKeys, setPressedKeys] = useState([]);
+  // Using keys state directly in the handler without storing them separately
   const [reminderPreference, setReminderPreference] = useState(user?.reminderPreference);
   const location = useLocation();
   
   // Create memoized handler for the key event
   const handleKeyDown = useCallback((event) => {
-    setPressedKeys(prev => {
-      const updated = [...prev, event.key];
-      // Check for Konami code
-      if (updated.join().includes(KONAMI_CODE.join())) {
-        setShowSnakeGame(true);
-      }
-      // Keep only the last N keys where N is the length of the Konami code
-      return updated.slice(-KONAMI_CODE.length);
-    });
+    // Track keys directly in the handler
+    const keys = [];
+    keys.push(event.key);
+    
+    // Check for Konami code
+    if (keys.join().includes(KONAMI_CODE.join())) {
+      setShowSnakeGame(true);
+    }
   }, []);
 
   // Setup key event listener
