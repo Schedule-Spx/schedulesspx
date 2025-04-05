@@ -7,17 +7,6 @@ import PeriodRenamer from '../components/PeriodRenamer';
 import logger from '../utils/logger';
 import '../styles/carousel.css';
 
-// Faculty ban emails (keep in sync with AuthContext)
-const FACULTY_BAN_EMAILS = new Set([
-  'kagenmjensen@me.com'
-]);
-
-// Faculty emails that are exempt from the ban (keep in sync with AuthContext)
-const FACULTY_EXEMPT_EMAILS = new Set([
-  'lfarrell@spx.org',
-  'mlawson@spx.org'
-]);
-
 const Account = ({ weekSchedule }) => {
   const { currentTheme, changeTheme, themes } = useTheme();
   const { user, isLoggedIn, reminderPreference, updateReminderPreference, getBanStatus } = useAuth();
@@ -26,7 +15,6 @@ const Account = ({ weekSchedule }) => {
   const [showThemeFormModal, setShowThemeFormModal] = useState(false);
   const navigate = useNavigate();
   
-  // Remove excessive console logs
   logger.debug("Account - Component initialized", { isLoggedIn: isLoggedIn() });
   
   const themeCategories = {
@@ -43,14 +31,10 @@ const Account = ({ weekSchedule }) => {
     logger.debug("Account - Component mounted");
     
     // Check if user is banned and redirect if needed - using navigate for smoother transitions
-    const { isBanned, type } = getBanStatus();
+    const { isBanned } = getBanStatus();
     
     if (isBanned) {
-      if (type === 'faculty') {
-        navigate('/facultyban', { replace: true });
-      } else {
-        navigate('/banned', { replace: true });
-      }
+      navigate('/banned', { replace: true });
     }
   }, [user, navigate, getBanStatus]);
   
@@ -91,14 +75,12 @@ const Account = ({ weekSchedule }) => {
     });
   };
   
-  // Enhanced ThemePreview component to display new theme properties
   const ThemePreview = ({ themeName, theme }) => {
     if (!theme) {
       logger.error(new Error(`Attempted to render undefined theme`), { themeName });
       return null;
     }
     
-    // Safely check if currentTheme has a name property
     const isSelected = currentTheme && currentTheme.name && 
       currentTheme.name.toLowerCase().replace(/\s+/g, '') === themeName.toLowerCase();
     const isPremium = themeCategories['Premium Themes'].includes(themeName);
@@ -126,7 +108,6 @@ const Account = ({ weekSchedule }) => {
     );
   };
   
-  // Replace Google Form iframe with a direct link since iframes are blocked by CSP
   const ThemeFormModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className={`${currentTheme.main} ${currentTheme.text} p-6 ${currentTheme.cardStyle} max-w-2xl w-full max-h-[90vh] overflow-auto`}>
@@ -143,7 +124,6 @@ const Account = ({ weekSchedule }) => {
           Please note that all payments must be made in cash only.
         </p>
         
-        {/* Replace iframe with a direct link to avoid CSP issues */}
         <div className="mb-6 text-center">
           <a 
             href="https://docs.google.com/forms/d/e/1FAIpQLScuxBD9LYMWMr-AuBfT6ENPvCYn3AmgF-nkOVWIc9BzjfyQzA/viewform" 
@@ -179,13 +159,11 @@ const Account = ({ weekSchedule }) => {
     );
   }
   
-  // Additional ban check before rendering content
   const { isBanned } = getBanStatus();
   if (isBanned) {
-    return null; // Return nothing as we're handling the redirect in useEffect
+    return null;
   }
   
-  // Change Log section - fixing the syntax errors in the JSX
   const renderChangeLogSection = () => (
     <div className={`${currentTheme.main} border ${currentTheme.border} ${currentTheme.cardStyle} p-6`}>
       <h2 className={`text-xl font-bold mb-4 text-center ${currentTheme.fontFamily}`}>Change Log</h2>
@@ -209,7 +187,6 @@ const Account = ({ weekSchedule }) => {
       {showThemeFormModal && <ThemeFormModal />}
       
       <div className="max-w-4xl mx-auto pb-16">
-        {/* Account Information section */}
         <div className={`${currentTheme.main} border ${currentTheme.border} ${currentTheme.cardStyle} p-6 mb-8`}>
           <h1 className={`text-2xl font-bold mb-6 text-center drop-shadow-md ${currentTheme.fontFamily}`}>Account Information</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -238,16 +215,13 @@ const Account = ({ weekSchedule }) => {
           </div>
         </div>
         
-        {/* Period Customization section */}
         <div className="mb-8">
           <PeriodRenamer />
         </div>
         
-        {/* Theme Customization section */}
         <div className={`${currentTheme.main} border ${currentTheme.border} ${currentTheme.cardStyle} p-6 mb-8`}>
           <h2 className={`text-xl font-bold mb-4 text-center ${currentTheme.fontFamily}`}>Theme Customization</h2>
           
-          {/* Request Custom Theme button */}
           <div className="mb-6 text-center">
             <button
               className={`${currentTheme.accent} text-white font-bold py-2 px-6 ${currentTheme.buttonStyle} ${currentTheme.animation} hover:opacity-90 transition-opacity`}
@@ -310,7 +284,6 @@ const Account = ({ weekSchedule }) => {
           </TransitionGroup>
         </div>
         
-        {/* Legal Information section */}
         <div className={`${currentTheme.main} border ${currentTheme.border} ${currentTheme.cardStyle} p-6 mb-8`}>
           <h2 className={`text-xl font-bold mb-4 text-center ${currentTheme.fontFamily}`}>Legal Information</h2>
           <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -329,7 +302,6 @@ const Account = ({ weekSchedule }) => {
           </div>
         </div>
         
-        {/* Change Log section - Fixed version */}
         {renderChangeLogSection()}
       </div>
     </div>

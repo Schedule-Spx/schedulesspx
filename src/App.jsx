@@ -12,7 +12,6 @@ import SnakeGamePopup from './components/SnakeGamePopup';
 import ErrorBoundary from './components/ErrorBoundary';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import AttendanceReminderPopup from './components/AttendanceReminderPopup';
-import FacultyBanPage from './pages/FacultyBan';
 
 // Lazy load components to reduce initial bundle size
 const MainDashboard = lazy(() => import('./pages/MainDashboard'));
@@ -27,7 +26,7 @@ const News = lazy(() => import('./pages/News'));
 const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
 const BoardMode = lazy(() => import('./pages/BoardMode'));
-const MarchMadness = lazy(() => import('./pages/MarchMadness'));
+const MarchMadness = lazy(() => import('./pages/MarchMadness');
 
 // Loading fallback component
 const LoadingFallback = memo(() => <div>Loading...</div>);
@@ -48,19 +47,12 @@ function BanChecker({ children }) {
     if (!isBanned) return;
     
     // If already on the correct ban page, don't redirect
-    if (
-      (type === 'faculty' && location.pathname === '/facultyban') ||
-      (type === 'student' && location.pathname === '/banned')
-    ) {
+    if (type === 'student' && location.pathname === '/banned') {
       return;
     }
     
     // Redirect to appropriate ban page
-    if (type === 'faculty') {
-      navigate('/facultyban', { replace: true });
-    } else {
-      navigate('/banned', { replace: true });
-    }
+    navigate('/banned', { replace: true });
   }, [shouldCheckBan, getBanStatus, navigate, location.pathname]);
   
   return children;
@@ -109,8 +101,7 @@ function AppContent() {
   
   // Only show nav bar if user is not banned
   const showNavBar = !isBanned || 
-    (location.pathname === '/banned' && type === 'student') ||
-    (location.pathname === '/facultyban' && type === 'faculty');
+    (location.pathname === '/banned' && type === 'student');
 
   return (
     <>
@@ -121,7 +112,6 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/banned" element={<Banned />} />
-            <Route path="/facultyban" element={<FacultyBanPage />} />
             <Route 
               path="/main" 
               element={
@@ -191,7 +181,6 @@ function AppContent() {
             <Route path="/terms" element={<TermsAndConditions />} />
             <Route path="/news" element={<News />} />
             <Route path="/changelog" element={<ChangeLog />} />
-            <Route path="/march-madness" element={<MarchMadness />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>
