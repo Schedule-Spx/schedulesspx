@@ -26,7 +26,6 @@ const News = lazy(() => import('./pages/News'));
 const StudentTools = lazy(() => import('./pages/StudentTools'));
 const ChangeLog = lazy(() => import('./pages/ChangeLog'));
 const BoardMode = lazy(() => import('./pages/BoardMode'));
-const MarchMadness = lazy(() => import('./pages/MarchMadness'));
 
 // Loading fallback component
 const LoadingFallback = memo(() => <div>Loading...</div>);
