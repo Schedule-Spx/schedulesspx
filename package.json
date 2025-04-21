@@ -28,7 +28,7 @@
     "react-transition-group": "^4.4.5",
     "rimraf": "^6.0.1",
     "rss-parser": "^3.13.0",
-    "shadcn-ui": "^0.2.3",
+    "shadcn-ui": "^0.9.5",
     "socket.io-client": "*",
     "uuid": "^11.1.0",
     "web-vitals": "*"
