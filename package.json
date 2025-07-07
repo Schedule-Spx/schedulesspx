@@ -45,7 +45,7 @@
     "vite": "^7.0.2",
     "vite-plugin-aliases": "^0.0.1",
     "vite-plugin-compression": "*",
-    "vite-plugin-image-optimizer": "^1.1.8",
+    "vite-plugin-image-optimizer": "^2.0.2",
     "vite-plugin-pwa": "*",
     "vitest": "*",
     "workbox-window": "*"
