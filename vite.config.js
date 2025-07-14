@@ -146,9 +146,14 @@ export default defineConfig(({ mode }) => {
       },
     },
     publicDir: 'public', // Directory for static assets
-    // css: {
-    //   postcss: './postcss.config.js'
-    // },
+    css: {
+      postcss: {
+        plugins: [
+          autoprefixer(), // Adds vendor prefixes
+          tailwindcss()   // Tailwind CSS integration
+        ]
+      }
+    },
     esbuild: {
       logOverride: { 'this-is-undefined-in-esm': 'silent' } // Suppress specific warnings
     },
