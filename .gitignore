@@ -10,6 +10,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -24,9 +25,10 @@ yarn-error.log*
 .env
 .env
 
+# Vite
+dev-dist
 
 # prompt setup files
-
 promptsetup.py
 promptsetup.whitelist
 promptsetup.blacklist
