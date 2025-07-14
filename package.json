@@ -42,7 +42,7 @@
     "autoprefixer": "*",
     "postcss": "*",
     "tailwindcss": "*",
-    "vite": "^7.0.2",
+    "vite": "^7.0.4",
     "vite-plugin-aliases": "^0.0.1",
     "vite-plugin-compression": "*",
     "vite-plugin-image-optimizer": "^2.0.2",
